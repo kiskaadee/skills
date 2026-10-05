@@ -23,7 +23,7 @@ Its sole responsibility is **immutable fact capture**. It does not interpret, su
    * Infer, ask for, or fabricate rationale.
    * Derive semantic lineage or retrospective notes.
    * Conduct learning quizzes or interact conversationally with the user.
-   * Synthesize or write daily journals (owned strictly by `journal-builder`).
+   * Synthesize or write daily journals (reserved for a future `journal-builder` skill, not built yet).
 3. **Lossless Essential Metadata**:
    Captures the complete commit identity and essential Git attributes:
    `committed_at,repository,project,branch,commit_sha,parent_sha,subject`
@@ -85,7 +85,7 @@ If the repository root is `~/Brain` or the directory name is `Brain`, terminate 
 ### Step 2: Capture via Deterministic Script
 Execute the bundled deterministic capture script:
 ```bash
-bash ~/Brain/05-agents/skills/commit-logger/scripts/log-commit.sh [COMMIT_SHA]
+bash scripts/log-commit.sh [COMMIT_SHA]   # path relative to this SKILL.md
 ```
 *(If `COMMIT_SHA` is omitted, the script automatically defaults to `HEAD` of the current repository).*
 
@@ -100,4 +100,4 @@ Inspect `00-inbox/commit-log.csv` to confirm the row exists and adheres to RFC 4
 
 * **Producer**: `git-commit` invokes `commit-logger` upon verifying the created commit SHA. External or manual commits may trigger `scripts/log-commit.sh` via a Git `post-commit` hook.
 * **Storage**: `00-inbox/commit-log.csv` is an append-only raw event ledger. It is exempt from `inbox-curation` triage.
-* **Consumer**: `journal-builder` (`/journal`) consumes the accumulated records in `commit-log.csv` in batches to conduct retrospectives, drive Socratic learning loops, and synthesize daily journals in `03-records/journal/`.
+* **Consumer (planned, not built yet)**: a future `journal-builder` (`/journal`) would consume the accumulated records in `commit-log.csv` in batches to conduct retrospectives, drive Socratic learning loops, and synthesize daily journals in `03-records/journal/`.
