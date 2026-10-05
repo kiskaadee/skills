@@ -65,7 +65,7 @@ Select the target directory according to the repository's Directory Contracts:
 | **Engineering Best Practice** | `04-learning/knowledge/methods/` | `knowledge` | `<slug>.md` |
 | **Operational SOP / How-to Runbook** | `04-learning/guides/<project>/` | `guide` | `<slug>.md` |
 
-Prepare the compliant YAML frontmatter block matching the destination contract (see [AGENTS.md](../../../AGENTS.md) for templates).
+Prepare the compliant YAML frontmatter block matching the destination contract (see Brain's `AGENTS.md` for templates).
 
 ### Step 4: Interactive Checkpoint
 Present a 4-point curation checkpoint to the user:
