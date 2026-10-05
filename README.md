@@ -66,6 +66,7 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 | **[`diagnose`](skills/diagnose/SKILL.md)** | `/diagnose [symptom]` | Evidence-first troubleshooting. Progresses from raw logs to proven root cause and minimal, reversible fixes. | 49 lines |
 | **[`git-commit`](skills/git-commit/SKILL.md)** | `/git-commit` | Working-tree inspection, atomic slice decomposition, and Conventional Commit drafting. Human approves every commit. | 54 lines |
 | **[`document`](skills/document/SKILL.md)** | `/document` | Second-order knowledge classifier (Discussion, ADR, Plan, Debug Record, Knowledge). User confirms type and provides core insight. | 49 lines |
+| **[`journal-builder`](skills/journal-builder/SKILL.md)** | `/journal-builder` or `/journal` | Retrospective inquiry from engineering history. Probes understanding and discovers learning edges. | 56 lines |
 | **[`build-skill`](skills/build-skill/SKILL.md)** | `/build-skill [topic]` | Interactive design, sizing, authoring, and empirical dogfooding of agent skills. Enforces design review gate before file creation. | 48 lines |
 
 ### Vault Extensions (`extensions/`)
@@ -73,7 +74,7 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 | Skill | Status | Purpose |
 | :--- | :--- | :--- |
 | **[`draft-curation`](extensions/draft-curation/SKILL.md)** | Active | Triages, classifies, and commits incoming notes from an inbox/staging directory into structured lifecycle directories. |
-| **[`commit-logger`](extensions/commit-logger/SKILL.md)** | Standby | Immutable Git commit event capture script into a machine-readable CSV ledger (planned consumer of future `journal-builder`). |
+| **[`commit-logger`](extensions/commit-logger/SKILL.md)** | Active | Immutable Git commit event capture script into a machine-readable CSV ledger (consumed by `journal-builder`). |
 
 ---
 

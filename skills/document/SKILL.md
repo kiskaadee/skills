@@ -25,6 +25,7 @@ description: >-
 | How to build it: phases, constraints, done-definition | Plan         | [plan](references/plan-authoring.md)             |
 | What broke and why (root cause)                       | Debug Record | [debug](references/debug-record-authoring.md)    |
 | A general mental model or technique                   | Knowledge    | [knowledge](references/knowledge-authoring.md)   |
+| Daily synthesis: gains, lessons, learning edges       | Journal      | [journal](references/journal-authoring.md)       |
 
 A rich session may justify more than one (e.g. Debug Record + Discussion). Split them; don't write one hybrid document.
 
@@ -48,4 +49,5 @@ A rich session may justify more than one (e.g. Debug Record + Discussion). Split
 - The file exists at the chosen location, or we agreed no document is needed.
 
 ## Hands off to
-- `git-commit`: to commit the document if it lives in a repo.
+- `draft-curation`: to review and curate drafts staged into an inbox into lifecycle destinations.
+- `git-commit`: to commit the document if it lives directly in a repo.

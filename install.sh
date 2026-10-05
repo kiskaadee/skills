@@ -32,12 +32,11 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Active skills to install
-ACTIVE_PORTABLE_SKILLS=(build-skill diagnose document git-commit practice)
-ACTIVE_EXTENSION_SKILLS=(draft-curation)
-# Note: commit-logger is NOT installed (planned consumer of journal-builder)
+ACTIVE_PORTABLE_SKILLS=(build-skill diagnose document git-commit journal-builder practice)
+ACTIVE_EXTENSION_SKILLS=(draft-curation commit-logger)
 
 # Legacy / deprecated skills to clean up or back up if found in target
-OBSOLETE_SKILLS=(engineering-tutor engineering-investigation skill-builder documentation-router commit-logger inbox-curation)
+OBSOLETE_SKILLS=(engineering-tutor engineering-investigation skill-builder documentation-router inbox-curation)
 
 echo "=== Target: $TARGET_DIR (mode: $MODE) ==="
 
