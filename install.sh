@@ -33,11 +33,11 @@ done
 
 # Active skills to install
 ACTIVE_PORTABLE_SKILLS=(build-skill diagnose document git-commit practice)
-ACTIVE_BRAIN_SKILLS=(inbox-curation)
+ACTIVE_EXTENSION_SKILLS=(draft-curation)
 # Note: commit-logger is NOT installed (planned consumer of journal-builder)
 
 # Legacy / deprecated skills to clean up or back up if found in target
-OBSOLETE_SKILLS=(engineering-tutor engineering-investigation skill-builder documentation-router commit-logger)
+OBSOLETE_SKILLS=(engineering-tutor engineering-investigation skill-builder documentation-router commit-logger inbox-curation)
 
 echo "=== Target: $TARGET_DIR (mode: $MODE) ==="
 
@@ -50,9 +50,9 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
       missing=$((missing + 1))
     fi
   done
-  for s in "${ACTIVE_BRAIN_SKILLS[@]}"; do
+  for s in "${ACTIVE_EXTENSION_SKILLS[@]}"; do
     if [[ ! -e "$TARGET_DIR/$s" ]]; then
-      echo "  [MISSING] $s (brain)"
+      echo "  [MISSING] $s (extension)"
       missing=$((missing + 1))
     fi
   done
@@ -118,9 +118,9 @@ for s in "${ACTIVE_PORTABLE_SKILLS[@]}"; do
   fi
 done
 
-# Install brain skills
-for s in "${ACTIVE_BRAIN_SKILLS[@]}"; do
-  src="$SCRIPT_DIR/brain/$s"
+# Install extension skills
+for s in "${ACTIVE_EXTENSION_SKILLS[@]}"; do
+  src="$SCRIPT_DIR/extensions/$s"
   dest="$TARGET_DIR/$s"
 
   if [[ -L "$dest" ]]; then
@@ -134,12 +134,12 @@ for s in "${ACTIVE_BRAIN_SKILLS[@]}"; do
 
   if [[ "$MODE" == "link" ]]; then
     ln -sfn "$src" "$dest"
-    echo "  [LINKED] $s (brain) -> $dest"
+    echo "  [LINKED] $s (extension) -> $dest"
   elif [[ "$MODE" == "copy" ]]; then
     mkdir -p "$dest"
     rsync -a --delete "$src/" "$dest/"
     echo "$SCRIPT_DIR@$(git -C "$SCRIPT_DIR" rev-parse HEAD 2>/dev/null || echo unknown)" > "$dest/.managed-by-skills-repo"
-    echo "  [COPIED] $s (brain) -> $dest"
+    echo "  [COPIED] $s (extension) -> $dest"
   fi
 done
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# log-commit.sh - Deterministic Git commit event capture for Brain
+# log-commit.sh - Deterministic Git commit event capture for structured knowledge vaults
 # Appends verified commit metadata into 00-inbox/commit-log.csv
 
 set -euo pipefail
 
-BRAIN_ROOT="${BRAIN_ROOT:-$HOME/Brain}"
-LEDGER_FILE="${BRAIN_ROOT}/00-inbox/commit-log.csv"
+VAULT_ROOT="${VAULT_ROOT:-${BRAIN_ROOT:-$HOME/Brain}}"
+LEDGER_FILE="${VAULT_ROOT}/00-inbox/commit-log.csv"
 
 TARGET_REF="HEAD"
 FORCE_ALLOW_BRAIN=false
@@ -27,8 +27,8 @@ fi
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 REPO_NAME="$(basename "${REPO_ROOT}")"
 
-# 2. Anti-Recursion Invariant: Brain is non-loggable unless explicitly forced
-if [[ "${REPO_ROOT}" == "${BRAIN_ROOT}" ]] || [[ "${REPO_NAME}" == "Brain" ]]; then
+# 2. Anti-Recursion Invariant: Vault repo is non-loggable unless explicitly forced
+if [[ "${REPO_ROOT}" == "${VAULT_ROOT}" ]] || [[ "${REPO_NAME}" == "Brain" ]] || [[ "${REPO_NAME}" == "$(basename "${VAULT_ROOT}")" ]]; then
     if [[ "${FORCE_ALLOW_BRAIN}" != "true" ]]; then
         # Silent exit as a no-op to prevent recursion
         exit 0
@@ -44,13 +44,13 @@ BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "detached")"
 
 # 4. Authoritative Project Mapping
 PROJECT=""
-if [[ "${REPO_ROOT}" == "${BRAIN_ROOT}" ]] || [[ "${REPO_NAME}" == "Brain" ]]; then
+if [[ "${REPO_ROOT}" == "${VAULT_ROOT}" ]] || [[ "${REPO_NAME}" == "Brain" ]] || [[ "${REPO_NAME}" == "$(basename "${VAULT_ROOT}")" ]]; then
     PROJECT="brain"
-elif [[ -d "${BRAIN_ROOT}/06-projects/${REPO_NAME}" ]]; then
+elif [[ -d "${VAULT_ROOT}/06-projects/${REPO_NAME}" ]]; then
     PROJECT="${REPO_NAME}"
-elif [[ -d "${BRAIN_ROOT}/06-projects" ]]; then
+elif [[ -d "${VAULT_ROOT}/06-projects" ]]; then
     # Look for matching project directory containing repository reference in README.md
-    for proj_dir in "${BRAIN_ROOT}/06-projects"/*; do
+    for proj_dir in "${VAULT_ROOT}/06-projects"/*; do
         if [[ -f "${proj_dir}/README.md" ]]; then
             if grep -qi "${REPO_NAME}" "${proj_dir}/README.md"; then
                 PROJECT="$(basename "${proj_dir}")"

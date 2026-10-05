@@ -17,7 +17,7 @@ Create a Knowledge Article when an engineering effort, investigation, practice d
 2. **Non-Trivial Mental Model**: The subject involves non-obvious trade-offs, subtle failure modes, or conceptual hurdles that standard API docs or cursory tutorials gloss over.
 3. **Pedagogical Durability**: The explanation will remain valuable to an engineer months or years later, independent of transient project tasks.
 
-### Target Placement within Brain (`04-learning/knowledge/`)
+### Target Placement within Knowledge Base or Vault
 * **`concepts/`** — Disciplinary and theoretical ideas: data structures, algorithmic paradigms, concurrency models, distributed systems principles (`type: knowledge`).
 * **`methods/`** — Reusable engineering practices, workflows, and disciplines: testing strategies, investigative techniques, architectural paradigms, documentation methods (`type: knowledge`).
 * **`technologies/`** — Deep dives into tools, runtimes, and languages: environment managers, container engines, frameworks, standard library mechanics (`type: knowledge`).
@@ -169,7 +169,7 @@ Conclude with a single reflective heuristic question the reader can ask themselv
 
 ## 6. Frontmatter & Metadata Standards
 
-Knowledge articles adhere to the Brain `DirectoryContract` for `04-learning/knowledge/`:
+Knowledge articles adhere to standard YAML frontmatter metadata:
 
 ```yaml
 ---

@@ -1,14 +1,12 @@
 ---
 name: commit-logger
-description: >-
-  Record verified Git commit events as lossless, immutable records in Brain's machine-readable
-  commit ledger (00-inbox/commit-log.csv).
+description: Record verified Git commit events as lossless, immutable records in a machine-readable commit ledger (00-inbox/commit-log.csv).
 disable-model-invocation: false
 ---
 
 # Commit Logger
 
-This skill captures verified Git commit events and logs them into Brain's machine-readable event ledger (`00-inbox/commit-log.csv`).
+Vault extension: captures Git commit events into a configured knowledge-vault ledger (`00-inbox/commit-log.csv`).
 
 Its sole responsibility is **immutable fact capture**. It does not interpret, summarize, or evaluate changes.
 
@@ -28,9 +26,9 @@ Its sole responsibility is **immutable fact capture**. It does not interpret, su
    Captures the complete commit identity and essential Git attributes:
    `committed_at,repository,project,branch,commit_sha,parent_sha,subject`
 4. **Authoritative Project Resolution**:
-   Resolves the repository directory against Brain's `06-projects/` topology. If no authoritative project mapping exists, preserves the repository name and leaves `project` empty (`""`). Never guesses project associations.
+   Resolves the repository directory against the vault's project topology (e.g. `06-projects/`). If no authoritative project mapping exists, preserves the repository name and leaves `project` empty (`""`). Never guesses project associations.
 5. **Anti-Recursion Invariant**:
-   Commits inside the `Brain` repository itself (`~/Brain`) are strictly non-loggable by default to prevent recursion. Any automated or hook invocation targeting Brain exits immediately as a no-op. When Brain commits represent meaningful engineering progress, passing `--force` (or `--allow-brain`) explicitly captures the commit under project `brain`.
+   Commits inside the vault repository itself (e.g. `~/Brain`) are strictly non-loggable by default to prevent recursion. Any automated or hook invocation targeting the vault exits immediately as a no-op. When vault commits represent meaningful engineering progress, passing `--force` (or `--allow-brain`) explicitly captures the commit under project `brain`.
 6. **Idempotency Barrier**:
    The full 40-character commit SHA acts as a unique idempotency key. If the SHA already exists in `00-inbox/commit-log.csv`, the event is skipped silently.
 
@@ -50,7 +48,7 @@ Its sole responsibility is **immutable fact capture**. It does not interpret, su
 | :--- | :--- | :--- | :--- |
 | `committed_at` | Git committer timestamp | ISO-8601 with timezone (`%cI`) | `2026-10-02T16:42:13-05:00` |
 | `repository` | Top-level working directory | Directory basename | `bdinvite` |
-| `project` | Brain `06-projects/` mapping | Directory slug if known, else `""` | `bdinvite` |
+| `project` | Vault `06-projects/` mapping | Directory slug if known, else `""` | `bdinvite` |
 | `branch` | Current Git branch | Branch ref name (or `detached`) | `feat/gitops` |
 | `commit_sha` | Git commit identity | Full 40-character SHA | `a81f3c2e9b7d84f...` |
 | `parent_sha` | First parent commit SHA | Full 40-character SHA, or `""` if root | `91bc7de41f2a...` |
@@ -66,7 +64,7 @@ When invoked following a verified commit (or during catch-up):
 flowchart TD
     Start["Receive Commit Reference<br/>(SHA or HEAD)"] --> RepoCheck{"Inside Git Repo?"}
     RepoCheck -->|No| Abort["Exit with Error"]
-    RepoCheck -->|Yes| Recursion{"Repo == Brain?"}
+    RepoCheck -->|Yes| Recursion{"Repo == Vault?"}
     Recursion -->|Yes| NoOp["Silent No-Op Exit"]
     Recursion -->|No| Extract["Extract Git Metadata & Resolve Project"]
     Extract --> Dedup{"SHA already in<br/>commit-log.csv?"}
@@ -80,7 +78,7 @@ Inspect the target repository:
 ```bash
 git rev-parse --show-toplevel
 ```
-If the repository root is `~/Brain` or the directory name is `Brain`, terminate immediately.
+If the repository root matches the configured vault or the directory name is `Brain`, terminate immediately.
 
 ### Step 2: Capture via Deterministic Script
 Execute the bundled deterministic capture script:

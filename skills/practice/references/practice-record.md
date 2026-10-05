@@ -1,7 +1,7 @@
 # Practice Record Template
 
-Default location: `~/Brain/00-inbox/practice-YYYY-MM-DD-<topic>.md`.
-Before saving, ask where it goes (2-3 options, `~/Brain/00-inbox` recommended).
+Default location: configured notes inbox (or project `docs/`) as `practice-YYYY-MM-DD-<topic>.md`.
+Before saving, ask where it goes (2-3 options, configured notes inbox recommended).
 
 ```markdown
 ---

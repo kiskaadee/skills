@@ -1,14 +1,16 @@
 ---
-name: inbox-curation
+name: draft-curation
 description: >-
-  Triage, classify, format, validate, and move raw notes and drafts from 00-inbox into
-  canonical Brain knowledge graph lifecycle directories (01-plans, 02-discussions, 03-records,
-  04-learning).
+  Triage, classify, format, validate, and move raw notes and drafts from an inbox or staging
+  directory into canonical knowledge lifecycle directories (plans, discussions, records,
+  learning).
 ---
 
-# Inbox Curation & Graph Ingestion
+# Draft Curation & Knowledge Ingestion
 
-This skill governs the systematic ingestion and curation of unprocessed drafts from `00-inbox/` into the canonical lifecycle directories of the Brain knowledge graph.
+This extension skill governs the systematic ingestion and curation of unprocessed drafts from an inbox/staging directory (e.g. `00-inbox/`) into canonical lifecycle directories.
+
+> **Vault Contract**: This extension assumes a knowledge vault organized around epistemic lifecycle directories (`01-plans/`, `02-discussions/`, `03-records/`, `04-learning/`) with schema validation and semantic commit conventions.
 
 ---
 
@@ -20,10 +22,10 @@ This skill governs the systematic ingestion and curation of unprocessed drafts f
    - Incidents, regressions, root-cause analyses $\to$ `03-records/debug/` (`type: debug`)
    - General knowledge, concepts, languages $\to$ `04-learning/knowledge/` (`type: knowledge`)
    - Practical SOPs, runbooks, operation walkthroughs $\to$ `04-learning/guides/<project>/` (`type: guide`)
-2. **The Validation Gate**: A curated document MUST pass `python scripts/validate-brain.py` before any commit is made.
-3. **Zero Dangling Drafts**: Once a draft is curated and committed to its destination, the original file in `00-inbox/` must be deleted.
+2. **The Validation Gate**: If the vault has an automated validator (e.g. `python scripts/validate-brain.py`), a curated document MUST pass before any commit is made.
+3. **Zero Dangling Drafts**: Once a draft is curated and committed to its destination, the original file in the staging directory must be deleted.
 4. **Interactive Checkpoint**: The agent must present the proposed destination, frontmatter, and rationale to the user before relocating files, unless explicitly instructed to process autonomously.
-5. **Atomic Commit Boundary**: Each curated document or cohesive bundle must be committed separately with the Brain's semantic commit type (`plan`, `discussion`, `knowledge`, `guide`, `debug`).
+5. **Atomic Commit Boundary**: Each curated document or cohesive bundle must be committed separately with conventional or vault-specific semantic commit types (`plan`, `discussion`, `knowledge`, `guide`, `debug`).
 
 ---
 
@@ -65,7 +67,7 @@ Select the target directory according to the repository's Directory Contracts:
 | **Engineering Best Practice** | `04-learning/knowledge/methods/` | `knowledge` | `<slug>.md` |
 | **Operational SOP / How-to Runbook** | `04-learning/guides/<project>/` | `guide` | `<slug>.md` |
 
-Prepare the compliant YAML frontmatter block matching the destination contract (see Brain's `AGENTS.md` for templates).
+Prepare the compliant YAML frontmatter block matching the destination contract (see vault's `AGENTS.md` or templates).
 
 ### Step 4: Interactive Checkpoint
 Present a 4-point curation checkpoint to the user:
@@ -94,7 +96,7 @@ python scripts/test_validator.py
 Ensure all checks pass cleanly: frontmatter validation, link resolution, code fences, Mermaid syntax, Ruff linting, and Pyright typing.
 
 ### Step 7: Atomic Semantic Commit
-Package the curated file using the Brain's semantic commit taxonomy:
+Package the curated file using conventional or vault semantic commit taxonomy:
 - `plan(<project>): <description>`
 - `discussion(<project>): <description>`
 - `debug(<project>): <description>`

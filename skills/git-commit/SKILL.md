@@ -51,4 +51,4 @@ the repo allows it.
 
 ## Hands off to
 - `document`: if a commit carries a decision or insight worth more than a commit message.
-- `commit-logger` (Brain only): after a verified commit, if installed.
+- `commit-logger`: after a verified commit, if installed.

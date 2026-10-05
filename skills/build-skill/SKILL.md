@@ -18,9 +18,9 @@ disable-model-invocation: true
 2. **Pick the right tool.** Before writing a skill, check whether it is really:
    - a rule that always applies: one line in `AGENTS.md`;
    - a fixed command with no judgment: a script;
-   - a human procedure: a guide in Brain;
+   - a human procedure: a guide in your docs or vault;
    - a procedure that needs agent judgment: a skill. Continue.
-3. **Check overlap.** List the skills in this repo (`skills/`, `brain/`). Ask where the new
+3. **Check overlap.** List the skills in this repo (`skills/`, `extensions/`). Ask where the new
    skill stops and which existing skill it hands off to.
 4. **Size it.** Decide the shape: reference (facts consulted on demand), transformation
    (input to output), procedure (steps with checks between them), or interview (rounds of
