@@ -17,7 +17,6 @@ Use the ask-question tool if available; otherwise a numbered list.
 - Never run destructive git (`reset --hard`, `restore <file>`, `clean -fd`, force-push) without
   my explicit yes.
 - Redact secrets (tokens, keys, passwords, connection strings) from anything you print or save.
-
 ## Skills and docs
 
 - My skills live in `~/Projects/active/skills`. Edit them there, never in an installed copy.

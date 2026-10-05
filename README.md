@@ -1,14 +1,40 @@
-# skills
+# Skills
 
 **Modular, harness-agnostic skills for disciplined pair programming with coding agents.**
 
-A collection of lightweight, single-purpose skills focused on low context overhead (≤50 lines), zero ceremony, and human-approved state transitions. Designed to enforce clean git history, scientific diagnosis, Socratic practice, and durable documentation across any compliant agent platform.
+A collection of lightweight, single-purpose skills focused on low context overhead (≤80 lines), minimal ceremony, and user-approved state transitions. 
+
+Designed to support critical systems thinking, active learning, disciplined engineering, and durable documentation across any compliant agent platform.
+
+This collection was not designed for a Senior Software Engineer, but for learners, with the primary goal of maximizing long-term learning gains; the idea is to learn to think like a software engineer and architect, rather than simply producing code.
+
+---
+
+## Why Build Instead of Borrow?
+
+There are many great Skills bundles out there, written by and for experienced developers to orchestrate automated "software factories". Many existing agent workflows optimize for experienced developers who want to delegate as much implementation work as possible. 
+
+That is a reasonable goal, but it is not mine. As a learner, I need the workflow to preserve opportunities to reason, make decisions, debug, and build mental models.
+
+Copying skills crafted for someone else's workflow imports their cognitive shortcuts, and assumptions. I believe that AI is useful for much more than only producing code. 
+
+These skills exist to enforce four core principles:
+
+1. **Defeating the Comprehension Illusion**: Having an AI generate code is not the same as understanding how a system behaves. When code velocity outpaces comprehension, you end up with systems you cannot debug when production breaks. Skills like `practice` make the learner write the code and drive analysis, ensuring mental models develop alongside the codebase.
+
+2. **Intentional Epistemic Friction ("Your call")**: Great engineering requires deliberate checkpoints. Instead of letting agents make unilateral architectural choices, these skills pause at critical state transitions—requiring proven root causes before patching (`diagnose`), approving reviewable atomic slices (`git-commit`), or identifying learning opportunities that should be preserved as durable knowledge (`document`).
+
+3. **Operational Ownership**: An agent should investigate, measure, and propose concrete options, but the human engineer must own the trade-offs, failure domains, and repository history. You cannot own what you did not decide.
+
+4. **Radical Simplicity over Prompt Bloat**: Many third-party skills are brittle, multi-page prompts that consume context and hallucinate complex state machines. These skills adhere to strict line caps (≤80 lines for portable skills), the deletion test, and minimal ceremony.
 
 ---
 
 ## The System Architecture
 
-The skills form an orchestrated pair-programming workflow. `build-skill` governs meta-level skill design. Three core operational skills (`practice`, `diagnose`, `git-commit`) structure day-to-day engineering. `document` evaluates whether insights produced during work warrant durable preservation.
+The system is under active testing and continuous improvement. Currently, the skills form an orchestrated pair-programming workflow. `build-skill` governs meta-level skill design. 
+
+Three core operational skills (`practice`, `diagnose`, `git-commit`) structure day-to-day engineering. `document` evaluates whether insights produced during work warrant durable preservation.
 
 ```mermaid
 flowchart TD
@@ -42,12 +68,12 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 | **[`document`](skills/document/SKILL.md)** | `/document` | Second-order knowledge classifier (Discussion, ADR, Plan, Debug Record, Knowledge). User confirms type and provides core insight. | 49 lines |
 | **[`build-skill`](skills/build-skill/SKILL.md)** | `/build-skill [topic]` | Interactive design, sizing, authoring, and empirical dogfooding of agent skills. Enforces design review gate before file creation. | 48 lines |
 
-### Brain Extensions (`brain/`)
+### Vault Extensions (`extensions/`)
 
 | Skill | Status | Purpose |
 | :--- | :--- | :--- |
-| **[`inbox-curation`](brain/inbox-curation/SKILL.md)** | Active | Triages, classifies, and commits incoming notes from Brain's `00-inbox/` into lifecycle directories. |
-| **[`commit-logger`](brain/commit-logger/SKILL.md)** | Standby | Immutable Git commit event capture script into Brain ledger (planned consumer of future `journal-builder`). |
+| **[`draft-curation`](extensions/draft-curation/SKILL.md)** | Active | Triages, classifies, and commits incoming notes from an inbox/staging directory into structured lifecycle directories. |
+| **[`commit-logger`](extensions/commit-logger/SKILL.md)** | Standby | Immutable Git commit event capture script into a machine-readable CSV ledger (planned consumer of future `journal-builder`). |
 
 ---
 
@@ -105,4 +131,4 @@ When run:
 
 ## License
 
-Released into the public domain under the [Unlicense](LICENSE).
+Released into the public domain under the [Unlicense](UNLICENSE.md).

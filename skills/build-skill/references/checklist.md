@@ -24,14 +24,14 @@ seen. If you can't name the failure, don't add the control.
 
 Change the smallest thing that explains what went wrong:
 
-| Observed | Smallest fix |
-| :--- | :--- |
-| Skipped a verification step | Make the step's proof observable and gate the next step on it. |
-| Ignored an important rule | Move the rule into the numbered steps, where it is read at the right moment. |
-| Procedure lost in detail | Move the detail to `references/`. |
-| Wandered into another skill's job | Tighten "Use when" and "Hands off to". |
-| Repeated boilerplate | Cut the instruction or shorten it. |
-| Behaved correctly without an instruction | Delete the instruction. |
+| Observed                                 | Smallest fix                                                                 |
+| :--------------------------------------- | :--------------------------------------------------------------------------- |
+| Skipped a verification step              | Make the step's proof observable and gate the next step on it.               |
+| Ignored an important rule                | Move the rule into the numbered steps, where it is read at the right moment. |
+| Procedure lost in detail                 | Move the detail to `references/`.                                            |
+| Wandered into another skill's job        | Tighten "Use when" and "Hands off to".                                       |
+| Repeated boilerplate                     | Cut the instruction or shorten it.                                           |
+| Behaved correctly without an instruction | Delete the instruction.                                                      |
 
 Then re-run a scenario that used to work, to confirm nothing regressed.
 
