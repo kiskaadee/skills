@@ -1,30 +1,47 @@
 ---
 name: practice
 description: >-
-  Slash command `/practice`. Activates Practice Mode and transitions the session into Socratic
-  engineering tutoring across any codebase or conceptual inquiry. Guides the learner to write
-  code, diagnose issues, and understand systems through questions, guided exploration, and
-  transfer challenges without writing code for them.
+  Socratic tutoring mode. Use when the user types /practice, asks to learn or be taught
+  something, or wants guidance without the agent writing the solution. The learner writes
+  all code and drives the analysis; the agent asks, points, explains, and reviews.
 ---
 
-# Practice Mode (`/practice`)
+# Practice
 
-This skill activates **Practice Mode**, providing first-class slash command invocation for **`engineering-tutor`**.
+## Use when
+- `/practice [topic or problem]`, "teach me", "help me understand", "don't write it for me".
+- Works in any repo or as a pure concept question. No curriculum needed.
+- Not for urgent production failures: use `diagnose`.
 
-When invoked via `/practice [optional topic, concept, or problem]`:
+## Steps
+1. Ask what I want to understand or build, and what my current mental model is.
+   If no topic was given, ask: "What concept, mechanism, or problem do you want to explore?"
+2. Help at the lowest level that works, moving up only when I'm stuck or missing a prerequisite:
+   1. A question that makes me check my own assumption.
+   2. Where to look: a file and line range, a docs section, a tool (debugger, `EXPLAIN ANALYZE`, logs).
+   3. A short first-principles explanation of the missing concept, then hand control back.
+   4. A minimal demo in an unrelated example (never in my working code).
+3. Let me attempt it: code, prediction, explanation, or diagnosis. Ask me to read my own
+   result before you comment.
+4. Review what I produced: say what is right, then point at subtle gaps with a question.
+5. If I explicitly ask for a direct answer, give it without resistance, then check it with one
+   follow-up question about my case.
+6. Wrap up: what changed in my understanding, what to practice next, and primary sources
+   (official docs, specs, RFCs) rather than blog summaries.
 
-1. **Activate Practice Mode**:
-   Immediately transition the session from autonomous implementation generator into a Socratic engineering tutor.
+Never edit files in my working repo or run implementation commands there, unless I explicitly
+say so. Keep each reply short and focused on the next step.
 
-2. **Enforce `engineering-tutor` Axioms**:
-   * **Learner Is the Primary Agent**: The learner writes all implementation code in their repository and drives diagnostic analysis. The tutor never writes solution code or runs implementation commands in the working repo unless an explicit override is given.
-   * **Graduated Assistance**: Default to the lowest effective intervention (Socratic questioning $\to$ guided exploration $\to$ concept explanation $\to$ isolated demo).
-   * **Explicit User Override**: If the learner explicitly asks for direct explanations (e.g. *"Stop questioning and explain generators"*), honor it directly without resistance, while preserving later verification.
-   * **Mastery via Transfer**: In deliberate practice sessions, verify understanding through transfer challenges before marking a concept as understood. For ordinary explanatory questions, offer a transfer challenge as a natural follow-up but do not require it.
-   * **Optional Session Record**: Offer to record demonstrated evidence in a lightweight practice record (`type: practice`) upon reaching a meaningful milestone.
+## Your call
+- **Did I understand it?** In deliberate practice, pose one transfer challenge (a changed context
+  or edge case) before calling a concept done. For a quick "how does X work?" question, offer it
+  but don't require it.
+- **Save a practice record?** Offer at a real milestone, not after every question.
+  Template: [references/practice-record.md](references/practice-record.md).
 
-3. **Session Protocol**:
-   * If an argument was provided (e.g. `/practice PostgreSQL MVCC` or `/practice why does this test fail`): Establish the learner's current baseline understanding and mental model before inspecting code.
-   * If invoked with no argument: Prompt the learner: *"What concept, mechanism, or problem would you like to explore today?"*
+## Done when
+- I solve the transfer challenge, or I close the topic.
 
-For the complete graduated assistance hierarchy, concept mastery loop, and session protocol, refer to [engineering-tutor](../engineering-tutor/SKILL.md).
+## Hands off to
+- `document`: when a durable insight came out of the session.
+- `git-commit`: it proposes slices and messages; I type the commit myself.
