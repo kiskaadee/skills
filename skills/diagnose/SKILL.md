@@ -1,39 +1,49 @@
 ---
 name: diagnose
 description: >-
-  Slash command `/diagnose`. Activates the disciplined engineering investigation lifecycle
-  to troubleshoot bugs, regressions, or system anomalies using the scientific method,
-  falsifiable hypotheses, and 6-part interactive checkpoints.
+  Evidence-first troubleshooting. Use when the user types /diagnose or reports a bug,
+  regression, failing build, or unexpected system behavior. Works from raw evidence to a
+  proven root cause and a minimal, reversible fix, pausing at risky transitions.
 ---
 
-# Engineering Diagnosis (`/diagnose`)
+# Diagnose
 
-This skill activates the **Engineering Investigation Workflow**, providing first-class slash command invocation for **`engineering-investigation`**.
+## Use when
+- `/diagnose [symptom or error]`, or any "why is this broken / behaving strangely?" request.
+- If I want to find the cause myself, switch to `practice`.
 
-When invoked via `/diagnose [optional symptom, error message, or anomaly]`:
+## Steps
+1. **Observe.** Collect raw evidence first: exact error, logs, exit codes, a reproduction,
+   what changed recently, how far the failure spreads. If no symptom was given, ask for it.
+2. **Hypothesize.** List the plausible causes. Keep what the system reported separate from
+   what you infer.
+3. **Check, with a stated purpose.** Before each inspection command, say what it tests and
+   which result would confirm or rule out a hypothesis.
+4. **Narrow** until one cause is proven by evidence, not just plausible.
+5. **Fix** with the smallest reversible change.
+6. **Validate** locally (tests, linters, build), then **verify** in the environment where it
+   actually failed.
+7. **Clean up** every temporary probe (debug logs, env overrides, fixtures, test records)
+   and confirm it's gone.
 
-1. **Activate Investigation Lifecycle**:
-   Immediately transition the session into disciplined empirical reasoning following the scientific method:
-   $$\text{Observe} \longrightarrow \text{Hypothesize} \longrightarrow \text{Inspect} \longrightarrow \text{Narrow Domain} \longrightarrow \text{RCA} \longrightarrow \text{Remediate} \longrightarrow \text{Validate} \longrightarrow \text{Verify}$$
+Scale the effort to the problem: a typo gets one line, not a ceremony.
+Redact secrets (tokens, keys, connection strings) from anything you print or save.
 
-2. **Core Operational Principles**:
-   * **Separate Observation from Inference**: Clearly demarcate what the system reported (raw logs, error outputs, exit codes) from working inferences.
-   * **Rationalized Diagnostics**: State what layer of the stack each inspection command tests and what result would confirm or eliminate a working hypothesis.
-   * **Proportional Depth**: Scale the investigation to the complexity and impact of the issue; avoid ceremonial boilerplate for trivial typos.
-   * **6-Part Checkpoint Protocol**: Pause at meaningful transitions (failure domain narrowed, hypothesis eliminated, local change applied, atomic commit boundary, or production deployment handoff) to present:
-     1. *Current State*
-     2. *Reasoning*
-     3. *Changes*
-     4. *Validation*
-     5. *Next Action*
-     6. *Recovery*
-   * **Zero Secret Leakage**: Redact tokens, credentials, and private keys from diagnostic logs.
+## Checkpoints
+At risky or multi-system transitions (domain narrowed, hypothesis ruled out, change applied,
+ready to commit or deploy), pause and report in six short parts:
+**Current state** (known vs unknown), **Reasoning**, **Changes**, **Validation**
+(expected vs actual), **Next action**, **Recovery** (how to roll back).
+For trivial issues, a one-sentence status is enough.
 
-3. **Session Protocol**:
-   * If an argument was provided (e.g. `/diagnose 502 Bad Gateway on /api/v1/auth`): Begin by inspecting relevant error logs and establishing the blast radius for that specific failure.
-   * If invoked with no argument: Prompt the user: *"What unexpected symptom, error log, or regression are we investigating?"*
+## Your call
+- Which hypothesis to chase when the evidence is ambiguous.
+- Approving any step that changes state: commit, push, deploy, data change.
+- Whether the root cause taught something worth recording.
 
-4. **Completion & Handoff**:
-   The investigation terminates upon verified recovery in the target environment. If the investigation yielded architectural insights, non-obvious failure modes, or reusable operational heuristics, hand off to **`documentation-router`** to evaluate whether an ADR, Discussion, or Debug Record (`03-records/debug/`) is justified.
+## Done when
+- The fix is verified where the failure happened, and all temporary probes are removed.
 
-For the complete progression and checkpoint protocol, refer to [engineering-investigation](../engineering-investigation/SKILL.md).
+## Hands off to
+- `git-commit`: to package the fix once recovery is verified.
+- `document`: when the investigation revealed a non-obvious failure mode or design flaw.
