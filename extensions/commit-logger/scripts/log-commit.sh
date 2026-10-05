@@ -37,7 +37,7 @@ fi
 
 # 3. Extract Immutable Git Metadata
 COMMIT_SHA="$(git rev-parse "${TARGET_REF}")"
-PARENT_SHA="$(git rev-parse "${COMMIT_SHA}^" 2>/dev/null || echo "")"
+PARENT_SHA="$(git rev-parse --verify "${COMMIT_SHA}^" 2>/dev/null || echo "")"
 COMMITTED_AT="$(git show -s --format=%cI "${COMMIT_SHA}")"
 SUBJECT="$(git show -s --format=%s "${COMMIT_SHA}")"
 BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "detached")"
