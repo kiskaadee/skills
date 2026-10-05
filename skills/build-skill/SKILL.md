@@ -1,30 +1,48 @@
 ---
 name: build-skill
 description: >-
-  Slash command `/build-skill`. Activates the interactive skill-builder workflow to
-  design, size, author, and iteratively refine agent skills.
+  Interactive design and refinement of agent skills. Use when the user types /build-skill
+  to create a new skill or fix one that misbehaves.
 disable-model-invocation: true
-argument-hint: "What capability or workflow do you want to turn into a skill?"
 ---
 
-# Skill Builder (`/build-skill`)
+# Build Skill
 
-This skill activates the **Skill Builder Workflow**, providing first-class slash command invocation for **`skill-builder`**.
+## Use when
+- `/build-skill [capability]`: turning a recurring workflow or failure into a skill.
+- Fixing an existing skill after watching it misbehave on a real task.
 
-When invoked via `/build-skill [optional capability or workflow name]`:
+## Steps
+1. **Find the friction.** Ask what recurring workflow, pain point, or failure this addresses.
+   If no capability was given, ask: "What keeps going wrong, or what do you keep repeating?"
+2. **Pick the right tool.** Before writing a skill, check whether it is really:
+   - a rule that always applies: one line in `AGENTS.md`;
+   - a fixed command with no judgment: a script;
+   - a human procedure: a guide in Brain;
+   - a procedure that needs agent judgment: a skill. Continue.
+3. **Check overlap.** List the skills in this repo (`skills/`, `brain/`). Ask where the new
+   skill stops and which existing skill it hands off to.
+4. **Size it.** Decide the shape: reference (facts consulted on demand), transformation
+   (input to output), procedure (steps with checks between them), or interview (rounds of
+   questions). Add gates or checkpoints only for a failure you can name.
+5. **Write a short spec:** name (= slash command), description, steps, "Your call" items,
+   done-when signal, hand-offs, files in `references/` or `scripts/` if any.
+6. **Write it** in this repo following [references/skeleton.md](references/skeleton.md),
+   then run the checks in [references/checklist.md](references/checklist.md).
+7. **Dogfood.** Run it on a real task, read the agent's actual turns, and fix the smallest
+   thing that went wrong (see the checklist's refinement table). Re-run a case that worked
+   before to make sure nothing regressed.
 
-1. **Activate Interactive Skill Architect**:
-   Immediately transition the session into an interactive design and engineering review following the 6-stage lifecycle:
-   $$\text{Need Discovery} \longrightarrow \text{Archetype Sizing} \longrightarrow \text{Operational Controls} \longrightarrow \text{Skill Design Specification} \longrightarrow \text{Review Gate} \longrightarrow \text{Authoring \& Dogfooding}$$
+Write only in this repo. Never create copies elsewhere or wrapper skills for slash commands.
 
-2. **Core Operational Principles**:
-   * **The Human is the Architectural Authority**: The developer decides architectural intent, approves boundaries, and owns the final design. The assistant acts as an investigative coach and design reviewer.
-   * **Proportional Structure (Anti-Overengineering)**: Size the skill proportionally to its diagnosed mode (Reference, Transformation, Procedural Workflow, or Interactive Elicitation). Never force a state machine where a simple reference or schema suffices.
-   * **Mandatory Design Review Gate**: Synthesize all architectural choices into a formal **Skill Design Specification** and secure explicit human approval before generating any files.
-   * **Smallest Mechanism Refinement**: When dogfooding reveals failures, modify the smallest relevant mechanism (a gate, a promoted rule, a negative boundary) rather than rewriting the skill.
+## Your call
+- Rule, script, guide, or skill? (step 2)
+- What the skill refuses to own. (step 3)
+- **Approve the spec before any file is written.** (step 5)
+- Whether a dogfood failure is worth a fix, or acceptable.
 
-3. **Session Protocol**:
-   * If an argument was provided (e.g. `/build-skill release-notes`): Begin Stage 1 by exploring the specific friction and determining whether the capability is a Rule, Script, Guide, or Skill.
-   * If invoked with no argument: Prompt the developer: *"What recurring engineering workflow, friction point, or failure mode would you like to turn into an agent skill?"*
+## Done when
+- The skill passes the checklist and one real dogfood run behaves as the spec says.
 
-For the complete 4-tier epistemic architecture, diagnostic questions, and refinement matrix, refer to [skill-builder](../skill-builder/SKILL.md).
+## Hands off to
+- `git-commit`: to commit the new or changed skill.
