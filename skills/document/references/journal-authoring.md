@@ -9,6 +9,7 @@ A Daily Journal is a durable, evidence-grounded record of a day's engineering ac
 * **Purpose**: Capture the terminal state of a day's work across projects, record verified mental models, and preserve active learning edges for future study.
 * **Grounding**: Derived from primary evidence (commit ledger, git history) and interactive reflection, never from passive memory or auto-summarized activity narration.
 * **Mutability**: Journals are date-scoped historical records. Once curated, existing human-authored content must be preserved; subsequent journal runs may extend the same day's record with genuinely new work, learning, and reflections.
+* **Assessment Provenance**: The `assessed_commits` list in YAML frontmatter contains the full 40-character Git commit SHAs incorporated into the journal's assessment loop. This provides a deterministic, machine-readable boundary distinguishing processed history from unassessed ledger events.
 
 ---
 
@@ -22,6 +23,9 @@ date: YYYY-MM-DD
 tags:
   - project-name
   - technology-or-topic
+assessed_commits:
+  - 42927b9858c1b091bb6e78d3abcf6f9500bd7547
+  - fee7429a1064193c066b8c20bd6927977599a67f
 ---
 ```
 
