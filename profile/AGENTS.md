@@ -21,3 +21,12 @@ Use the ask-question tool if available; otherwise a numbered list.
 
 - My skills live in `~/Projects/active/skills`. Edit them there, never in an installed copy.
 - Durable notes default to `~/Brain/00-inbox/`. Use `document` to decide if one is warranted.
+
+## Workspaces and resolution
+
+- Active codebases and workspaces resolve under:
+  - `~/Projects/active/` (active tools and applications)
+  - `~/Projects/tests/` (benchmarks, experiments, and spikes)
+  - `~/Homelab/Sites/` and `~/Homelab/Core/` (self-hosted services)
+  - `~/Brain/` (knowledge vault)
+- When resolving a project from the commit ledger, search these workspace roots before asking the user.
