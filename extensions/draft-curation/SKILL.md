@@ -28,7 +28,7 @@ This extension skill governs the systematic ingestion and curation of unprocesse
 3. **Zero Dangling Drafts**: Once a draft is curated and relocated to its destination, the original file in the staging directory must be deleted.
 4. **Interactive Checkpoint**: The agent must present the proposed destination, frontmatter, and rationale to the user before relocating files, unless explicitly instructed to process autonomously.
 5. **Atomic Curation Boundary**: Each curated document or cohesive bundle is relocated and validated as an independent unit. Git history is mutated only through `git-commit`.
-6. **Unique Daily Journal & Reconciliation**: A daily journal (`03-records/journal/YYYY-MM-DD.md`) is a unique daily artifact. When a curated draft targets a date whose journal already exists, reconcile it with the existing record rather than creating a duplicate file (`-2.md`) or blindly overwriting. Reconciliation must preserve existing human edits and integrate genuinely new wins, artifacts, objectives, and reflections while avoiding duplicate entries.
+6. **Unique Daily Journal & Reconciliation**: A daily journal (`03-records/journal/YYYY-MM-DD.md`) is a unique daily artifact. When a curated draft targets a date whose journal already exists, reconcile it with the existing record rather than creating a duplicate file (`-2.md`) or blindly overwriting. Reconciliation must preserve existing human edits, union the `assessed_commits` frontmatter list, and integrate genuinely new wins, artifacts, objectives, and reflections while avoiding duplicate entries.
 
 ---
 
@@ -91,7 +91,7 @@ Present a 4-point curation checkpoint to the user:
    - Ensure external code links use forge Git URLs (never machine-specific `file:///` URIs).
 2. **Write or Reconcile Target File**:
    - *New document*: Write the transformed document directly to the destination path.
-   - *Existing daily journal*: Perform journal-aware reconciliation. Preserve existing human-authored edits, append new project sections/wins, append new decisions/artifacts, and record new learning edge outcomes without duplicating entries.
+   - *Existing daily journal*: Perform journal-aware reconciliation. Preserve existing human-authored edits, append new project sections/wins, append new decisions/artifacts, union `assessed_commits` in YAML frontmatter, and record new learning edge outcomes without duplicating entries.
 3. **Remove Staging File**: Delete the original file from `00-inbox/`.
 
 ### Step 6: Validation Pass
