@@ -5,6 +5,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_DIR="${TARGET:-$HOME/.gemini/config/skills}"
 PROFILE_TARGET="${PROFILE_TARGET:-$HOME/.gemini/config/AGENTS.md}"
+AGENTS_DIR_TARGET="${AGENTS_DIR_TARGET:-$HOME/.gemini/config/agents}"
 MODE="link"
 CHECK_ONLY=0
 
@@ -60,6 +61,16 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
       echo "  [OBSOLETE PRESENT] $obs"
     fi
   done
+  if [[ -d "$SCRIPT_DIR/profile/agents" ]]; then
+    for a in "$SCRIPT_DIR/profile/agents"/*.md; do
+      [[ -e "$a" ]] || continue
+      aname="$(basename "$a")"
+      if [[ ! -e "$AGENTS_DIR_TARGET/$aname" ]]; then
+        echo "  [MISSING] agent: $aname"
+        missing=$((missing + 1))
+      fi
+    done
+  fi
   if [[ "$missing" -eq 0 ]]; then
     echo "All active skills are present."
   fi
@@ -163,6 +174,32 @@ if [[ -d "$(dirname "$PROFILE_TARGET")" ]]; then
     cp "$profile_src" "$PROFILE_TARGET"
     echo "  [COPIED] AGENTS.md -> $PROFILE_TARGET"
   fi
+fi
+
+# Install agent personas
+if [[ -d "$SCRIPT_DIR/profile/agents" ]]; then
+  mkdir -p "$AGENTS_DIR_TARGET"
+  for a in "$SCRIPT_DIR/profile/agents"/*.md; do
+    [[ -e "$a" ]] || continue
+    aname="$(basename "$a")"
+    adest="$AGENTS_DIR_TARGET/$aname"
+    if [[ -L "$adest" ]]; then
+      target_link="$(readlink "$adest")"
+      if [[ "$target_link" != "$a" ]]; then
+        rm -f "$adest"
+      fi
+    elif [[ -f "$adest" ]]; then
+      backup_if_exists "$adest"
+    fi
+
+    if [[ "$MODE" == "link" ]]; then
+      ln -sfn "$a" "$adest"
+      echo "  [LINKED] agent: $aname -> $adest"
+    elif [[ "$MODE" == "copy" ]]; then
+      cp "$a" "$adest"
+      echo "  [COPIED] agent: $aname -> $adest"
+    fi
+  done
 fi
 
 if [[ "$backed_up" -eq 1 ]]; then
