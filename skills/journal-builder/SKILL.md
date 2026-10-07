@@ -2,7 +2,7 @@
 name: journal-builder
 description: >-
   Turn a day's accumulated engineering history into a structured journal through
-  evidence-based reconstruction, locked learning objectives, and a closed assessment loop.
+  collaborative reconstruction, locked learning objectives, and a closed assessment loop.
 ---
 
 # Journal Builder
@@ -14,20 +14,19 @@ description: >-
 - Not for deliberate coding practice drills; use `practice`.
 
 ## Steps
-1. **Target the day and check history.** Establish the date window from argument or current day.
+1. **Target the day and check history.** Establish the date window from argument or today.
    Read events from the ledger (e.g. `commit-log.csv`) or recent repository `git log`.
-   - **Provenance boundary**: A journal records the commit events incorporated into its
-     reconstruction (under Decisions & Artifacts). These references serve as the durable boundary
-     distinguishing previously assessed work from new ledger events.
-   - **Backlog check**: If older ledger events exist that are not yet incorporated in any journal
-     record, surface them and ask whether to process the older date first (preserve temporal fidelity).
-   - **Incremental run**: If a journal record already exists for the target date, compare ledger
-     events against incorporated commits. Only new substantive work proceeds to assessment.
-2. **Reconstruct by project and domain.** Group new unassessed commits by project, then by
-   technical domain (e.g. auth, deployment, architecture). Summarize what changed.
-3. **Lock learning objectives.** Select the smallest useful set of independently assessable
-   learning objectives from substantive work. Objectives must be atomic (one independently
-   testable understanding). Formulate a hidden expected answer before asking. Skip routine work.
+   - **Provenance check**: Read `assessed_commits` frontmatter across existing journals.
+     Only events whose full 40-character SHA is absent proceed as unassessed work.
+   - **Backlog check**: If unassessed events exist from prior dates, surface them and ask
+     whether to process the older backlog chronologically first.
+   - **Resolve locations**: Resolve project identities to local paths using the agent profile.
+2. **Reconstruct collaboratively.** Inspect resolved repositories (diffs, tests, docs).
+   Formulate the reconstruction checkpoint (sources, narrative, domains, uncertainties).
+   Pause and confirm the context before formulating any questions.
+3. **Lock learning objectives.** Once reconstruction is confirmed, select the smallest useful
+   set of atomic learning objectives from substantive work. Formulate a hidden expected answer
+   and rubric before asking. Skip routine work.
 4. **Run the assessment loop.** Present one objective and question at a time.
    Expect either `Answer: <explanation>` or `Skip: <reason>`.
    After every answer, give concise formative feedback: what was correct, what is missing
@@ -37,18 +36,27 @@ description: >-
    - **Incorrect / Unresolved**: provide smallest evidence (code line, diff, log) -> retry.
    - **Skip: I'm exhausted**: mark Deferred and move to next.
    - **Retries fail or Skip: I don't get it**: mark Unresolved (learning edge) and continue.
-5. **Synthesize the candidate journal.** Structure the entry with Wins by project,
-   Decisions/Artifacts, Mistakes & Learning Edges (with objective outcomes), and Technical Reflections.
+5. **Synthesize the candidate journal.** Include `assessed_commits` in YAML frontmatter.
+   Structure body with Wins by project, Decisions/Artifacts, Mistakes & Learning Edges
+   (with objective outcomes), and Technical Reflections.
 6. **Hand off to `document`.** Pass the candidate journal to `document` to classify,
    author, and stage the draft. Do not choose or prompt for storage destinations.
 
+## Reconstruction checkpoint
+Before locking objectives, present the reconstructed context:
+- **Sources**: Inspected repos, commit SHAs, related docs or notes.
+- **Narrative**: What was built, refactored, or tested, and observed results.
+- **Domains**: Technical concepts involved (e.g. auth flows, token dynamics).
+- **Uncertainties**: Missing context, unstated rationale, or ambiguous intent.
+Pause for confirmation: "Does this reconstruction match the work you want to review?"
+
 ## Your call
 - **Backlog triage**: whether to process older unassessed work before today.
-- **Confirm the day's scope**: whether the detected projects and domains match the day's work.
+- **Confirm reconstruction**: whether sources, narrative, and domains match your actual work.
 - **Respond to objectives**: provide `Answer: ...` or `Skip: <reason>`.
 
 ## Done when
-- All locked learning objectives are assessed and the candidate journal is handed off to `document`.
+- All locked learning objectives are assessed and candidate journal is handed off to `document`.
 
 ## Hands off to
 - `document`: to author and stage the candidate journal draft.
