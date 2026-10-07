@@ -98,4 +98,4 @@ Inspect `00-inbox/commit-log.csv` to confirm the row exists and adheres to RFC 4
 
 * **Producer**: `git-commit` invokes `commit-logger` upon verifying the created commit SHA. External or manual commits may trigger `scripts/log-commit.sh` via a Git `post-commit` hook.
 * **Storage**: `00-inbox/commit-log.csv` is an append-only raw event ledger. It is exempt from `inbox-curation` triage.
-* **Consumer (planned, not built yet)**: a future `journal-builder` (`/journal`) would consume the accumulated records in `commit-log.csv` in batches to conduct retrospectives, drive Socratic learning loops, and synthesize daily journals in `03-records/journal/`.
+* **Consumer**: `journal-builder` (`/journal`) consumes the accumulated records in `commit-log.csv`, resolves project directories via the active agent profile, checks assessment provenance via journal frontmatters, conducts collaborative reconstruction, and drives the closed assessment loop to synthesize daily journals in `03-records/journal/`.
