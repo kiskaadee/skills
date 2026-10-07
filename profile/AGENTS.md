@@ -29,4 +29,5 @@ Use the ask-question tool if available; otherwise a numbered list.
   - `~/Projects/tests/` (benchmarks, experiments, and spikes)
   - `~/Homelab/Sites/` and `~/Homelab/Core/` (self-hosted services)
   - `~/Brain/` (knowledge vault)
+  - `~/Config/` (system and NixOS configuration)
 - When resolving a project from the commit ledger, search these workspace roots before asking the user.
