@@ -5,7 +5,7 @@
 set -euo pipefail
 
 VAULT_ROOT="${VAULT_ROOT:-${BRAIN_ROOT:-$HOME/Brain}}"
-LEDGER_FILE="${VAULT_ROOT}/00-inbox/commit-log.csv"
+LEDGER_FILE="${LEDGER_FILE:-${VAULT_ROOT}/00-inbox/commit-log.csv}"
 
 TARGET_REF="HEAD"
 FORCE_ALLOW_BRAIN=false
@@ -48,16 +48,28 @@ if [[ "${REPO_ROOT}" == "${VAULT_ROOT}" ]] || [[ "${REPO_NAME}" == "Brain" ]] ||
     PROJECT="brain"
 elif [[ -d "${VAULT_ROOT}/06-projects/${REPO_NAME}" ]]; then
     PROJECT="${REPO_NAME}"
+elif [[ -d "${VAULT_ROOT}/06-projects/${REPO_NAME,,}" ]]; then
+    PROJECT="${REPO_NAME,,}"
 elif [[ -d "${VAULT_ROOT}/06-projects" ]]; then
-    # Look for matching project directory containing repository reference in README.md
-    for proj_dir in "${VAULT_ROOT}/06-projects"/*; do
-        if [[ -f "${proj_dir}/README.md" ]]; then
-            if grep -qi "${REPO_NAME}" "${proj_dir}/README.md"; then
-                PROJECT="$(basename "${proj_dir}")"
-                break
+    # Resolve workstation path relative to $HOME (e.g. ~/Homelab/Core, ~/Config)
+    if [[ "${REPO_ROOT}" == "${HOME}"* ]]; then
+        REL_REPO_PATH="~${REPO_ROOT#$HOME}"
+    else
+        REL_REPO_PATH="${REPO_ROOT}"
+    fi
+
+    if [[ "${REL_REPO_PATH}" != "~" && -n "${REL_REPO_PATH}" ]]; then
+        ESCAPED_PATH="${REL_REPO_PATH//./\\.}"
+        # Look for matching project directory referencing authoritative workstation path in README.md
+        for proj_dir in "${VAULT_ROOT}/06-projects"/*; do
+            if [[ -f "${proj_dir}/README.md" ]]; then
+                if grep -Eq "(^|[^a-zA-Z0-9_/-])${ESCAPED_PATH}([^a-zA-Z0-9_/-]|$)" "${proj_dir}/README.md"; then
+                    PROJECT="$(basename "${proj_dir}")"
+                    break
+                fi
             fi
-        fi
-    done
+        done
+    fi
 fi
 
 # 5. CSV Formatting (RFC 4180 Escaping)
