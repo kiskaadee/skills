@@ -6,15 +6,18 @@ Used by `build-skill` at step 6 (writing) and step 7 (dogfooding).
 
 | Check | Question |
 | :--- | :--- |
+| Name syntax | Does `name` strictly match `^[a-z0-9-]+$` (no uppercase, no underscores)? |
+| Description | Does it state what the skill does in 3rd person and name concrete triggers? (The agent routes from this alone.) |
+| Invocation | Should this ever auto-trigger? If manual only, is `disable-model-invocation: true` set? |
+| Directory layout | Uses canonical layout (`SKILL.md`, and optional `references/`, `scripts/`, `resources/`, `examples/`)? |
+| Section structure | Follows fixed sections: `Use when`, `Steps`, `Your call`, `Done when`, `Hands off to`? |
+| Size | Is `SKILL.md` 80 lines or less, with bulky material/schemas in `references/`? |
 | One job | Is there one recurring problem this skill owns? |
 | Clear edges | Does "Hands off to" say where it stops? Does "Use when" say what it is not for? |
 | One owner per rule | Is any rule here already defined elsewhere (AGENTS.md, another skill)? Point to it instead. |
 | Deletion test | Would removing each sentence change what the agent does? If not, remove it. |
 | Observable finish | Does "Done when" name a concrete signal (test passes, file exists, user approved)? |
 | Human decisions | Does "Your call" list the decisions that must stay with the user? |
-| Size | Is `SKILL.md` 80 lines or less, with bulky material in `references/`? |
-| Invocation | Should this ever auto-trigger? If not, set `disable-model-invocation: true`. |
-| Description | Does it say what the skill does and name concrete triggers? (The agent decides from this alone.) |
 | Public repo | No absolute home paths, no secrets. |
 
 Add extra controls (hard gates, state files, checkpoints) only for a failure you have actually

@@ -25,8 +25,9 @@ disable-model-invocation: true
 4. **Size it.** Decide the shape: reference (facts consulted on demand), transformation
    (input to output), procedure (steps with checks between them), or interview (rounds of
    questions). Add gates or checkpoints only for a failure you can name.
-5. **Write a short spec:** name (= slash command), description, steps, "Your call" items,
-   done-when signal, hand-offs, files in `references/` or `scripts/` if any.
+5. **Write a short spec:** name (matching `^[a-z0-9-]+$` = slash command), description
+   (3rd person, concrete triggers), manual invocation toggle if needed, steps, "Your call" items,
+   done-when signal, hand-offs, and files in canonical subdirectories (`references/`, `scripts/`, etc.).
 6. **Write it** in this repo following [references/skeleton.md](references/skeleton.md),
    then run the checks in [references/checklist.md](references/checklist.md).
 7. **Dogfood.** Run it on a real task, read the agent's actual turns, and fix the smallest
