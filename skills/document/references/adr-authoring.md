@@ -47,9 +47,9 @@ Concise framing of the problem, background forces, and the central architectural
 * Criteria against which options are evaluated.
 
 ## Considered Options
-* **Option 1: <Name>** — Brief description.
-* **Option 2: <Name>** — Brief description.
-* **Option 3: <Name>** — Brief description.
+* **Option 1: <Name>**: Brief description.
+* **Option 2: <Name>**: Brief description.
+* **Option 3: <Name>**: Brief description.
 
 ## Decision Outcome
 Chosen option: **Option X: <Name>**, because <neutral trade-off rationale grounded in decision drivers>.

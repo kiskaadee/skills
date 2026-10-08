@@ -18,9 +18,9 @@ Create a Knowledge Article when an engineering effort, investigation, practice d
 3. **Pedagogical Durability**: The explanation will remain valuable to an engineer months or years later, independent of transient project tasks.
 
 ### Target Placement within Knowledge Base or Vault
-* **`concepts/`** — Disciplinary and theoretical ideas: data structures, algorithmic paradigms, concurrency models, distributed systems principles (`type: knowledge`).
-* **`methods/`** — Reusable engineering practices, workflows, and disciplines: testing strategies, investigative techniques, architectural paradigms, documentation methods (`type: knowledge`).
-* **`technologies/`** — Deep dives into tools, runtimes, and languages: environment managers, container engines, frameworks, standard library mechanics (`type: knowledge`).
+* **`concepts/`**: Disciplinary and theoretical ideas: data structures, algorithmic paradigms, concurrency models, distributed systems principles (`type: knowledge`).
+* **`methods/`**: Reusable engineering practices, workflows, and disciplines: testing strategies, investigative techniques, architectural paradigms, documentation methods (`type: knowledge`).
+* **`technologies/`**: Deep dives into tools, runtimes, and languages: environment managers, container engines, frameworks, standard library mechanics (`type: knowledge`).
 
 ---
 
