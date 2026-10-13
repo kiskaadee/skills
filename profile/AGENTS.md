@@ -17,6 +17,16 @@ Use the ask-question tool if available; otherwise a numbered list.
 - Never run destructive git (`reset --hard`, `restore <file>`, `clean -fd`, force-push) without
   my explicit yes.
 - Redact secrets (tokens, keys, passwords, connection strings) from anything you print or save.
+
+## Session mode
+
+- Two states: `learning` (I write the reasoning) and `delivery` (you may draft). Rules:
+  `learning-contract.md` next to this file (source: `profile/learning-contract.md`).
+- One mode per session. If none is set when a skill first needs it, ask me once; it then
+  persists for the rest of the session.
+- Only I switch modes ("learn" / "deliver"). You may suggest a switch, never make it yourself.
+- Session mode overrides any skill default. Show `mode: <state>` at the top of skill output.
+
 ## Skills and docs
 
 - My skills live in `~/Projects/active/skills`. Edit them there, never in an installed copy.
@@ -27,7 +37,7 @@ Use the ask-question tool if available; otherwise a numbered list.
 - Active codebases and workspaces resolve under:
   - `~/Projects/active/` (active tools and applications)
   - `~/Projects/tests/` (benchmarks, experiments, and spikes)
-  - `~/Homelab/Sites/` and `~/Homelab/Core/` (self-hosted services)
+  - `~/Homelab/` Shared space for Homelab's Core and Sites repositories
   - `~/Brain/` (knowledge vault)
   - `~/Config/` (system and NixOS configuration)
 - When resolving a project from the commit ledger, search these workspace roots before asking the user.

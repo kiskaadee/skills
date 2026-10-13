@@ -174,6 +174,20 @@ if [[ -d "$(dirname "$PROFILE_TARGET")" ]]; then
     cp "$profile_src" "$PROFILE_TARGET"
     echo "  [COPIED] AGENTS.md -> $PROFILE_TARGET"
   fi
+
+  # Learning contract sits beside the profile, which references it by filename
+  contract_src="$SCRIPT_DIR/profile/learning-contract.md"
+  contract_dest="$(dirname "$PROFILE_TARGET")/learning-contract.md"
+  if [[ -f "$contract_dest" && ! -L "$contract_dest" ]]; then
+    backup_if_exists "$contract_dest"
+  fi
+  if [[ "$MODE" == "link" ]]; then
+    ln -sfn "$contract_src" "$contract_dest"
+    echo "  [LINKED] learning-contract.md -> $contract_dest"
+  elif [[ "$MODE" == "copy" ]]; then
+    cp "$contract_src" "$contract_dest"
+    echo "  [COPIED] learning-contract.md -> $contract_dest"
+  fi
 fi
 
 # Install agent personas
