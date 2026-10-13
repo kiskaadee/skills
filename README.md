@@ -69,6 +69,7 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 | **[`journal-builder`](skills/journal-builder/SKILL.md)** | `/journal-builder` or `/journal` | Retrospective inquiry from engineering history. Probes understanding and discovers learning edges. | 56 lines |
 | **[`reconcile-docs`](skills/reconcile-docs/SKILL.md)** | `/reconcile-docs [path]` | Reconciles historical evidence, present code reality, and future plans into canonical repo docs (README, ARCHITECTURE, ADR, ROADMAP). | 37 lines |
 | **[`build-skill`](skills/build-skill/SKILL.md)** | `/build-skill [topic]` | Interactive design, sizing, authoring, and empirical dogfooding of agent skills. Enforces design review gate before file creation. | 48 lines |
+| **[`inspect-flake-update`](skills/inspect-flake-update/SKILL.md)** | `/inspect-flake-update` | Inspects updated flake.lock inputs, reviews upstream revisions, runs nix flake check, and drafts commit messages. | 46 lines |
 
 ### Vault Extensions (`extensions/`)
 
