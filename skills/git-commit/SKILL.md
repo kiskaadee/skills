@@ -21,12 +21,16 @@ description: >-
    reverted on its own (e.g. refactor, then feature, then tests, then docs). Flag accidental
    additions: scratch files, unrelated formatting, debug code.
 3. **Order** slices so each commit builds on the previous one.
-4. **Draft messages** using the repo's types (`AGENTS.md`), otherwise Conventional Commits
+4. **Messages.** Use the repo's types (`AGENTS.md`), otherwise Conventional Commits
    (`feat`, `fix`, `refactor`, `docs`, `test`, `build`, `ci`, `chore`, ...). Match depth to
-   significance:
-   - trivial: subject only;
-   - several concrete changes: subject + bullet body;
-   - non-obvious trade-off: subject + bullets + `Rationale:` line.
+   significance: trivial = subject only; several changes = subject + bullets; non-obvious
+   trade-off = subject + bullets + `Rationale:` line.
+   - **Learning** (session mode, see profile). Follow the learning contract.
+     For each slice, list the facts: files, behavior changed, tests present or missing, risks.
+     Ask 0-2 questions drawn from the diff. I write the message. Review it against the diff
+     (type, scope, subject accuracy, overclaiming) using the contract labels, then let me revise.
+     Write a message for me only if I ask; if you do, record `shown-solution`.
+   - **Delivery.** Draft the message yourself.
 5. **Gate** each slice before committing:
    right repo; intended branch (not `main`/`master` unless the repo's `AGENTS.md` allows it);
    staged content is only this slice; tests/build run or explicitly waived; message matches
@@ -41,8 +45,10 @@ Commit without asking only if I said so in this session, and never on `main`/`ma
 the repo allows it.
 
 ## Your call
-- **How to slice.** Offer 2-3 options, recommended first, each with its draft messages.
+- **How to slice.** Offer 2-3 options, recommended first (draft messages only in delivery mode).
   Example: "1 commit" / "2 commits: refactor + feature" / "3 commits: refactor, feature, tests".
+- **Integration strategy.** Only when a real merge/rebase/cherry-pick choice exists. In learning
+  mode I pick a strategy and give my reason; you check the reason against the branch topology.
 - **Approve each commit** before it is created.
 - **What next** after the last commit: offer 2-3 actions (push, open PR, keep working, run `document`).
 
