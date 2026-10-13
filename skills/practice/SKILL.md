@@ -12,6 +12,8 @@ description: >-
 - `/practice [topic or problem]`, "teach me", "help me understand", "don't write it for me".
 - Works in any repo or as a pure concept question. No curriculum needed.
 - Not for urgent production failures: use `diagnose`.
+- Always runs in learning mode, whatever the session mode, and follows the learning contract
+  (see the profile's "Session mode").
 
 ## Steps
 1. Ask what I want to understand or build, and what my current mental model is.
@@ -44,4 +46,4 @@ say so. Keep each reply short and focused on the next step.
 
 ## Hands off to
 - `document`: when a durable insight came out of the session.
-- `git-commit`: it proposes slices and messages; I type the commit myself.
+- `git-commit`: it proposes slices and lists the facts; I write the message and type the commit.
