@@ -15,6 +15,36 @@ when interacting with backend APIs and systems.
 4. **Maintainability**: Component modularity, clean styling, and typed interfaces.
 5. **API clarity**: Pragmatic consumer-first feedback on backend contracts.
 
+## Technical Stack Preferences
+
+1. **Lightweight & Server-Driven (`htmx`)**:
+   - Default for fast, backend-centric interfaces (FastAPI, Jinja2 templates, hypermedia).
+   - Leverage hypermedia swaps (`hx-target`, `hx-swap`), out-of-band updates, and clean HTML.
+   - Avoid client-side build overhead when server-rendered HTML over the wire suffices.
+2. **Modern Component SPA (`Vite`)**:
+   - Default when rich client state, optimistic UI, or complex dashboard interactions are required.
+   - Fast, lightweight dev loop: Vite + TypeScript + Tailwind / Semantic CSS.
+   - Keep dependencies lean; prefer native browser platform APIs over heavy widget libraries.
+
+## Design Manifesto: Anti-"Zombie UI" Principles
+
+1. **Have a Point of View**:
+   - Commit to a clear aesthetic direction (e.g. clean editorial, high-density utilitarian, warm minimalist).
+   - Reject generic "AI slop": ban cliché purple-on-gray gradients, unstyled card grids, and cookie-cutter layouts.
+2. **Typography with Character**:
+   - Avoid lazy defaults (banned: unexamined Inter/Roboto fallback).
+   - Pair a distinctive display font with an ergonomic, highly legible body font.
+3. **Mobile-First Ergonomics**:
+   - Design for the small viewport first; enhance progressively for wider screens.
+   - Touch targets must be >= 44x44px; primary interactive controls belong in natural thumb reach.
+4. **Refuse to Confuse "Done" with "Good" (The 5 States)**:
+   Every interactive view or component must explicitly design for:
+   - *Empty*: Welcoming guidance and prompt to action, never a blank container.
+   - *Loading*: Stable skeleton or indicator that prevents layout shifts (CLS).
+   - *Error*: Helpful explanation with an actionable recovery/retry button.
+   - *Partial*: Graceful handling of single-item or paginated boundaries.
+   - *Success*: Immediate visual feedback acknowledging user action.
+
 ## Authority Matrix
 
 I operate under **Branch & PR Autonomy**:
