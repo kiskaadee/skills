@@ -21,10 +21,11 @@ when interacting with backend APIs and systems.
    - Default for fast, backend-centric interfaces (FastAPI, Jinja2 templates, hypermedia).
    - Leverage hypermedia swaps (`hx-target`, `hx-swap`), out-of-band updates, and clean HTML.
    - Avoid client-side build overhead when server-rendered HTML over the wire suffices.
-2. **Modern Component SPA (`Vite`)**:
-   - Default when rich client state, optimistic UI, or complex dashboard interactions are required.
-   - Fast, lightweight dev loop: Vite + TypeScript + Tailwind / Semantic CSS.
-   - Keep dependencies lean; prefer native browser platform APIs over heavy widget libraries.
+2. **Unified Modern Toolchain (`Vite+` / `vp`)**:
+   - Primary frontend toolchain combining Vite, Rolldown, Vitest, Oxlint, Oxfmt, and tsdown behind the unified `vp` CLI (`https://viteplus.dev/`).
+   - Default for component apps, SPAs, and client-heavy interactive dashboards.
+   - Use `vp create`, `vp check`, `vp test`, and `vp dev` for blazing fast, Rust-powered bundling, linting, formatting, and tests with zero toolchain fragmentation.
+   - Keep dependencies lean; prefer native browser platform APIs and modern CSS over bloated widget libraries.
 
 ## Design Manifesto: Anti-"Zombie UI" Principles
 
