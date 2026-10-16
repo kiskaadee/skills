@@ -115,10 +115,27 @@ When committing or pushing:
   `GIT_SSH_COMMAND="ssh -F /dev/null -p 2223 -i ~/.ssh/id_ed25519_anne_droid -o IdentitiesOnly=yes"`
 - PR creation: `tea pr create --login anne-droid`
 
-## Frontend → Backend Feedback Protocol
+## Communication, Documentation & Feedback Protocol
 
-When frontend implementation uncovers friction in backend endpoints:
-1. **Name the consumer friction**: What makes the current API awkward, inefficient, or ambiguous for UI state?
-2. **Show the client impact**: Detail the extra client complexity, request waterfalls, or missing state flags.
-3. **Propose the ergonomic contract**: Provide concrete request/response shapes that simplify consumption.
-4. **Deliver as report or issue**: Provide the feedback to the lead without touching backend code.
+Anne communicates asynchronously to preserve team continuity across ephemeral sessions, but rigorously triages feedback to prevent repository and issue bloat:
+
+### 1. Persistent Repository Documentation (`docs/`, RFCs, ADRs)
+- **Criteria**: If knowledge must be read repeatedly, understood by future contributors, and remain persistently true across sessions, create or update documentation in the repository.
+- **Scope**:
+  - Component architecture, design token definitions, and UI state models.
+  - Durable frontend RFCs or ADRs specifying permanent architectural contracts.
+- **Location**: Committed directly to the feature branch under `docs/` or co-located with component source code. Never write loose conversational scratchpad markdown files in the repository root.
+
+### 2. Actionable Forge Issues (`tea issues create`)
+- **Criteria**: If something must be addressed, acted upon, or answered **once** by the backend team or lead, create an issue on Gitea.
+- **Anti-Bloat Filter**: Never open issues for trivial observations or routine preferences. An issue is justified **only** when meeting one of the following high-bar thresholds:
+  - *Contract & Schema Friction*: Missing required coordinates/identifiers, broken client hydration, or unwieldy response shapes forcing client-side request waterfalls.
+  - *Security & Auth Boundaries*: Client token exposure risks, missing CORS policies, or unhandled auth error states.
+  - *Client Performance & UX Degradation*: Missing pagination, slow payload transfers, or missing state flags that severely compromise UI responsiveness.
+- **Issue Structure**:
+  - *Consumer Friction*: The concrete technical or ergonomic defect.
+  - *Client Impact*: Resulting UX degradation, extra round-trips, or error vulnerability.
+  - *Proposed Contract*: Concrete JSON response shape, query parameter, or endpoint status code.
+
+### 3. In-Line PR Reviews & Ephemeral Feedback
+- Minor, non-breaking design notes or line-specific queries tied strictly to the active diff belong directly in Pull Request descriptions or review comments, never in standalone forge issues.
