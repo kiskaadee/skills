@@ -39,17 +39,23 @@ Three core operational skills (`practice`, `diagnose`, `git-commit`) structure d
 ```mermaid
 flowchart TD
     SB["build-skill<br/>meta-level design"]
-    subgraph Core["Engineering Skills"]
-        PRAC["practice<br/>learn it: user writes the code"]
+    subgraph Core["Engineering & Learning Skills"]
+        PRAC["practice<br/>learn it: Socratic & recall"]
         DIAG["diagnose<br/>find out: evidence-first RCA"]
-        GIT["git-commit<br/>package it: clean atomic history"]
+        GIT["git-commit<br/>package it: author mode"]
+        JB["journal-builder<br/>synthesize it: facts & scaffold"]
     end
-    DOC["document<br/>preserve it: 5 epistemic types"]
+    DOC["document<br/>classify & author: 6 epistemic types"]
+    REC["reconcile-docs<br/>reconcile: history, code, roadmap"]
     Storage["Vault / Repo Docs"]
 
     SB --> Core
     Core --> DOC
+    Core --> JB
+    JB --> DOC
     DOC --> Storage
+    Storage --> REC
+    REC --> Storage
 ```
 
 Every skill features an explicit **"Your call"** checkpoint where the agent pauses and asks the human to make critical architectural, diagnostic, and commit decisions with 2-3 concrete options.
@@ -62,13 +68,13 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 
 | Skill | Trigger / Command | Purpose | Length |
 | :--- | :--- | :--- | :--- |
-| **[`practice`](skills/practice/SKILL.md)** | `/practice [topic]` | Socratic tutoring mode. The user writes all code and drives analysis. Uses graduated assistance and transfer challenges. | 47 lines |
+| **[`practice`](skills/practice/SKILL.md)** | `/practice [topic]`, `/practice review` | Socratic tutoring and delayed retrieval. Learner writes all code; uses graduated assistance, rubric calibration, and recall-before-reveal. | 50 lines |
 | **[`diagnose`](skills/diagnose/SKILL.md)** | `/diagnose [symptom]` | Evidence-first troubleshooting. Progresses from raw logs to proven root cause and minimal, reversible fixes. | 49 lines |
-| **[`git-commit`](skills/git-commit/SKILL.md)** | `/git-commit` | Working-tree inspection, atomic slice decomposition, and Conventional Commit drafting. Human approves every commit. | 54 lines |
-| **[`document`](skills/document/SKILL.md)** | `/document` | Second-order knowledge classifier (Discussion, ADR, Plan, Debug Record, Knowledge). User confirms type and provides core insight. | 49 lines |
-| **[`journal-builder`](skills/journal-builder/SKILL.md)** | `/journal-builder` or `/journal` | Retrospective inquiry from engineering history. Probes understanding and discovers learning edges. | 56 lines |
+| **[`git-commit`](skills/git-commit/SKILL.md)** | `/git-commit` | Working-tree inspection, atomic slice decomposition, and author-driven message authoring in learning sessions. User approves every commit. | 60 lines |
+| **[`document`](skills/document/SKILL.md)** | `/document` | Second-order knowledge classifier (Discussion, ADR, Plan, Debug Record, Knowledge, Journal). User confirms type and provides core insight. | 53 lines |
+| **[`journal-builder`](skills/journal-builder/SKILL.md)** | `/journal-builder` or `/journal` | Two-phase daily engineering review: generates factual skeleton with question blanks, then reviews and calibrates user reasoning. | 58 lines |
 | **[`reconcile-docs`](skills/reconcile-docs/SKILL.md)** | `/reconcile-docs [path]` | Reconciles historical evidence, present code reality, and future plans into canonical repo docs (README, ARCHITECTURE, ADR, ROADMAP). | 37 lines |
-| **[`build-skill`](skills/build-skill/SKILL.md)** | `/build-skill [topic]` | Interactive design, sizing, authoring, and empirical dogfooding of agent skills. Enforces design review gate before file creation. | 48 lines |
+| **[`build-skill`](skills/build-skill/SKILL.md)** | `/build-skill [topic]` | Interactive design, sizing, authoring, and empirical dogfooding of agent skills. Enforces design review gate before file creation. | 49 lines |
 | **[`inspect-flake-update`](skills/inspect-flake-update/SKILL.md)** | `/inspect-flake-update` | Inspects updated flake.lock inputs, reviews upstream revisions, runs nix flake check, and drafts commit messages. | 46 lines |
 
 ### Vault Extensions (`extensions/`)
@@ -82,13 +88,14 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 
 ## Skill Interaction Matrix
 
-| From \ To | Practice | Diagnose | Git Commit | Document | Build Skill |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Practice** | — | yields for production incidents | learner types the commit | optional handoff on key insights | — |
-| **Diagnose** | yields if user wants to find cause | — | hands off to package verified fix | hands off if RCA reveals non-obvious lesson | — |
-| **Git Commit** | learner-controlled | packages remediation result | — | delegates if commit warrants deeper doc | — |
-| **Document** | consumes practice milestones | consumes RCA findings | packages docs if committed | — | — |
-| **Build Skill** | — | — | delegates all commits | delegates all documentation | applies deletion test to itself |
+| From \ To | Practice | Diagnose | Git Commit | Journal Builder | Document | Reconcile Docs |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Practice** | — | yields for production incidents | learner types the commit | feeds learning edges | optional handoff on key insights | — |
+| **Diagnose** | yields if user wants to find cause | — | hands off to package verified fix | feeds incident root causes | hands off if RCA reveals non-obvious lesson | — |
+| **Git Commit** | learner-controlled | packages remediation result | — | records commit events to ledger | delegates if commit warrants deeper doc | provides commit history |
+| **Journal Builder** | hands off unresolved gaps | hands off active defects | assesses ledger events | — | hands off candidate journal draft | — |
+| **Document** | consumes practice milestones | consumes RCA findings | packages docs if committed | consumes completed journal drafts | — | provides ADRs and plans |
+| **Reconcile Docs** | — | — | verifies commit reality | — | audits ADRs and plans | — |
 
 ---
 
@@ -96,7 +103,9 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 
 1. **Investigation to History**: `diagnose` (verify root cause) -> `git-commit` (atomic slice approval) -> `document` (optional Debug Record / ADR).
 2. **Deliberate Practice to Knowledge**: `practice` (solve transfer challenge) -> `document` (author durable knowledge article).
-3. **Skill Design Loop**: `build-skill` (approve spec) -> dogfood run -> minimal mechanism refinement.
+3. **Retrospective Scaffolding to Journal**: `commit-logger` (event ledger) -> `journal-builder` (fact skeleton & question blanks) -> user fills reasoning -> curation & calibration -> `draft-curation`.
+4. **Documentation Reconciliation**: `reconcile-docs` (audit history, code reality, roadmap) -> propose updates to README / ARCHITECTURE / ADRs -> user approves.
+5. **Skill Design Loop**: `build-skill` (approve spec) -> dogfood run -> minimal mechanism refinement.
 
 ---
 
