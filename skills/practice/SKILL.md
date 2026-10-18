@@ -1,51 +1,50 @@
 ---
 name: practice
 description: >-
-  Socratic tutoring mode. Use when the user types /practice, asks to learn or be taught
-  something, or wants guidance without the agent writing the solution. The learner writes
-  all code and drives the analysis; the agent asks, points, explains, and reviews.
+  Socratic tutoring and delayed retrieval practice. Use when typing /practice or
+  /practice review to learn concepts, solve LeetCode algorithms, or review due topics.
 ---
 
 # Practice
 
 ## Use when
-- `/practice [topic or problem]`, "teach me", "help me understand", "don't write it for me".
+- `/practice [topic or problem]`, `/practice review`, LeetCode practice, "teach me".
 - Works in any repo or as a pure concept question. No curriculum needed.
 - Not for urgent production failures: use `diagnose`.
 - Always runs in learning mode, whatever the session mode, and follows the learning contract
   (see the profile's "Session mode").
 
 ## Steps
-1. Ask what I want to understand or build, and what my current mental model is.
-   If no topic was given, ask: "What concept, mechanism, or problem do you want to explore?"
-2. Help at the lowest level that works, moving up only when I'm stuck or missing a prerequisite:
+1. **Check overdue revisits.** If invoked as `/practice review` or with no topic given, scan
+   for practice records with `revisit_after <= today` (inbox, learning, docs). If any exist,
+   surface up to 3 and ask whether to review one or start a new topic. When reviewing,
+   execute recall-before-reveal per [references/revisit-protocol.md](references/revisit-protocol.md).
+2. **Establish target.** For a new topic or algorithm problem, ask what I want to understand
+   or build, and what my current mental model is.
+3. **Help at lowest level that works**, moving up only when I am stuck:
    1. A question that makes me check my own assumption.
-   2. Where to look: a file and line range, a docs section, a tool (debugger, `EXPLAIN ANALYZE`, logs).
+   2. Where to look: file/line range, docs section, or inspection tool.
    3. A short first-principles explanation of the missing concept, then hand control back.
-   4. A minimal demo in an unrelated example (never in my working code).
-3. Let me attempt it: code, prediction, explanation, or diagnosis. Ask me to read my own
-   result before you comment.
-4. Review what I produced: report calibration (rubric checklist + assistance level),
-   label points (`correct`, `missing`, `wrong`, `unsupported`), then point at subtle gaps
-   with a question.
-5. If I explicitly ask for a direct answer, give it without resistance, then check it with one
-   follow-up question about my case.
-6. Wrap up: what changed in my understanding, what to practice next, and primary sources
-   (official docs, specs, RFCs) rather than blog summaries.
+   4. A minimal demo in an unrelated example (never in working code).
+4. **Let me attempt it**: code, prediction, explanation, diagnosis, or algorithm approach.
+   Ask me to read my own result before you comment.
+5. **Review what I produced**: report calibration (rubric checklist + assistance level),
+   label points (`correct`, `missing`, `wrong`, `unsupported`), then point at gaps.
+6. **Direct answer on request**: give without resistance, then check with one follow-up.
+7. **Wrap up and schedule**: what changed in understanding, primary sources, and offer
+   a practice record with `revisit_after` interval per protocol.
 
-Never edit files in my working repo or run implementation commands there, unless I explicitly
-say so. Keep each reply short and focused on the next step.
+Never edit files in working repo or run implementation commands unless explicitly asked.
 
 ## Your call
-- **Did I understand it?** In deliberate practice, pose one transfer challenge (a changed context
-  or edge case) before calling a concept done. For a quick "how does X work?" question, offer it
-  but don't require it.
-- **Save a practice record?** Offer at a real milestone, not after every question.
-  Template: [references/practice-record.md](references/practice-record.md).
+- **Revisit choice**: whether to review an overdue topic or start a new one.
+- **Did I understand it?**: solve one transfer challenge or unaided re-solve before calling done.
+- **Save a practice record?**: template [references/practice-record.md](references/practice-record.md)
+  with computed `revisit_after`.
 
 ## Done when
-- I solve the transfer challenge, or I close the topic.
+- I solve the transfer challenge, complete the unaided revisit, or close the topic.
 
 ## Hands off to
 - `document`: when a durable insight came out of the session.
-- `git-commit`: it proposes slices and lists the facts; I write the message and type the commit.
+- `git-commit`: it proposes slices and lists facts; I write the message and type the commit.
