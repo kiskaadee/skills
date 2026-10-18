@@ -32,9 +32,9 @@ description: >-
      Write a message for me only if I ask; if you do, record `shown-solution`.
    - **Delivery.** Draft the message yourself.
 5. **Gate** each slice before committing:
-   right repo; intended branch (not `main`/`master` unless the repo's `AGENTS.md` allows it);
-   staged content is only this slice; tests/build run or explicitly waived; message matches
-   the diff.
+   right repo; commit to current branch (assume branch decision was locked before edits;
+   verify not `main`/`master` unless the repo's `AGENTS.md` allows it); staged content is
+   only this slice; tests/build run or explicitly waived; message matches the diff.
 6. **Commit** the approved slice by staging exactly its files or hunks (never a blind
    `git add -A` when other changes exist), then verify: new SHA, `git log -1`, what remains
    in the working tree.

@@ -14,6 +14,7 @@ Use the ask-question tool if available; otherwise a numbered list.
 ## Hard rules
 
 - Never commit to `main`/`master` unless the repo's own `AGENTS.md` allows it.
+- Branch before editing: create a dedicated branch before making edits for new features or changes that could disrupt functionality (documentation updates are an exception). Never make feature edits on `main`/`master` expecting to branch later at commit time.
 - Never run destructive git (`reset --hard`, `restore <file>`, `clean -fd`, force-push) without
   my explicit yes.
 - Redact secrets (tokens, keys, passwords, connection strings) from anything you print or save.
@@ -41,6 +42,7 @@ Use the ask-question tool if available; otherwise a numbered list.
   - `~/Brain/` (knowledge vault)
   - `~/Config/` (system and NixOS configuration)
 - When resolving a project from the commit ledger, search these workspace roots before asking the user.
+- To create new projects or repositories, always use `new-repo` (source: `~/Projects/active/new-repo`). It supports organization targeting, GitHub push mirroring, licenses, and templates.
 
 ## Agent Directory
 
