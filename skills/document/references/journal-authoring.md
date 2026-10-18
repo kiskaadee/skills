@@ -1,15 +1,15 @@
 # Journal Authoring Specification
 
-A Daily Journal is a durable, evidence-grounded record of a day's engineering accomplishments, architectural decisions, and the learning edges identified through retrospective reflection.
+A Daily Journal is an evidence-grounded record of a day's engineering accomplishments, architectural decisions, and human-authored reasoning on key concepts.
 
 ---
 
 ## 1. Epistemic Role
 
-* **Purpose**: Capture the terminal state of a day's work across projects, record verified mental models, and preserve active learning edges for future study.
-* **Grounding**: Derived from primary evidence (commit ledger, git history) and interactive reflection, never from passive memory or auto-summarized activity narration.
-* **Mutability**: Journals are date-scoped historical records. Once curated, existing human-authored content must be preserved; subsequent journal runs may extend the same day's record with genuinely new work, learning, and reflections.
-* **Assessment Provenance**: The `assessed_commits` list in YAML frontmatter contains the full 40-character Git commit SHAs incorporated into the journal's assessment loop. This provides a deterministic, machine-readable boundary distinguishing processed history from unassessed ledger events.
+* **Purpose**: Capture the terminal state of a day's work across projects, record human-authored mental models, and preserve active learning edges for future study.
+* **Grounding**: Derived from primary evidence (commit ledger, git history) and user reflection, never from auto-summarized activity narration or promotional praise.
+* **Scaffolding vs Review**: In learning mode, the journal begins as an agent-generated scaffold with facts and question blanks. The engineer completes the blanks, and curation adds diagnostic feedback and calibration.
+* **Assessment Provenance**: The `assessed_commits` list in YAML frontmatter contains the full 40-character Git commit SHAs incorporated into the journal. This provides a deterministic boundary distinguishing processed history from unassessed ledger events.
 
 ---
 
@@ -26,6 +26,8 @@ tags:
 assessed_commits:
   - 42927b9858c1b091bb6e78d3abcf6f9500bd7547
   - fee7429a1064193c066b8c20bd6927977599a67f
+status: draft | completed
+revisit_after: YYYY-MM-DD # optional
 ---
 ```
 
@@ -36,25 +38,26 @@ assessed_commits:
 ### 1. Document Title
 `# Daily Journal: YYYY-MM-DD`
 
-### 2. Wins (`## Wins`)
-Subdivided by project or scope (`### <Project Name>`).
-Bullet points detailing concrete accomplishments, architectural boundaries established, and working implementations. Use plain, precise technical language.
+### 2. Facts (Agent) (`## Facts (Agent)`)
+Grouped by project (`### <Project Name>`).
+Plain, concise technical facts without promotional adjectives:
+- **Commits**: `<short-sha>` description of change.
+- **Artifacts**: links to ADRs, plans, debug records.
+- **Evidence**: key files touched, test results.
 
-### 3. Decisions, Incidents & Artifacts (`## Decisions, Incidents & Artifacts`)
-Links to formal artifacts produced or updated during the day:
-- Architectural Decision Records (`03-records/decisions/` or repo `docs/`)
-- Implementation Plans & Roadmaps (`01-plans/`)
-- Debug Records & Post-mortems (`03-records/debug/`)
-- Key commit SHAs or pull requests.
+### 3. Learning & Reasoning (User) (`## Learning & Reasoning (User)`)
+Numbered prompts derived from substantive architectural changes, invariants, trade-offs, or bug diagnoses:
+- `### 1. <Question prompt>`
+- User's explanation in their own words.
 
-### 4. Mistakes, Gaps & Learning Edges (`## Mistakes, Gaps & Learning Edges`)
-Organized by project/domain. Records the epistemic state of assessed learning objectives:
-- **Achieved**: The concept or invariant the user successfully demonstrated and explained.
-- **Unresolved**: Knowledge gaps where the user struggled or answered `Skip: I don't get it`. Includes the concrete code/evidence needed for follow-up.
-- **Deferred**: Objectives skipped due to external constraints (e.g. `Skip: I'm exhausted`).
+### 4. Feedback & Calibration (Agent) (`## Feedback & Calibration (Agent)`)
+Filled during review/curation after user answers:
+- **Assistance**: `independent` | `hints` | `substantial` | `shown-solution`
+- **Rubric Checklist**:
+  - Invariant / Mechanism: [✓ | ✗ | ~] <note>
+  - Edge cases / Failure modes: [✓ | ✗ | ~] <note>
+  - Trade-offs / Constraints: [✓ | ✗ | ~] <note>
+- **Diagnostic Feedback**: points labeled `correct`, `missing`, `wrong`, or `unsupported`.
 
-### 5. Technical & Personal Reflections (`## Technical & Personal Reflections`)
-Synthesized takeaways on system behavior, engineering discipline, trade-offs, and shifts in mental models.
-
-### 6. Next Objectives (`## Next Objectives`)
-Optional forward-looking priorities for upcoming sessions.
+### 5. Open / Gaps (`## Open / Gaps`)
+Unresolved uncertainties, deferred questions, or edge cases identified during review.

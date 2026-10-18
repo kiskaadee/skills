@@ -25,7 +25,7 @@ description: >-
 | How to build it: phases, constraints, done-definition | Plan         | [plan](references/plan-authoring.md)             |
 | What broke and why (root cause)                       | Debug Record | [debug](references/debug-record-authoring.md)    |
 | A general mental model or technique                   | Knowledge    | [knowledge](references/knowledge-authoring.md)   |
-| Daily synthesis: gains, lessons, learning edges       | Journal      | [journal](references/journal-authoring.md)       |
+| Daily synthesis: facts, reasoning, calibration        | Journal      | [journal](references/journal-authoring.md)       |
 
 A rich session may justify more than one (e.g. Debug Record + Discussion). Split them; don't write one hybrid document.
 

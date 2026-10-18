@@ -1,64 +1,58 @@
 ---
 name: journal-builder
 description: >-
-  Turn a day's accumulated engineering history into a structured journal through
-  collaborative reconstruction, locked learning objectives, and a closed assessment loop.
+  Turn a day's engineering history into a factual journal and learning scaffold.
+  Produces facts and question blanks for the user to answer, then evaluates them.
 ---
 
 # Journal Builder
 
 ## Use when
 - `/journal-builder [YYYY-MM-DD]` or `/journal [YYYY-MM-DD]` (defaults to today).
-- End of a workday or sprint to review history, test understanding, and record learning edges.
-- Not for standalone changelogs; use git log directly.
-- Not for deliberate coding practice drills; use `practice`.
+- End of a workday or sprint to record facts and practice recalling key reasoning.
+- Not for standalone changelogs: use git log directly.
+- Not for deliberate coding practice drills: use `practice`.
 
 ## Steps
-1. **Target the day and check history.** Establish the date window from argument or today.
-   Read events from the ledger (e.g. `commit-log.csv`) or recent repository `git log`.
-   - **Provenance check**: Read `assessed_commits` frontmatter across existing journals.
-     Only events whose full 40-character SHA is absent proceed as unassessed work.
+1. **Target the day and check history.** Establish date from argument or today.
+   Check if a draft scaffold exists for that date with filled answers; if so, skip to step 5.
+   Read events from commit ledger (e.g. `commit-log.csv`) or repository `git log`.
+   - **Provenance check**: Read `assessed_commits` across existing journals. Only events
+     whose full 40-character SHA is absent proceed as unassessed work.
    - **Backlog check**: If unassessed events exist from prior dates, surface them and ask
      whether to process the older backlog chronologically first.
-   - **Resolve locations**: Resolve project identities to local paths using the agent profile.
-2. **Reconstruct collaboratively.** Inspect resolved repositories (diffs, tests, docs).
-   Formulate the reconstruction checkpoint (sources, narrative, domains, uncertainties).
-   Pause and confirm the context before formulating any questions.
-3. **Lock learning objectives.** Once reconstruction is confirmed, select the smallest useful
-   set of atomic learning objectives from substantive work. Formulate a hidden expected answer
-   and rubric before asking. Skip routine work.
-4. **Run the assessment loop.** Present one objective and question at a time.
-   Expect either `Answer: <explanation>` or `Skip: <reason>`.
-   After every answer, give concise formative feedback: what was correct, what is missing
-   or imprecise, and the decision. Never pass an answer that omitted material understanding.
-   - **Demonstrated**: core understanding articulated -> mark Achieved, move to next.
-   - **Partially demonstrated**: material understanding missing -> targeted follow-up question.
-   - **Incorrect / Unresolved**: provide smallest evidence (code line, diff, log) -> retry.
-   - **Skip: I'm exhausted**: mark Deferred and move to next.
-   - **Retries fail or Skip: I don't get it**: mark Unresolved (learning edge) and continue.
-5. **Synthesize the candidate journal.** Include `assessed_commits` in YAML frontmatter.
-   Structure body with Wins by project, Decisions/Artifacts, Mistakes & Learning Edges
-   (with objective outcomes), and Technical Reflections.
-6. **Hand off to `document`.** Pass the candidate journal to `document` to classify,
-   author, and stage the draft. Do not choose or prompt for storage destinations.
-
-## Reconstruction checkpoint
-Before locking objectives, present the reconstructed context:
-- **Sources**: Inspected repos, commit SHAs, related docs or notes.
-- **Narrative**: What was built, refactored, or tested, and observed results.
-- **Domains**: Technical concepts involved (e.g. auth flows, token dynamics).
-- **Uncertainties**: Missing context, unstated rationale, or ambiguous intent.
-Pause for confirmation: "Does this reconstruction match the work you want to review?"
+   - **Resolve locations**: Resolve project identities to local paths using agent profile.
+2. **Reconstruct facts.** Inspect repositories (diffs, tests, docs). Group by project:
+   commit SHAs, files touched, passing/failing tests, and links to ADRs or plans.
+3. **Formulate learning questions.** Follow the learning contract. Select 0-3 questions
+   from substantive work (architectural decisions, invariants, trade-offs, hard bugs).
+   Skip routine work. Prepare hidden expected answers grounded in the diffs. Zero questions
+   is a valid outcome if work was routine.
+4. **Author scaffold draft.**
+   - **Learning mode** (session mode, see profile): write draft with `status: draft`. Include
+     `assessed_commits`, `## Facts (Agent)` grouping commits and artifacts, `## Learning & Reasoning (User)`
+     with question headers and blanks (`[Your answer / explanation]`), and an empty `## Open / Gaps`.
+     Stage draft in configured notes inbox (e.g. `00-inbox/`) and prompt me to fill the blanks.
+   - **Delivery mode**: draft concise facts and brief summary without blanks, avoiding promotional
+     praise ("masterfully", "expert").
+5. **Review completed scaffold.** When evaluating a filled draft:
+   - Check answers against code evidence and invariants.
+   - Fill `## Feedback & Calibration (Agent)`: label points (`correct`, `missing`, `wrong`,
+     `unsupported`) and provide calibration rubric checklist (Invariant, Edge cases, Trade-offs)
+     with assistance level.
+   - Keep my original wording intact; never overwrite my answers with AI summaries.
+   - Move unresolved points to `## Open / Gaps`. Set `status: completed`.
+6. **Hand off to `document` or `draft-curation`.** Pass completed journal to stage or relocate.
 
 ## Your call
 - **Backlog triage**: whether to process older unassessed work before today.
-- **Confirm reconstruction**: whether sources, narrative, and domains match your actual work.
-- **Respond to objectives**: provide `Answer: ...` or `Skip: <reason>`.
+- **Review questions**: whether questions target the right decisions, or to skip any question.
+- **Save destination**: confirm final journal location (default: `03-records/journal/YYYY-MM-DD.md`).
 
 ## Done when
-- All locked learning objectives are assessed and candidate journal is handed off to `document`.
+- Scaffold draft is staged with blanks (Phase 1), or filled scaffold is evaluated and completed (Phase 2).
 
 ## Hands off to
-- `document`: to author and stage the candidate journal draft.
-- `practice`: if an unresolved learning edge warrants an isolated deliberate practice drill.
+- `draft-curation`: to curate and relocate completed journal from inbox to canonical archive.
+- `practice`: if an unresolved gap warrants an isolated deliberate practice drill.
 - `diagnose`: if reflection identified an active, unexplained system failure.
