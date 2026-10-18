@@ -19,8 +19,10 @@ defines what each mode means.
    then a demo in an unrelated example.
 4. **Record assistance** with every attempt: `independent`, `hints`, `substantial`, or `shown-solution`.
 5. **Give diagnostic feedback.** Check the attempt against the evidence and label each point
-   `correct`, `missing`, `wrong`, or `unsupported`. Then let the user revise. Never praise or rank
-   the user ("mastered", "masterfully").
+   `correct`, `missing`, `wrong`, or `unsupported`. Provide a calibration rubric checklist
+   evaluating core engineering dimensions (`Invariant/Mechanism`, `Edge cases/Failure modes`,
+   `Trade-offs/Constraints`) alongside the assistance level (`independent`, `hints`, etc.).
+   Never praise or rank the user ("mastered", "masterfully").
 6. **Keep gaps visible.** An unanswered question stays blank or is marked `open`. The agent does
    not fill it in.
 

@@ -25,7 +25,9 @@ description: >-
    4. A minimal demo in an unrelated example (never in my working code).
 3. Let me attempt it: code, prediction, explanation, or diagnosis. Ask me to read my own
    result before you comment.
-4. Review what I produced: say what is right, then point at subtle gaps with a question.
+4. Review what I produced: report calibration (rubric checklist + assistance level),
+   label points (`correct`, `missing`, `wrong`, `unsupported`), then point at subtle gaps
+   with a question.
 5. If I explicitly ask for a direct answer, give it without resistance, then check it with one
    follow-up question about my case.
 6. Wrap up: what changed in my understanding, what to practice next, and primary sources

@@ -10,9 +10,18 @@ date: YYYY-MM-DD
 project: <project-name or none>
 topics: [<topic-1>, <topic-2>]
 status: completed | active
+assistance: independent | hints | substantial | shown-solution
+revisit_after: YYYY-MM-DD
 ---
 
 # Practice: <topic or problem>
+
+## Calibration
+- **Assistance**: independent | hints | substantial | shown-solution
+- **Rubric**:
+  - Invariant / Mechanism: [✓ | ✗ | ~] <note>
+  - Edge cases / Failure modes: [✓ | ✗ | ~] <note>
+  - Trade-offs / Constraints: [✓ | ✗ | ~] <note>
 
 ## Starting point
 The question, bug, or mechanism I set out to understand.
