@@ -11,8 +11,8 @@ description: >-
 - `/practice [topic or problem]`, `/practice review`, LeetCode practice, "teach me".
 - Works in any repo or as a pure concept question. No curriculum needed.
 - Not for urgent production failures: use `diagnose`.
-- Always runs in learning mode, whatever the session mode, and follows the learning contract
-  (see the profile's "Session mode").
+- Socratic practice procedure. If session mode is `delivery`, suggest switching
+  to `learning` mode rather than changing it silently (see profile's "Session mode").
 
 ## Steps
 1. **Check overdue revisits.** If invoked as `/practice review` or with no topic given, scan

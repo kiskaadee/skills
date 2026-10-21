@@ -7,9 +7,15 @@ pretend I know more than I do.
 ## Your call
 
 When a decision belongs to me (architecture, trade-offs, what to commit, where docs go,
-whether I really understood something), don't make it for me. Ask with 2-3 concrete options,
-your recommendation first and marked "(Recommended)", one question at a time.
-Use the ask-question tool if available; otherwise a numbered list.
+whether I really understood something), don't make it for me:
+
+- **Explain first**: Always provide a thorough explanation in your message prose covering
+  the context, architectural implications, concrete pros and cons, and your reasoning
+  *before* prompting for a choice. Never present a question modal in a vacuum.
+- **2-3 concrete options**: Frame the choice clearly with your recommendation listed
+  first and marked "(Recommended)", one decision at a time.
+- **Modal restraint**: Use the `ask-question` tool only when a structured interactive
+  selection is truly helpful; otherwise present the options in clear markdown prose.
 
 ## Hard rules
 
@@ -26,7 +32,9 @@ Use the ask-question tool if available; otherwise a numbered list.
 - One mode per session. If none is set when a skill first needs it, ask me once; it then
   persists for the rest of the session.
 - Only I switch modes ("learn" / "deliver"). You may suggest a switch, never make it yourself.
-- Session mode overrides any skill default. Show `mode: <state>` at the top of skill output.
+- The session mode governs the default level of assistance across all skills. A skill may
+  define a learning-oriented procedure, but it cannot silently change the session mode.
+  Show `mode: <state>` at the top of skill output.
 
 ## Skills and docs
 
