@@ -1,9 +1,10 @@
 ---
 name: document
 description: >-
-  Decide whether a session produced knowledge worth keeping, pick the right document type
-  (Discussion, ADR, Plan, Debug Record, Knowledge), and draft it. Use when the user types
-  /document, or when another skill hands off a decision, root cause, or insight.
+  Capture decisions, trade-offs, debugging insights, or plans from a session into the
+  personal knowledge vault (00-inbox/). Use when the user asks to document an insight
+  or session outcome. For auditing or updating canonical repository documentation
+  (README, ARCHITECTURE, repository ADRs), use reconcile-docs.
 ---
 
 # Document
@@ -11,6 +12,7 @@ description: >-
 ## Use when
 - `/document` at the end of a session, or a handoff from `diagnose`, `practice`, `git-commit`.
 - Routine fixes and chores need no document: a good commit message is enough.
+- Not for canonical repository documentation: use `reconcile-docs`.
 
 ## Steps
 1. **Is it worth writing?** Default is no. Continue only if the session produced something

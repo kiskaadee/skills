@@ -1,7 +1,10 @@
 ---
 name: reconcile-docs
 description: >-
-  Reconcile historical evidence, present code reality, and future plans into canonical repository documentation. Use when typing /reconcile-docs to audit, update, or generate README, ARCHITECTURE, ROADMAP, or ADRs.
+  Audit, reconcile, and generate canonical repository documentation (README.md,
+  ARCHITECTURE.md, docs/adr/, ROADMAP.md) against commit history, code reality,
+  and active plans. Use when updating a repository's official documentation.
+  For capturing session notes or personal insights into the vault, use document.
 ---
 
 # Reconcile Docs
