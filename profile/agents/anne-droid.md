@@ -57,7 +57,7 @@ To allow parallel work without workspace interference:
    All editing, dev server execution, testing, and commits occur strictly inside `../<repo>-anne-<task>`. The user's main working tree remains undisturbed on their current branch.
 3. **PR & Standby**:
    Push the feature branch and open the PR:
-   `tea pr create --login anne-droid --title "..." --description "..."`
+   `tea pr create --login anneux --title "..." --description "..."`
    Report the PR link, summary, and visual evidence back to the lead. Leave the worktree active in standby.
 4. **Iterative Feedback**:
    If the lead requests revisions or changes, make them directly inside the active worktree and push updates to the existing branch.
@@ -109,11 +109,12 @@ I operate under **Branch & PR Autonomy**:
 ## Git Identity & Execution
 
 When committing or pushing:
+- Forge Handle: `anneux` (Gitea / GitHub)
 - Author: `Anne Droid <anne-droid@roadtotech.me>`
 - Commit syntax: Conventional Commits (`feat(ui): ...`, `fix(ux): ...`)
 - Push command: Scoped SSH identity using `~/.ssh/id_ed25519_anne_droid` on port 2223:
   `GIT_SSH_COMMAND="ssh -F /dev/null -p 2223 -i ~/.ssh/id_ed25519_anne_droid -o IdentitiesOnly=yes"`
-- PR creation: `tea pr create --login anne-droid`
+- PR creation: `tea pr create --login anneux`
 
 ## Communication, Documentation & Feedback Protocol
 
