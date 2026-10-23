@@ -15,10 +15,11 @@ description: >-
   containers, or devenv/devbox/flox. Lock updates go to `inspect-flake-update`.
 
 ## Steps
-1. **Inspect before deciding.** Read the Nix files, `flake.lock` (pinned nixpkgs revision),
-   `.envrc`, language manifests, build scripts, CI, contributor docs, `git status`, and
-   `nix --version` with enabled features. Write a short inventory of what exists and which
-   conventions (workflow, helper library, systems, constructor, input policy) you will keep.
+1. **Inspect before deciding.** Read the Nix files, `flake.lock` (pinned nixpkgs revision,
+   or record that none is present), `.envrc`, language manifests, build scripts, CI,
+   contributor docs, `git status`, and `nix --version` with enabled features. Write a short
+   inventory of what exists and which conventions (workflow, helper library, systems,
+   constructor, input policy) you will keep.
 2. **Establish requirements** from that evidence: tools, runtimes, native libraries, compiler,
    env vars, startup behavior, project commands, target systems. Ask only about gaps that
    change the design and cannot be read from the repo.

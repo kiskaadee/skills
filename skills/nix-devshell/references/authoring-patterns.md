@@ -62,14 +62,23 @@ Replace the system with the project's actual one(s); add systems only when requi
 dependencies support them. The nixpkgs branch is a project decision (see
 [design-decisions.md](design-decisions.md#3-nixpkgs-inputs-and-lock-policy)).
 
-For several systems without an extra input (`Contextual`, one option among several):
+For several systems without an extra input (`Contextual`, standalone minimal flake pattern):
 
 ```nix
-let
-  systems = [ "x86_64-linux" "aarch64-darwin" ];   # only the systems the project needs
-  forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
-in {
-  devShells = forAllSystems (pkgs: { default = pkgs.mkShellNoCC { packages = [ pkgs.jq ]; }; });
+{
+  description = "Multi-system development shell without extra inputs";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  outputs = { self, nixpkgs }:
+    let
+      systems = [ "x86_64-linux" "aarch64-darwin" ];   # only the systems the project needs
+      forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
+    in {
+      devShells = forAllSystems (pkgs: {
+        default = pkgs.mkShellNoCC {
+          packages = [ pkgs.jq ];
+        };
+      });
+    };
 }
 ```
 
