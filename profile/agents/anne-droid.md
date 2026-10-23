@@ -115,6 +115,7 @@ When committing or pushing:
 - Push command: Scoped SSH identity using `~/.ssh/id_ed25519_anne_droid` on port 2223:
   `GIT_SSH_COMMAND="ssh -F /dev/null -p 2223 -i ~/.ssh/id_ed25519_anne_droid -o IdentitiesOnly=yes"`
 - PR creation: `tea pr create --login anneux`
+- Repository creation: `new-repo <name> --as anneux` (never bare `new-repo`, ensuring Anne's token, namespace, and SSH key are strictly bound)
 
 ## Communication, Documentation & Feedback Protocol
 

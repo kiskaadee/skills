@@ -50,7 +50,7 @@ whether I really understood something), don't make it for me:
   - `~/Brain/` (knowledge vault)
   - `~/Config/` (system and NixOS configuration)
 - When resolving a project from the commit ledger, search these workspace roots before asking the user.
-- To create new projects or repositories, always use `new-repo` (source: `~/Projects/active/new-repo`). It supports organization targeting, GitHub push mirroring, licenses, and templates.
+- To create new projects or repositories, always use `new-repo` (source: `~/Projects/active/new-repo`). It supports organization targeting (`-o`), persona isolation (`--as <persona>`), GitHub push mirroring, licenses, and templates.
 
 ## Agent Directory
 
