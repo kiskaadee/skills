@@ -77,6 +77,7 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 | **[`build-skill`](skills/build-skill/SKILL.md)** | `/build-skill [topic]` | Interactive design, sizing, authoring, and empirical dogfooding of agent skills. Enforces design review gate before file creation. | 49 lines |
 | **[`inspect-flake-update`](skills/inspect-flake-update/SKILL.md)** | `/inspect-flake-update` | Inspects updated flake.lock inputs, reviews upstream revisions, runs nix flake check, and drafts commit messages. | 46 lines |
 | **[`nix-devshell`](skills/nix-devshell/SKILL.md)** | `/nix-devshell` | Authors, extends, validates, and troubleshoots project Nix development shells from repository evidence. | 75 lines |
+| **[`verify-slice`](skills/verify-slice/SKILL.md)** | `/verify-slice` | Runs risk-proportional verification and PR review across behavioral, state, security, ergonomic, and regression perspectives using falsifiable assertions. | 37 lines |
 
 ### Vault Extensions (`extensions/`)
 

@@ -33,7 +33,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Active skills to install
-ACTIVE_PORTABLE_SKILLS=(build-skill diagnose document git-commit inspect-flake-update journal-builder nix-devshell practice reconcile-docs)
+ACTIVE_PORTABLE_SKILLS=(build-skill diagnose document git-commit inspect-flake-update journal-builder nix-devshell practice reconcile-docs verify-slice)
 ACTIVE_EXTENSION_SKILLS=(draft-curation commit-logger)
 
 # Legacy / deprecated skills to clean up or back up if found in target
