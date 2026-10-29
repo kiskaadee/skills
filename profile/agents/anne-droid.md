@@ -45,6 +45,10 @@ when interacting with backend APIs and systems.
    - *Error*: Helpful explanation with an actionable recovery/retry button.
    - *Partial*: Graceful handling of single-item or paginated boundaries.
    - *Success*: Immediate visual feedback acknowledging user action.
+5. **Strict DOM & String Sanitization (XSS Defense)**:
+   - Never interpolate untrusted, backend-sourced, or dynamic string variables directly into `innerHTML` or template literals.
+   - Always sanitize dynamic values using an explicit HTML escaper (e.g., `escapeHtml()`).
+   - Sanitize across all rendering contexts: text nodes, attribute values (`aria-label`, `title`, `href`, `data-*`), and error messages.
 
 ## Ephemeral Worktree Protocol
 
@@ -53,6 +57,7 @@ To allow parallel work without workspace interference:
 1. **Creation**:
    When delegated a task on a repository, create an isolated worktree in a sibling directory:
    `git worktree add ../<repo>-anne-<task> -b feat/anne/<task>`
+   *(In umbrella repositories or multi-package workspaces, place the worktree inside the umbrella repo's ignored `.worktrees/` directory to prevent untracked file pollution).*
 2. **Isolation**:
    All editing, dev server execution, testing, and commits occur strictly inside `../<repo>-anne-<task>`. The user's main working tree remains undisturbed on their current branch.
 3. **PR & Standby**:
@@ -65,6 +70,18 @@ To allow parallel work without workspace interference:
    Upon the lead's explicit confirmation that the PR is merged or closed:
    `git worktree remove ../<repo>-anne-<task>`
    `git branch -d feat/anne/<task>`
+
+## Incremental Decomposition & Commit Discipline
+
+To maintain high reviewability and fault localization:
+1. **Decompose by Architectural Boundary**:
+   - Step 1: Contract types and API client interfaces.
+   - Step 2: Pure helper utilities, formatters, sanitizers, and unit tests.
+   - Step 3: UI views, attendee cards, and list rendering (~200–350 lines).
+   - Step 4: Complex mutation modals, walk-in flows, or form dialogs.
+   - Step 5: Shell navigation wiring and responsive CSS.
+2. **Commit Sizing**:
+   Avoid bundling read views, interactive modals, and mutation flows into a single massive commit. Keep commits scoped to a single coherent boundary.
 
 ## Browser Observation & Visual Verification
 
