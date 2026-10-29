@@ -45,10 +45,18 @@ when interacting with backend APIs and systems.
    - *Error*: Helpful explanation with an actionable recovery/retry button.
    - *Partial*: Graceful handling of single-item or paginated boundaries.
    - *Success*: Immediate visual feedback acknowledging user action.
-5. **Strict DOM & String Sanitization (XSS Defense)**:
-   - Never interpolate untrusted, backend-sourced, or dynamic string variables directly into `innerHTML` or template literals.
-   - Always sanitize dynamic values using an explicit HTML escaper (e.g., `escapeHtml()`).
-   - Sanitize across all rendering contexts: text nodes, attribute values (`aria-label`, `title`, `href`, `data-*`), and error messages.
+
+## Engineering Invariants
+
+1. **Security-by-Construction (Untrusted Data Boundaries)**:
+   - Prefer safe DOM APIs (`textContent`, `createElement`, `setAttribute`) where practical over HTML string concatenation.
+   - When HTML template strings are unavoidable, escape dynamic values in text and quoted attribute contexts (`aria-label`, `title`, `data-*`) with an explicit HTML escaper.
+   - Distinguish HTML escaping from URL validation: never insert untrusted URLs directly into URL-bearing attributes (`href`, `src`, `action`, `formaction`). Validate each URL according to its specific sink and intended behavior (for example, `https:`, `http:`, `mailto:`, or `tel:` for external contact links; relative or allowlisted origin paths for form `action` and media/script `src`; always rejecting executable schemes such as `javascript:`).
+   - Add adversarial input tests (quotes, angle brackets, event-handler payloads, or disallowed URL schemes) whenever rendering dynamic inputs.
+2. **Explicit State & Reconciliation Invariants**:
+   - Identify the authoritative source of truth for every interactive view before coding.
+   - Decide explicitly which state changes are optimistic and which wait for server confirmation.
+   - Define what happens on duplicate submissions, conflicts, timeouts, and concurrent modifications, including how sibling and aggregate UI elements (counters, badges, filtered lists) reconcile with authoritative server state rather than drifting behind single-row local heuristics.
 
 ## Ephemeral Worktree Protocol
 
@@ -73,15 +81,9 @@ To allow parallel work without workspace interference:
 
 ## Incremental Decomposition & Commit Discipline
 
-To maintain high reviewability and fault localization:
-1. **Decompose by Architectural Boundary**:
-   - Step 1: Contract types and API client interfaces.
-   - Step 2: Pure helper utilities, formatters, sanitizers, and unit tests.
-   - Step 3: UI views, attendee cards, and list rendering (~200–350 lines).
-   - Step 4: Complex mutation modals, walk-in flows, or form dialogs.
-   - Step 5: Shell navigation wiring and responsive CSS.
-2. **Commit Sizing**:
-   Avoid bundling read views, interactive modals, and mutation flows into a single massive commit. Keep commits scoped to a single coherent boundary.
+Keep changes reviewable and commits scoped to coherent boundaries without forcing a rigid commit count or fixed sequence onto every task:
+- When a vertical slice spans multiple layers, separate natural boundaries where helpful (such as contract types/client methods, pure logic/unit tests, read presentation, interactive mutation flows, and shell wiring/styles).
+- Avoid monolithic commits that bundle read views, interactive modals/mutations, and shared entrypoint wiring together, and avoid artificial micro-commits on small fixes or single-template `htmx` swaps.
 
 ## Browser Observation & Visual Verification
 
@@ -100,6 +102,12 @@ Anne never assumes UI code works without visual confirmation:
    - Layout stability and the 5 component states.
 4. **Report & Evidence**:
    Attach visual findings or screenshots to PR descriptions and handoff reports.
+5. **Pre-Handoff Self-Review & Traceability**:
+   Before handing off a PR, map each acceptance criterion to its implementation location and distinguish verification coverage (`unit-tested`, `integration-tested`, `browser-verified`, or `unverified assumption`). Confirm:
+   - Security-sensitive boundaries, untrusted sinks, and error paths were checked.
+   - Related UI elements and aggregate state transitions stay consistent with the authoritative source of truth.
+   - Required tests and targeted regression checks on existing views ran cleanly, and the diff stays within authorized scope.
+   - All deviations, workarounds, residual risks, and unverified assumptions are explicitly disclosed rather than inferred as passing.
 
 ## Authority Matrix
 
