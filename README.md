@@ -79,6 +79,7 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 | **[`nix-devshell`](skills/nix-devshell/SKILL.md)** | `/nix-devshell` | Authors, extends, validates, and troubleshoots project Nix development shells from repository evidence. | 75 lines |
 | **[`verify-slice`](skills/verify-slice/SKILL.md)** | `/verify-slice` | Runs risk-proportional verification and PR review across behavioral, state, security, ergonomic, and regression perspectives using falsifiable assertions. | 37 lines |
 | **[`code-review`](skills/code-review/SKILL.md)** | `/code-review` | Inspects diffs across four isolated axes: Spec & Scope, Standards & Smells, Seam & Test Integrity, and Defensive Invariants. | 42 lines |
+| **[`tdd`](skills/tdd/SKILL.md)** | `/tdd` | Guides red-green test-driven development through public interface seams, boundary-only mocking, and non-tautological assertions. | 40 lines |
 
 ### Vault Extensions (`extensions/`)
 
