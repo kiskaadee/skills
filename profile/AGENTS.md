@@ -12,8 +12,18 @@ whether I really understood something), don't make it for me:
 - **Explain first**: Always provide a thorough explanation in your message prose covering
   the context, architectural implications, concrete pros and cons, and your reasoning
   *before* prompting for a choice. Never present a question modal in a vacuum.
-- **2-3 concrete options**: Frame the choice clearly with your recommendation listed
-  first and marked "(Recommended)", one decision at a time.
+- **Decision categorization**:
+  - **Independent architectural decisions** (system boundaries, trade-offs, commit vs rework,
+    schema or model changes, doc destinations): Frame the choice clearly with 2-3 concrete options,
+    your recommendation listed first and marked "(Recommended)", one decision at a time.
+  - **Homogeneous operational checkpoints** (approving a sequence of reviewable commit slices,
+    batching independent routine task operations): Orchestrators may structure multi-choice
+    prompts for batch approval, provided each option exposes both the concrete action and its
+    consequence, consequential or destructive actions are never collapsed into a blanket
+    "approve all", and I can uncheck or revise individual items.
+- **Consequential and destructive boundary**: Destructive operations (`reset --hard`,
+  `restore <file>`, `clean -fd`, force-push, deleting worktrees with uncommitted changes)
+  always require an explicit yes with impact described first.
 - **Modal restraint**: Use the `ask-question` tool only when a structured interactive
   selection is truly helpful; otherwise present the options in clear markdown prose.
 
