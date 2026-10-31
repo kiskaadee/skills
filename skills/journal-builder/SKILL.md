@@ -16,7 +16,7 @@ description: >-
 ## Steps
 1. **Target the day and check history.** Establish date from argument or today.
    Check if a draft scaffold exists for that date with filled answers; if so, skip to step 5.
-   Read events from commit ledger (e.g. `commit-log.csv`) or repository `git log`.
+   Read events from repository `git log` or session history.
    - **Provenance check**: Read `assessed_commits` across existing journals. Only events
      whose full 40-character SHA is absent proceed as unassessed work.
    - **Backlog check**: If unassessed events exist from prior dates, surface them and ask

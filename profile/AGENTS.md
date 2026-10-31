@@ -49,15 +49,6 @@ whether I really understood something), don't make it for me:
   - `~/Homelab/` Shared space for Homelab's Core and Sites repositories
   - `~/Brain/` (knowledge vault)
   - `~/Config/` (system and NixOS configuration)
-- When resolving a project from the commit ledger, search these workspace roots before asking the user.
-- To create new projects or repositories, always use `new-repo` (source: `~/Projects/active/new-repo`). It supports organization targeting (`-o`), persona isolation (`--as <persona>`), GitHub push mirroring, licenses, and templates.
-
-## Agent Directory
-
-When tasks involve specialized domains, consult or delegate to registered agent personas:
-
-- **Anne Droid** (`profile/agents/anne-droid.md`): Senior Frontend Engineer & UX Specialist.
-  - **Consult when**: Backend APIs are being designed/refactored with UI impact, UX flows or accessibility need review, or interface consumers experience contract friction. Anne provides advisory feedback reports.
-  - **Delegate when**: Frontend components, client styling, web interactions, or client tests need implementation. Anne operates on `feat/anne/*` branches with PR-based review.
-  - **Do not invoke for**: Backend-only logic, database internals, NixOS configuration, infrastructure, or deployment.
+- When resolving a project from task context, search these workspace roots before asking the user.
+- To create new projects or repositories, always use `new-repo` (source: `~/Projects/active/new-repo`). It supports organization targeting (`-o`), GitHub push mirroring, licenses, and templates.
 

@@ -34,10 +34,11 @@ done
 
 # Active skills to install
 ACTIVE_PORTABLE_SKILLS=(build-skill code-review diagnose document git-commit inspect-flake-update journal-builder nix-devshell practice reconcile-docs tdd verify-slice)
-ACTIVE_EXTENSION_SKILLS=(draft-curation commit-logger)
+ACTIVE_EXTENSION_SKILLS=(draft-curation)
 
 # Legacy / deprecated skills to clean up or back up if found in target
-OBSOLETE_SKILLS=(engineering-tutor engineering-investigation skill-builder documentation-router inbox-curation)
+OBSOLETE_SKILLS=(engineering-tutor engineering-investigation skill-builder documentation-router inbox-curation commit-logger)
+OBSOLETE_AGENTS=(anne-droid.md)
 
 echo "=== Target: $TARGET_DIR (mode: $MODE) ==="
 
@@ -59,6 +60,13 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
   for obs in "${OBSOLETE_SKILLS[@]}"; do
     if [[ -e "$TARGET_DIR/$obs" || -L "$TARGET_DIR/$obs" ]]; then
       echo "  [OBSOLETE PRESENT] $obs"
+      missing=$((missing + 1))
+    fi
+  done
+  for a in "${OBSOLETE_AGENTS[@]}"; do
+    if [[ -e "$AGENTS_DIR_TARGET/$a" || -L "$AGENTS_DIR_TARGET/$a" ]]; then
+      echo "  [OBSOLETE PRESENT] agent: $a"
+      missing=$((missing + 1))
     fi
   done
   if [[ -d "$SCRIPT_DIR/profile/agents" ]]; then
@@ -99,6 +107,13 @@ mkdir -p "$TARGET_DIR"
 for obs in "${OBSOLETE_SKILLS[@]}"; do
   if [[ -e "$TARGET_DIR/$obs" || -L "$TARGET_DIR/$obs" ]]; then
     backup_if_exists "$TARGET_DIR/$obs"
+  fi
+done
+
+# Clean up obsolete agent personas
+for a in "${OBSOLETE_AGENTS[@]}"; do
+  if [[ -e "$AGENTS_DIR_TARGET/$a" || -L "$AGENTS_DIR_TARGET/$a" ]]; then
+    backup_if_exists "$AGENTS_DIR_TARGET/$a"
   fi
 done
 

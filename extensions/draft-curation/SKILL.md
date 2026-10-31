@@ -10,12 +10,11 @@ description: >-
 ## Use when
 - `/draft-curation`: triaging, classifying, and ingesting raw notes from `00-inbox/` into canonical vault lifecycle directories.
 - Handoff from `document` after drafting notes into staging inbox.
-- Not for capturing git commits into ledger: use `commit-logger`.
 - Not for authoring fresh documents from conversation: use `document`.
 
 ## Steps
 1. **Preflight verification.** Verify repository health before moving files (run vault validator if present, e.g. `python scripts/validate-brain.py`).
-2. **Inventory staging.** Scan `00-inbox/` for pending drafts, ignoring system ledgers (`commit-log.csv`), `.keep`, or `README.md`. Identify project context and note scope.
+2. **Inventory staging.** Scan `00-inbox/` for pending drafts, ignoring `.keep` or `README.md`. Identify project context and note scope.
 3. **Classify and format.** Determine target directory, frontmatter type, and filename slug using [references/curation-matrix.md](references/curation-matrix.md). Ensure H1 heading, relative links, and clean markdown.
 4. **Checkpoint.** Present source path, proposed destination, proposed frontmatter, and epistemic rationale. Stop for confirmation before moving files.
 5. **Relocate and reconcile.** Write transformed file to destination (reconciling with existing daily journal if applicable, preserving existing edits and unioning `assessed_commits`). Delete original draft from `00-inbox/`.

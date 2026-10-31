@@ -86,7 +86,6 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 | Skill | Status | Purpose |
 | :--- | :--- | :--- |
 | **[`draft-curation`](extensions/draft-curation/SKILL.md)** | Active | Triages, classifies, and commits incoming notes from an inbox/staging directory into structured lifecycle directories. |
-| **[`commit-logger`](extensions/commit-logger/SKILL.md)** | Active | Immutable Git commit event capture script into a machine-readable CSV ledger (consumed by `journal-builder`). |
 
 ---
 
@@ -96,8 +95,8 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Practice** | — | yields for production incidents | learner types the commit | feeds learning edges | optional handoff on key insights | — |
 | **Diagnose** | yields if user wants to find cause | — | hands off to package verified fix | feeds incident root causes | hands off if RCA reveals non-obvious lesson | — |
-| **Git Commit** | learner-controlled | packages remediation result | — | records commit events to ledger | delegates if commit warrants deeper doc | provides commit history |
-| **Journal Builder** | hands off unresolved gaps | hands off active defects | assesses ledger events | — | hands off candidate journal draft | — |
+| **Git Commit** | learner-controlled | packages remediation result | — | provides commit history for review | delegates if commit warrants deeper doc | provides commit history |
+| **Journal Builder** | hands off unresolved gaps | hands off active defects | assesses commit history | — | hands off candidate journal draft | — |
 | **Document** | consumes practice milestones | consumes RCA findings | packages docs if committed | consumes completed journal drafts | — | provides ADRs and plans |
 | **Reconcile Docs** | — | — | verifies commit reality | — | audits ADRs and plans | — |
 
@@ -107,7 +106,7 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 
 1. **Investigation to History**: `diagnose` (verify root cause) -> `git-commit` (atomic slice approval) -> `document` (optional Debug Record / ADR).
 2. **Deliberate Practice to Knowledge**: `practice` (solve transfer challenge) -> `document` (author durable knowledge article).
-3. **Retrospective Scaffolding to Journal**: `commit-logger` (event ledger) -> `journal-builder` (fact skeleton & question blanks) -> user fills reasoning -> curation & calibration -> `draft-curation`.
+3. **Retrospective Scaffolding to Journal**: `journal-builder` (reconstruct facts & question blanks from repository history) -> user fills reasoning -> curation & calibration -> `draft-curation`.
 4. **Documentation Reconciliation**: `reconcile-docs` (audit history, code reality, roadmap) -> propose updates to README / ARCHITECTURE / ADRs -> user approves.
 5. **Skill Design Loop**: `build-skill` (approve spec) -> dogfood run -> minimal mechanism refinement.
 
