@@ -16,7 +16,7 @@ description: >-
 - Not for debugging an unknown symptom: use `diagnose`.
 
 ## Steps
-1. **Pin the fixed point and scope.** Resolve the base ref and record its commit SHA via `git rev-parse <base>`. Inspect working-tree state (`git status --short`, unstaged `git diff`, staged `git diff --cached`) alongside committed history (`git diff <base>...HEAD` and `git log <base>..HEAD --oneline`). Report findings distinguished across committed, staged, and unstaged changes.
+1. **Pin the fixed point and scope.** Resolve the base ref and record exact base and head commit SHAs (`git rev-parse <base> HEAD`). Inspect working-tree state (`git status --short`, unstaged `git diff`, staged `git diff --cached`, and relevant untracked files) alongside committed history (`git diff <base>...HEAD` and `git log <base>..HEAD --oneline`). Record the covered revisions and working-tree diff state (for example, clean tree or diff fingerprint) so downstream tools can verify whether the reviewed diff remained unchanged, and distinguish findings across committed, staged, and unstaged changes.
 2. **Select execution tier.** Match the change to the risk tiers from [axes](references/axes.md) (`Lightweight`, `Standard`, or `High-Assurance`). Single-agent sequential pass for Lightweight; independent review passes for Standard; isolated subagents per axis for High-Assurance.
 3. **Inspect the four axes.** Evaluate the diff against each axis independently using [axes](references/axes.md):
    - **Spec & Scope**: originating requirements satisfied, minimal shared-file footprint, zero scope creep.
@@ -25,8 +25,8 @@ description: >-
    - **Defensive Invariants**: system properties from [defensive-invariants](references/defensive-invariants.md) (trust boundaries, authority, consistency, failure semantics, resource limits).
 4. **Record structured findings.** Record every finding using the schema in [finding-schema](references/finding-schema.md) (`ID`, `Axis`, `Severity`, `Evidence`, `Invariant`, `Impact`, `Disposition`). A strong pass on one axis never compensates for a failure on another.
 5. **Aggregate without silent resolution.** When multiple reviewers or passes disagree, keep the disagreement visible under `Unresolved` until evidence settles it.
-6. **Recommend runtime verification scenarios.** Identify stateful or high-risk paths that static inspection cannot prove and list them as suggested scenarios for `verify-slice`.
-7. **Present the review summary.** Group findings by axis and apply the decision matrix from [axes](references/axes.md): `Needs Rework` (confirmed defects require changes), `Blocked` (unresolved Critical/High risks or unestablished scope), or `Ready` (no blocking defects; documented trade-offs accepted by owner). Never authorize release: the human owner decides release.
+6. **Emit executable runtime checks.** For stateful or high-risk paths that static inspection cannot prove, emit runnable fenced shell commands for `verify-slice` following the Step 6 contract in [finding-schema](references/finding-schema.md) (stating purpose, `local` vs. `live-infra` scope classification, explicit pass condition, and explicit failure signal).
+7. **Present the review summary.** Group findings by axis and apply the decision matrix from [axes](references/axes.md): `Needs Rework` (confirmed defects require changes), `Blocked` (unresolved Critical/High risks or unestablished scope), or `Ready` (all four axes completed, no confirmed or unresolved blocking findings remain, and exact covered revisions plus working-tree state are recorded). Static review establishes static provenance for that diff only; never authorize release.
 
 ## Your call
 - **Handling findings**: decide whether confirmed findings block merge, trigger a rework loop, or become tracked follow-up issues.
@@ -34,7 +34,7 @@ description: >-
 - **Authorizing release**: verification and review evidence inform decisions, but the human owner remains the sole release authority.
 
 ## Done when
-- All four axes have been inspected across working-tree and committed changes, every finding is recorded with evidence and disposition, candidate runtime scenarios are passed to `verify-slice` if needed, and the human owner has reviewed the findings.
+- All four axes have been inspected across working-tree and committed changes, every finding is recorded with evidence and disposition, executable Step 6 runtime checks are emitted for `verify-slice` if needed, and the human owner has reviewed the findings.
 
 ## Hands off to
 - `diagnose`: when a finding exposes a root cause that requires deeper troubleshooting.

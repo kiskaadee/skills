@@ -32,6 +32,9 @@ The distinction between recommendations is clear: `Needs Rework` means an establ
 | **Scope Inability or Missing Base Ref** | `Blocked` | Establish base commit and diff boundaries before reviewing. |
 | **No Blocking Findings** | `Ready` | Implementation is structurally sound; proceed to `verify-slice` or release. |
 
+### `Ready` Semantics and Downstream Reuse
+`Ready` means the review completed across all four axes, no confirmed or unresolved blocking findings remain (`Needs Rework` or `Blocked`), and the report explicitly identifies the base revision, head revision, and relevant working-tree state it covered. `Ready (Conditional)` qualifies as `Ready` for downstream handshake reuse only after the human owner adjudicates the open Medium/Low items (`Accepted Trade-off` or `Rejected`). A `Ready` review establishes static provenance for that exact diff; it does not substitute for runtime verification or authorize release.
+
 ### Documented Trade-Off Acceptance
 When a human owner accepts a documented trade-off for a Medium or Low finding, record the finding disposition as `Accepted Trade-off` (distinct from `Rejected`). This preserves audit traceability without misclassifying an intentional compromise as a disproven defect.
 
@@ -50,4 +53,4 @@ To keep review overhead proportional to risk, execution mode reuses the tiers es
 When multiple passes or subagents inspect a change:
 1. **Never silently resolve disagreements**: If Reviewer A flags a pattern as a defect and Reviewer B considers it acceptable, record the finding under `Unresolved` with both perspectives cited. The human owner adjudicates.
 2. **Preserve exact evidence**: Every finding must include exact file paths, line numbers, and code snippets demonstrating the condition.
-3. **Recommend runtime verification**: Where static analysis cannot verify dynamic timing, rendering, or network failure modes, formulate concrete candidate assertions and pass them to `verify-slice`.
+3. **Emit executable runtime checks**: Where static analysis cannot verify dynamic timing, rendering, or network failure modes, formulate runnable Step 6 checks formatted per [finding-schema](finding-schema.md) and pass them to `verify-slice`.
