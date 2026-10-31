@@ -4,7 +4,7 @@ Reference for `verify-slice`. Keep effort proportional to failure consequences a
 
 ## 1. Operational Rigor Tiers
 
-Each tier defines the minimum required checks. Escalate individual perspectives when a small diff touches a high-risk boundary (for example, a two-line auth or URL sanitizer change).
+Each tier defines the minimum required checks. Escalate individual perspectives when a small diff touches a high-risk boundary (for example, a two-line auth or URL sanitizer change). When a reusable `Ready` `code-review` handshake covers the exact unchanged base, head, and working-tree diff (see `SKILL.md` Steps 1 and 4), that review satisfies the tier's static diff audit as static provenance while `verify-slice` supplies runtime behavioral evidence; if any relevant file changed post-review, audit at least the changed delta.
 
 | Tier | Typical Slice | Minimum Required Checks | Execution Mode |
 | :--- | :--- | :--- | :--- |
@@ -23,16 +23,24 @@ Select only the perspectives relevant to the slice's risk profile. Give each sel
 | **Security Boundaries** | Can untrusted data execute code, break attributes, or route to unsafe destinations? | Trace every dynamic value into DOM/template sinks: verify safe DOM APIs or HTML escaping for text and quoted attributes, context-appropriate URL validation for `href`/`src`/`action` (never relying on HTML escaping alone for URLs), and at least one adversarial payload check. |
 | **Ergonomics & Accessibility** | Is the slice usable on narrow screens, with touch, and via keyboard/assistive tech? | Check narrow mobile viewport (`375px`) for overflow, `>= 44x44px` touch targets, sequential keyboard `Tab` focus, visible `:focus-visible` outlines, and `aria-live` announcements for dynamic feedback. |
 | **Scope & Regression** | Did the slice disturb adjacent features or smuggle unrelated refactors? | Inspect shared files (`main`, routers, shared types/styles) for minimal additive footprint; run targeted smoke checks on neighboring views/endpoints. |
-| **Commit & Evidence Hygiene** | Are commits localizable and does claimed test coverage match reality? | Check that commits separate coherent boundaries where practical and compare author self-audit claims against what unit/integration tests actually assert. |
+| **Commit & Evidence Hygiene** | Are commits localizable and does claimed test coverage match reality? | Separates two distinct responsibilities: (1) **Static review** (commit structure, diff scope, source and test inspection) is covered by a matching `Ready` review handshake. (2) **Runtime evidence reconciliation** verifies that reported outcomes are supported by executed checks and relevant test assertions substantiate claimed contracts. |
 
-## 3. Four-State Disposition Contract
+## 3. Four-State Disposition Contract and Boundary Matrix
 
-Every required assertion ends in exactly one state:
+Every required assertion ends in exactly one disposition. `BLOCKED` records an honest execution boundary, never permission to assume correctness or count an unexecuted check as `PASS`:
 
-- `PASS`: Assertion satisfied with observable proof (command output, HTTP response, DOM measurement, or screenshot).
-- `FAIL`: Assertion violated with reproducible steps and observed vs. expected output.
-- `BLOCKED`: Check could not run due to an environmental, fixture, or dependency problem (distinct from a product bug; diagnose the blocker before judging the implementation).
-- `INCONCLUSIVE`: Check ran, but collected evidence is insufficient to prove or falsify the assertion.
+| Situation | Disposition | Required Action |
+| :--- | :--- | :--- |
+| Check executes (`local`, or `live-infra` explicitly authorized by the human owner) and satisfies expected condition | `PASS` | Attach observable proof (command output, HTTP status, DOM measurement, or screenshot). |
+| Check executes and contradicts expected behavior | `FAIL` | Record reproducible steps and observed vs. expected output. |
+| Local fixture, seed, or tool setup prevents execution | `BLOCKED (env/fixture)` | Diagnose and repair the local blocker before judging the implementation (distinct from a product bug). |
+| `live-infra` check requires permissions or infrastructure (host rebuilds, production migrations, privileged network changes) unavailable or not explicitly authorized for this run | `BLOCKED (out-of-bounds)` | Do not fabricate execution or mark `PASS`; preserve the exact command and pass/fail criteria for an authorized operator run or maintenance window. |
+| Check executes, but available evidence cannot prove or falsify the assertion | `INCONCLUSIVE` | State what signal is missing and how to make the check deterministically falsifiable. |
+
+### Authority Separation Invariant
+- `code-review` establishes **static provenance** for a specific revision range and working-tree diff.
+- `verify-slice` establishes **runtime behavioral evidence** for selected assertions.
+- Neither substitutes for the other, and neither grants release approval; only the human owner authorizes release.
 
 ### Anti-Rationalization Rules
 1. **Expected values before observation**: State the exact pass/fail condition before running the check. If an assertion expects `2` and the system shows `1`, record `FAIL`, never `PASS` with a narrative excuse ("targeted reconciliation trade-off").
