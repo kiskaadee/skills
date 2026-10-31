@@ -72,6 +72,7 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 | **[`diagnose`](skills/diagnose/SKILL.md)** | `/diagnose [symptom]` | Evidence-first troubleshooting. Progresses from raw logs to proven root cause and minimal, reversible fixes. | 49 lines |
 | **[`git-commit`](skills/git-commit/SKILL.md)** | `/git-commit` | Working-tree inspection, atomic slice decomposition, and author-driven message authoring in learning sessions. User approves every commit. | 60 lines |
 | **[`git-workspace`](skills/git-workspace/SKILL.md)** | `/git-workspace` | Branch and worktree lifecycle, history integration (rebase/squash/cherry-pick), conflict halts, and evidence-first reflog recovery. | 50 lines |
+| **[`gitea-plan`](skills/gitea-plan/SKILL.md)** | `/gitea-plan` | Translates technical goals and plans into Gitea milestones and issues with tiered sizing and falsifiable acceptance criteria. | 52 lines |
 | **[`document`](skills/document/SKILL.md)** | `/document` | Second-order knowledge classifier (Discussion, ADR, Plan, Debug Record, Knowledge, Journal). User confirms type and provides core insight. | 55 lines |
 | **[`journal-builder`](skills/journal-builder/SKILL.md)** | `/journal-builder` or `/journal` | Two-phase daily engineering review: generates factual skeleton with question blanks, then reviews and calibrates user reasoning. | 58 lines |
 | **[`reconcile-docs`](skills/reconcile-docs/SKILL.md)** | `/reconcile-docs [path]` | Reconciles historical evidence, present code reality, and future plans into canonical repo docs (README, ARCHITECTURE, ADR, ROADMAP). | 40 lines |
@@ -111,6 +112,7 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 4. **Documentation Reconciliation**: `reconcile-docs` (audit history, code reality, roadmap) -> propose updates to README / ARCHITECTURE / ADRs -> user approves.
 5. **Skill Design Loop**: `build-skill` (approve spec) -> dogfood run -> minimal mechanism refinement.
 6. **Branch Lifecycle & Integration**: `git-workspace` (branch-before-edits or isolated worktree) -> implementation -> `git-commit` (atomic slice approval) -> `code-review` / `verify-slice` -> `git-workspace` (rebase or integration).
+7. **Issue Planning to Execution**: `gitea-plan` (tiered sizing & falsifiable acceptance criteria) -> `git-workspace` (dedicated branch) -> `git-commit` (checkpoint slicing).
 
 ---
 
