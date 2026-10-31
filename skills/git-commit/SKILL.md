@@ -10,8 +10,8 @@ description: >-
 
 ## Use when
 - `/git-commit`, "commit this", "split these changes", "write the commit message".
-- Rebase, squash, cherry-pick, merge or reset: read
-  [references/history-editing.md](references/history-editing.md) first.
+- Reviewing staged content and packaging clean checkpoint commits.
+- Not for branch creation, worktrees, rebasing, or recovery: use `git-workspace`.
 
 ## Steps
 1. **Inspect.** Repo root, branch and upstream, `git status`, `git diff`, `git diff --cached`.
@@ -47,13 +47,14 @@ the repo allows it.
 ## Your call
 - **How to slice.** Offer 2-3 options, recommended first (draft messages only in delivery mode).
   Example: "1 commit" / "2 commits: refactor + feature" / "3 commits: refactor, feature, tests".
-- **Integration strategy.** Only when a real merge/rebase/cherry-pick choice exists. In learning
-  mode I pick a strategy and give my reason; you check the reason against the branch topology.
-- **Approve each commit** before it is created.
-- **What next** after the last commit: offer 2-3 actions (push, open PR, keep working, run `document`).
+- **Approve commits.** Present options and batch approvals following the operational checkpoint
+  rules in `profile/AGENTS.md`. Each slice must expose files, message, and consequence.
+- **What next** after the last commit: offer 2-3 actions (push, open PR, switch to `git-workspace`
+  for integration or cleanup, keep working, run `document`).
 
 ## Done when
 - Every approved slice is committed, verified by SHA, and leftover changes are reported.
 
 ## Hands off to
+- `git-workspace`: for branch management, worktrees, rebasing, integration, or recovery.
 - `document`: if a commit carries a decision or insight worth more than a commit message.
