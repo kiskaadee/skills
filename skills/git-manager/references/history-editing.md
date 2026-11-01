@@ -12,10 +12,14 @@ Rules for rewriting or combining history. Read before any of these operations.
 - On conflicts: stop immediately. Inspect `git status --short` and conflicting hunks. Never guess resolution. Offer `git rebase --abort` to return cleanly to prior state if resolution is uncertain.
 
 ## Cherry-pick
-1. Inspect the source commit and what it depends on.
+1. Inspect the source commit and what it depends on, and confirm approval with the user per `profile/AGENTS.md` before executing.
 2. Confirm the target working tree is clean.
 3. Cherry-pick, inspect the resulting diff, run validation.
 4. On conflicts or hidden dependencies: stop and report. Offer `git cherry-pick --abort`.
+
+## Revert
+- Confirm target SHA, blast radius, and user approval per `profile/AGENTS.md` before running `git revert`.
+- Run validation after creating the revert commit; on conflicts, stop and offer `git revert --abort`.
 
 ## Merge
 - Follow the repo's integration policy (merge commit vs fast-forward vs rebase).

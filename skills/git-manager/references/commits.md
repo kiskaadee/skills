@@ -38,7 +38,7 @@ Verify all four checks before creating any commit:
   1. Active branch is `main`, `master`, or detached `HEAD`.
   2. Relevant checks failed and cannot be resolved within current task scope (never silently waive failing checks).
   3. Working tree contains unfamiliar modifications or ambiguous untracked files not produced by the current task; present 2-3 slicing options (recommended first) exposing files and consequences.
-  4. Operation involves `git revert`, cross-branch `cherry-pick` adaptation, or rewriting shared history.
+  4. Operation involves `git revert`, `cherry-pick`, or rewriting shared history.
 
 - **`learning` mode (`profile/learning-contract.md`)**:
   For each slice, state the facts (files, behavior changed, checks present or missing, risks) and ask 0-2 questions drawn from the diff. Pause so the user writes the commit message. Evaluate the user's draft against the diff (`correct`, `missing`, `wrong`, `unsupported` + assistance level) and let them revise. Write a message only if explicitly asked, recording `shown-solution`.

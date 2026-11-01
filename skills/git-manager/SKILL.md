@@ -51,7 +51,7 @@ description: >-
   or choose how to slice unfamiliar pre-existing working-tree edits.
 - **`learning` mode commit reasoning**: write the commit message and rationale per `learning-contract.md`.
 - **Integration strategy and exceptions**: choose rebase vs. merge when non-obvious, and adjudicate
-  conflicts, reverts, or non-trivial cherry-picks.
+  conflicts, reverts, or cherry-picks.
 - **Destructive operations**: explicitly confirm with impact described first per `profile/AGENTS.md`
   before `git reset --hard`, `git restore <file>`, `git clean -fd`, force-push, or dirty worktree removal.
 

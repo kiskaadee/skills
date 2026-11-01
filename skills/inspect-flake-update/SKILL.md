@@ -27,19 +27,19 @@ description: >-
 3. **Validate the flake.** Run `nix flake check` to ensure metadata, inputs, and derivations
    evaluate cleanly. If the repository defines host or package builds, optionally run
    dry builds without switching or activating.
-4. **Synthesize changes and suggest commit message.** Summarize all inspected inputs,
-   noting their updated versions and key upstream changes. Suggest a Conventional Commit
-   message (e.g. `chore(flake): bump <input> to <rev>` or `chore(deps): update inputs`).
+4. **Synthesize changes and prepare commit.** Summarize all inspected inputs, noting their
+   updated versions and key upstream changes. In `delivery` mode, draft a Conventional Commit
+   message (e.g. `chore(flake): bump <input> to <rev>`); in `learning` mode, let the user write it.
 5. **Hand off.** Hand off to `git-manager` to stage `flake.lock` and commit per session-mode rules.
 
 ## Your call
 - Deciding whether to accept an input update or roll it back.
 - Choosing whether to run additional dry builds beyond `nix flake check`.
-- Approving the commit when on `main`/`master` or in `learning` mode per `profile/AGENTS.md`.
+- Approving the commit on `main`/`master`, or writing the message in `learning` mode per `profile/AGENTS.md`.
 
 ## Done when
 - All updated inputs have been reviewed, `nix flake check` passes cleanly, the change
-  summary and commit message are produced, and handoff to `git-manager` is ready.
+  summary is produced, and handoff to `git-manager` is ready.
 
 ## Hands off to
 - `git-manager`: to stage `flake.lock` and record the commit.
