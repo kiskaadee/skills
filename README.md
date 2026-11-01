@@ -22,7 +22,7 @@ These skills exist to enforce four core principles:
 
 1. **Defeating the Comprehension Illusion**: Having an AI generate code is not the same as understanding how a system behaves. When code velocity outpaces comprehension, you end up with systems you cannot debug when production breaks. Skills like `practice` make the learner write the code and drive analysis, ensuring mental models develop alongside the codebase.
 
-2. **Intentional Epistemic Friction ("Your call")**: Great engineering requires deliberate checkpoints. Instead of letting agents make unilateral architectural choices, these skills pause at critical state transitions—requiring proven root causes before patching (`diagnose`), approving reviewable atomic slices (`git-commit`), or identifying learning opportunities that should be preserved as durable knowledge (`document`).
+2. **Intentional Epistemic Friction ("Your call")**: Great engineering requires deliberate checkpoints. Instead of letting agents make unilateral architectural choices, these skills pause at critical state transitions: requiring proven root causes before patching (`diagnose`), gating branch integration and merge readiness (`git-manager` / `gitea-pr`), or identifying learning opportunities that should be preserved as durable knowledge (`document`).
 
 3. **Operational Ownership**: An agent should investigate, measure, and propose concrete options, but the human engineer must own the trade-offs, failure domains, and repository history. You cannot own what you did not decide.
 
@@ -34,7 +34,7 @@ These skills exist to enforce four core principles:
 
 The system is under active testing and continuous improvement. Currently, the skills form an orchestrated pair-programming workflow. `build-skill` governs meta-level skill design. 
 
-Three core operational skills (`practice`, `diagnose`, `git-commit`) structure day-to-day engineering. `document` evaluates whether insights produced during work warrant durable preservation.
+Three core operational skills (`practice`, `diagnose`, `git-manager`) structure day-to-day engineering. `document` evaluates whether insights produced during work warrant durable preservation.
 
 ```mermaid
 flowchart TD
@@ -42,7 +42,7 @@ flowchart TD
     subgraph Core["Engineering & Learning Skills"]
         PRAC["practice<br/>learn it: Socratic & recall"]
         DIAG["diagnose<br/>find out: evidence-first RCA"]
-        GIT["git-commit<br/>package it: author mode"]
+        GIT["git-manager<br/>branches, commits & recovery"]
         JB["journal-builder<br/>synthesize it: facts & scaffold"]
     end
     DOC["document<br/>classify & author: 6 epistemic types"]
@@ -58,7 +58,7 @@ flowchart TD
     REC --> Storage
 ```
 
-Every skill features an explicit **"Your call"** checkpoint where the agent pauses and asks the human to make critical architectural, diagnostic, and commit decisions with 2-3 concrete options.
+Every skill features an explicit **"Your call"** checkpoint where the agent pauses and asks the human to make critical architectural, diagnostic, and release decisions with 2-3 concrete options.
 
 ---
 
@@ -70,10 +70,9 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 | :--- | :--- | :--- | :--- |
 | **[`practice`](skills/practice/SKILL.md)** | `/practice [topic]`, `/practice review` | Socratic tutoring and delayed retrieval. Learner writes all code; uses graduated assistance, rubric calibration, and recall-before-reveal. | 50 lines |
 | **[`diagnose`](skills/diagnose/SKILL.md)** | `/diagnose [symptom]` | Evidence-first troubleshooting. Progresses from raw logs to proven root cause and minimal, reversible fixes. | 49 lines |
-| **[`git-commit`](skills/git-commit/SKILL.md)** | `/git-commit` | Working-tree inspection, atomic slice decomposition, and author-driven message authoring in learning sessions. User approves every commit. | 60 lines |
-| **[`git-workspace`](skills/git-workspace/SKILL.md)** | `/git-workspace` | Branch and worktree lifecycle, history integration (rebase/squash/cherry-pick), conflict halts, and evidence-first reflog recovery. | 50 lines |
+| **[`git-manager`](skills/git-manager/SKILL.md)** | `/git-manager` | Repository hygiene, branch and worktree lifecycle, incremental Conventional Commits (autonomous on working branches in delivery mode; user-authored in learning mode), integration, conflict stops, and evidence-first reflog recovery. | 65 lines |
 | **[`gitea-plan`](skills/gitea-plan/SKILL.md)** | `/gitea-plan` | Translates technical goals and plans into Gitea milestones and issues with tiered sizing and falsifiable acceptance criteria. | 52 lines |
-| **[`gitea-pr`](skills/gitea-pr/SKILL.md)** | `/gitea-pr` | Manages Gitea pull request lifecycle: branch readiness, review/verification synthesis, issue closing, and merge readiness. | 61 lines |
+| **[`gitea-pr`](skills/gitea-pr/SKILL.md)** | `/gitea-pr` | Manages Gitea pull request lifecycle: branch readiness, review/verification synthesis, issue closing, and merge readiness. | 60 lines |
 | **[`document`](skills/document/SKILL.md)** | `/document` | Second-order knowledge classifier (Discussion, ADR, Plan, Debug Record, Knowledge, Journal). User confirms type and provides core insight. | 55 lines |
 | **[`journal-builder`](skills/journal-builder/SKILL.md)** | `/journal-builder` or `/journal` | Two-phase daily engineering review: generates factual skeleton with question blanks, then reviews and calibrates user reasoning. | 58 lines |
 | **[`reconcile-docs`](skills/reconcile-docs/SKILL.md)** | `/reconcile-docs [path]` | Reconciles historical evidence, present code reality, and future plans into canonical repo docs (README, ARCHITECTURE, ADR, ROADMAP). | 40 lines |
@@ -94,26 +93,26 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 
 ## Skill Interaction Matrix
 
-| From \ To | Practice | Diagnose | Git Commit | Journal Builder | Document | Reconcile Docs |
+| From \ To | Practice | Diagnose | Git Manager | Journal Builder | Document | Reconcile Docs |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Practice** | — | yields for production incidents | learner types the commit | feeds learning edges | optional handoff on key insights | — |
-| **Diagnose** | yields if user wants to find cause | — | hands off to package verified fix | feeds incident root causes | hands off if RCA reveals non-obvious lesson | — |
-| **Git Commit** | learner-controlled | packages remediation result | — | provides commit history for review | delegates if commit warrants deeper doc | provides commit history |
-| **Journal Builder** | hands off unresolved gaps | hands off active defects | assesses commit history | — | hands off candidate journal draft | — |
-| **Document** | consumes practice milestones | consumes RCA findings | packages docs if committed | consumes completed journal drafts | — | provides ADRs and plans |
-| **Reconcile Docs** | — | — | verifies commit reality | — | audits ADRs and plans | — |
+| **Practice** | - | yields for production incidents | learner writes message & runs commit | feeds learning edges | optional handoff on key insights | - |
+| **Diagnose** | yields if user wants to find cause | - | branches, commits fix & recovers | feeds incident root causes | hands off if RCA reveals non-obvious lesson | - |
+| **Git Manager** | learner-controlled in practice/learning | manages branches & packages fixes | - | provides commit history for review | delegates if commit warrants deeper doc | provides commit history |
+| **Journal Builder** | hands off unresolved gaps | hands off active defects | assesses commit history | - | hands off candidate journal draft | - |
+| **Document** | consumes practice milestones | consumes RCA findings | commits docs if stored in repo | consumes completed journal drafts | - | provides ADRs and plans |
+| **Reconcile Docs** | - | - | verifies commit reality & commits docs | - | audits ADRs and plans | - |
 
 ---
 
 ## Canonical Flows
 
-1. **Investigation to History**: `diagnose` (verify root cause) -> `git-commit` (atomic slice approval) -> `document` (optional Debug Record / ADR).
+1. **Investigation to History**: `diagnose` (verify root cause) -> `git-manager` (checkpoint commit) -> `document` (optional Debug Record / ADR).
 2. **Deliberate Practice to Knowledge**: `practice` (solve transfer challenge) -> `document` (author durable knowledge article).
 3. **Retrospective Scaffolding to Journal**: `journal-builder` (reconstruct facts & question blanks from repository history) -> user fills reasoning -> curation & calibration -> `draft-curation`.
 4. **Documentation Reconciliation**: `reconcile-docs` (audit history, code reality, roadmap) -> propose updates to README / ARCHITECTURE / ADRs -> user approves.
 5. **Skill Design Loop**: `build-skill` (approve spec) -> dogfood run -> minimal mechanism refinement.
-6. **Branch Lifecycle & Integration**: `git-workspace` (branch-before-edits or isolated worktree) -> implementation -> `git-commit` (atomic slice approval) -> `code-review` / `verify-slice` -> `git-workspace` (rebase or integration).
-7. **Issue Planning to PR Delivery**: `gitea-plan` (tiered sizing & falsifiable acceptance criteria) -> `git-workspace` (dedicated branch) -> `git-commit` (checkpoint slicing) -> `code-review` / `verify-slice` (provenance & runtime ledger) -> `gitea-pr` (PR synthesis, feedback triage, issue closing).
+6. **Branch Lifecycle & Integration**: `git-manager` (branch-before-edits or isolated worktree) -> implementation & incremental checkpoint commits -> `code-review` / `verify-slice` -> `git-manager` (rebase or integration).
+7. **Issue Planning to PR Delivery**: `gitea-plan` (tiered sizing & falsifiable acceptance criteria) -> `git-manager` (dedicated branch & incremental checkpoint commits) -> `code-review` / `verify-slice` (provenance & runtime ledger) -> `gitea-pr` (PR synthesis, feedback triage, issue closing).
 
 ---
 
@@ -145,7 +144,7 @@ When run:
 2. **The deletion test.** If deleting an instruction does not change agent behavior in a meaningful way, delete it.
 3. **Plain words over jargon.** Prefer "decision" over "epistemic commitment", "steps" over "state machine".
 4. **80 lines maximum for `SKILL.md`.** Deep templates and authoring specs live in `references/`.
-5. **Human ownership of critical decisions.** The AI investigates, drafts, and proposes; the human approves the architecture, commits, and destinations.
+5. **Human ownership of critical decisions.** The AI investigates, drafts, and proposes; the human approves the architecture, branch merges/releases, and document destinations.
 
 ---
 

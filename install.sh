@@ -33,11 +33,11 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Active skills to install
-ACTIVE_PORTABLE_SKILLS=(build-skill code-review diagnose document git-commit git-workspace gitea-plan gitea-pr inspect-flake-update journal-builder nix-devshell practice reconcile-docs tdd verify-slice)
+ACTIVE_PORTABLE_SKILLS=(build-skill code-review diagnose document git-manager gitea-plan gitea-pr inspect-flake-update journal-builder nix-devshell practice reconcile-docs tdd verify-slice)
 ACTIVE_EXTENSION_SKILLS=(draft-curation)
 
 # Legacy / deprecated skills to clean up or back up if found in target
-OBSOLETE_SKILLS=(engineering-tutor engineering-investigation skill-builder documentation-router inbox-curation commit-logger)
+OBSOLETE_SKILLS=(engineering-tutor engineering-investigation skill-builder documentation-router inbox-curation commit-logger git-commit git-workspace)
 OBSOLETE_AGENTS=(anne-droid.md)
 
 echo "=== Target: $TARGET_DIR (mode: $MODE) ==="
