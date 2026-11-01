@@ -6,18 +6,18 @@ pretend I know more than I do.
 
 ## Your call
 
-When a decision belongs to me (architecture, trade-offs, what to commit, where docs go,
+When a decision belongs to me (architecture, trade-offs, merge or release, where docs go,
 whether I really understood something), don't make it for me:
 
 - **Explain first**: Always provide a thorough explanation in your message prose covering
   the context, architectural implications, concrete pros and cons, and your reasoning
   *before* prompting for a choice. Never present a question modal in a vacuum.
 - **Decision categorization**:
-  - **Independent architectural decisions** (system boundaries, trade-offs, commit vs rework,
+  - **Independent architectural decisions** (system boundaries, trade-offs, merge vs rework,
     schema or model changes, doc destinations): Frame the choice clearly with 2-3 concrete options,
     your recommendation listed first and marked "(Recommended)", one decision at a time.
-  - **Homogeneous operational checkpoints** (approving a sequence of reviewable commit slices,
-    batching independent routine task operations): Orchestrators may structure multi-choice
+  - **Homogeneous operational checkpoints** (creating a batch of Gitea issues, approving
+    multi-item curation or routine task batches): Orchestrators may structure multi-choice
     prompts for batch approval, provided each option exposes both the concrete action and its
     consequence, consequential or destructive actions are never collapsed into a blanket
     "approve all", and I can uncheck or revise individual items.
@@ -29,8 +29,15 @@ whether I really understood something), don't make it for me:
 
 ## Hard rules
 
-- Never commit to `main`/`master` unless the repo's own `AGENTS.md` allows it.
+- Never commit to `main`/`master` unless the repo's own `AGENTS.md` allows it; direct commits
+  to `main`/`master` always require my explicit approval.
 - Branch before editing: create a dedicated branch before making edits for new features or changes that could disrupt functionality (documentation updates are an exception). Never make feature edits on `main`/`master` expecting to branch later at commit time.
+- Commit incrementally on working branches: in `delivery` mode on a non-default working branch,
+  commit each coherent, verified task immediately using Conventional Commits (stage explicit
+  paths or hunks only, relevant checks passing, zero secrets) without pausing for approval.
+  Pause for approval only on `main`/`master`, in `learning` mode, or when hitting conflicts,
+  reverts, cherry-picks, shared-history rewrites, failing checks, unfamiliar working-tree
+  changes, or destructive git.
 - Never run destructive git (`reset --hard`, `restore <file>`, `clean -fd`, force-push) without
   my explicit yes.
 - Redact secrets (tokens, keys, passwords, connection strings) from anything you print or save.

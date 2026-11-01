@@ -1,11 +1,13 @@
 # Learning contract
 
-Rules for any skill with a learning mode (`practice`, `git-commit`, `journal-builder`, `document`).
+Rules for any skill with a learning mode (`practice`, `git-manager`, `journal-builder`, `document`).
 The session mode itself is defined in the profile (`AGENTS.md`, "Session mode"). This file
 defines what each mode means.
 
 ## Modes
-- **Delivery:** the agent may draft messages, summaries, and documents. The user approves them.
+- **Delivery:** the agent may draft messages, summaries, and documents. On non-default working
+  branches, completed verified tasks are committed incrementally without approval per `AGENTS.md`;
+  architectural, PR, and document checkpoints still require user approval.
 - **Learning:** the agent provides facts, evidence, and questions. The user writes the reasoning.
 - Use learning mode for new concepts, real decisions, hard bugs, and chosen targets. Use delivery
   mode for routine or familiar work. Support should fade as a concept becomes familiar.
