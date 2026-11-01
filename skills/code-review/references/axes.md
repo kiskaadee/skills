@@ -8,7 +8,7 @@ Derived and adapted from Matt Pocock's skills repository (github.com/mattpocock/
 
 | Axis | Primary Question | Failure Mode Caught | Core Inspection Questions |
 | :--- | :--- | :--- | :--- |
-| **Spec & Scope** | Did we build what was requested, and only that? | Scope creep, missing requirements, leaky abstractions | 1. Does the diff satisfy the originating issue or specification contract?<br/>2. Is there unrequested functionality or premature generalization?<br/>3. Are changes to shared entrypoints (e.g., routers, base config) minimal and additive? |
+| **Spec & Scope** | Did we build what was requested, aligned with project direction, and only that? | Scope creep, missing requirements, architectural or roadmap drift, leaky abstractions | 1. Does the diff satisfy the originating issue or specification contract?<br/>2. When canonical direction docs exist (`ARCHITECTURE.md`, `ROADMAP.md`, ADRs, or active milestone scope), does the change align with long-term boundaries and trajectory?<br/>3. Is there unrequested functionality or premature generalization?<br/>4. Are changes to shared entrypoints (e.g., routers, base config) minimal and additive? |
 | **Standards & Smells** | Is the implementation maintainable and consistent? | Structural debt, friction with conventions | 1. Does the code adhere to repo standards (`CODING_STANDARDS.md`, linter configs)?<br/>2. Are code smells present that warrant refactoring? (See [smell-heuristics](smell-heuristics.md)).<br/>3. Is naming clear and aligned with domain vocabulary? |
 | **Seam & Test Integrity** | Do tests prove actual contracts at public interfaces? | Tautological tests, implementation coupling | 1. Are tests verifying public interfaces (seams) rather than mocking private internals?<br/>2. Are assertions non-tautological (do not mirror code logic or pass by construction)?<br/>3. Prefer tests establishing observable behavior through meaningful vertical slices. Batch independent cases when doing so preserves clear contracts and does not substitute test quantity for behavioral evidence. |
 | **Defensive Invariants** | Does the code preserve critical system properties under stress? | Injection, state desync, unhandled crashes | 1. Are untrusted inputs sanitized before reaching sinks? (See [defensive-invariants](defensive-invariants.md)).<br/>2. Does state reconcile against authoritative sources rather than local heuristic drift?<br/>3. Are failure semantics, timeouts, and resource limits explicit? |
@@ -16,7 +16,7 @@ Derived and adapted from Matt Pocock's skills repository (github.com/mattpocock/
 ### Non-Compensation Invariant
 A strong pass on one axis never excuses a failure on another:
 - Clean abstractions and zero code smells cannot excuse an unescaped HTML sink or an unhandled conflict.
-- 100% test coverage cannot excuse unrequested feature drift or broken domain invariants.
+- 100% test coverage cannot excuse unrequested feature drift, architectural direction drift, or broken domain invariants.
 - Strict spec compliance cannot excuse fragile code structure that breaks repository conventions.
 
 ## 2. Review Recommendations Matrix
