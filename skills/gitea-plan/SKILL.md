@@ -13,6 +13,7 @@ description: >-
 - Decomposing a project, feature request, or technical plan into trackable Gitea units.
 - Creating or editing milestones and issues with falsifiable acceptance criteria.
 - Setting rolling planning horizons for multi-phase epics.
+- Not for orchestrating slice implementation across subagents: use `implement-slice`.
 - Not for branch or worktree management: use `git-manager`.
 - Not for pull request lifecycle or review tracking: use `gitea-pr`.
 
@@ -48,5 +49,6 @@ description: >-
   acceptance criteria.
 
 ## Hands off to
+- `implement-slice`: to orchestrate end-to-end delivery of an approved issue or slice.
 - `git-manager`: to create dedicated branches or worktrees for the decomposed issues.
 - `gitea-pr`: to link, review, and close issues via pull requests.

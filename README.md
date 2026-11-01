@@ -71,7 +71,8 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 | **[`practice`](skills/practice/SKILL.md)** | `/practice [topic]`, `/practice review` | Socratic tutoring and delayed retrieval. Learner writes all code; uses graduated assistance, rubric calibration, and recall-before-reveal. | 50 lines |
 | **[`diagnose`](skills/diagnose/SKILL.md)** | `/diagnose [symptom]` | Evidence-first troubleshooting. Progresses from raw logs to proven root cause and minimal, reversible fixes. | 49 lines |
 | **[`git-manager`](skills/git-manager/SKILL.md)** | `/git-manager` | Repository hygiene, branch and worktree lifecycle, incremental Conventional Commits (autonomous on working branches in delivery mode; user-authored in learning mode), integration, conflict stops, and evidence-first reflog recovery. | 65 lines |
-| **[`gitea-plan`](skills/gitea-plan/SKILL.md)** | `/gitea-plan` | Translates technical goals and plans into Gitea milestones and issues with tiered sizing and falsifiable acceptance criteria. | 52 lines |
+| **[`gitea-plan`](skills/gitea-plan/SKILL.md)** | `/gitea-plan` | Translates technical goals and plans into Gitea milestones and issues with tiered sizing and falsifiable acceptance criteria. | 54 lines |
+| **[`implement-slice`](skills/implement-slice/SKILL.md)** | `/implement-slice` | Orchestrates end-to-end delivery of an issue or vertical slice across worker and QA subagents, pre-committed rubrics, and final-HEAD gates without editing code directly. | 44 lines |
 | **[`gitea-pr`](skills/gitea-pr/SKILL.md)** | `/gitea-pr` | Manages Gitea pull request lifecycle: branch readiness, review/verification synthesis, issue closing, and merge readiness. | 60 lines |
 | **[`document`](skills/document/SKILL.md)** | `/document` | Second-order knowledge classifier (Discussion, ADR, Plan, Debug Record, Knowledge, Journal). User confirms type and provides core insight. | 55 lines |
 | **[`journal-builder`](skills/journal-builder/SKILL.md)** | `/journal-builder` or `/journal` | Two-phase daily engineering review: generates factual skeleton with question blanks, then reviews and calibrates user reasoning. | 58 lines |
@@ -81,7 +82,7 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 | **[`inspect-flake-update`](skills/inspect-flake-update/SKILL.md)** | `/inspect-flake-update` | Inspects updated flake.lock inputs, reviews upstream revisions, runs nix flake check, and drafts commit messages. | 46 lines |
 | **[`nix-devshell`](skills/nix-devshell/SKILL.md)** | `/nix-devshell` | Authors, extends, validates, and troubleshoots project Nix development shells from repository evidence. | 76 lines |
 | **[`verify-slice`](skills/verify-slice/SKILL.md)** | `/verify-slice` | Runs risk-proportional verification and PR review across behavioral, state, security, ergonomic, and regression perspectives using falsifiable assertions. | 37 lines |
-| **[`code-review`](skills/code-review/SKILL.md)** | `/code-review` | Inspects diffs across four isolated axes: Spec & Scope, Standards & Smells, Seam & Test Integrity, and Defensive Invariants. | 42 lines |
+| **[`code-review`](skills/code-review/SKILL.md)** | `/code-review` | Inspects diffs across four isolated axes: Spec & Scope (including strategic project alignment), Standards & Smells, Seam & Test Integrity, and Defensive Invariants. | 42 lines |
 | **[`tdd`](skills/tdd/SKILL.md)** | `/tdd` | Guides red-green test-driven development through public interface seams, boundary-only mocking, and non-tautological assertions. | 40 lines |
 
 ### Vault Extensions (`extensions/`)
@@ -113,7 +114,7 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 4. **Documentation Reconciliation**: `reconcile-docs` (audit history, code reality, roadmap) -> propose updates to README / ARCHITECTURE / ADRs -> user approves.
 5. **Skill Design Loop**: `build-skill` (approve spec) -> dogfood run -> minimal mechanism refinement.
 6. **Branch Lifecycle & Integration**: `git-manager` (branch-before-edits or isolated worktree) -> implementation & incremental checkpoint commits -> `code-review` / `verify-slice` -> `git-manager` (rebase or integration).
-7. **Issue Planning to PR Delivery**: `gitea-plan` (tiered sizing & falsifiable acceptance criteria) -> `git-manager` (dedicated branch & incremental checkpoint commits) -> `code-review` / `verify-slice` (provenance & runtime ledger) -> `gitea-pr` (PR synthesis, feedback triage, issue closing).
+7. **Issue Planning to PR Delivery**: `gitea-plan` (tiered sizing & falsifiable acceptance criteria) -> `implement-slice` (orchestrates `git-manager` workspace isolation, worker `tdd` checkpoints, pre-committed `verify-slice` QA rubrics, and final-HEAD `code-review`) -> `gitea-pr` (PR synthesis, feedback triage, issue closing).
 
 ---
 
