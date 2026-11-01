@@ -1,6 +1,6 @@
 # Git Worktrees
 
-Reference for `git-workspace`. Manage isolated working trees linked to the same underlying Git repository without cloning or stashing.
+Reference for `git-manager`. Manage isolated working trees linked to the same underlying Git repository without cloning or stashing.
 
 ## Use Cases
 - Working on a quick fix or spike without stashing or switching branches in your main working tree.

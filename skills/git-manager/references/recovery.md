@@ -1,6 +1,6 @@
 # Evidence-First Git Recovery
 
-Reference for `git-workspace`. Procedures for diagnosing and recovering lost commits, detached heads, botched rebases, or corrupted refs using observable evidence.
+Reference for `git-manager`. Procedures for diagnosing and recovering lost commits, detached heads, botched rebases, or corrupted refs using observable evidence.
 
 ## Core Invariant
 Never propose a destructive command (`git reset --hard`, `git checkout -f`, `git clean -fd`) as a speculative remedy. Destructive commands discard uncommitted files permanently. Always inspect evidence first, locate candidate commit SHAs, and restore state into a new named branch.
