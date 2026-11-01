@@ -11,6 +11,7 @@ disable-model-invocation: true
 ## Use when
 - `/build-skill [capability]`: turning a recurring workflow or failure into a skill.
 - Fixing an existing skill after watching it misbehave on a real task.
+- Starting from someone else's skill: use `derive-skill` first; resume here with its approved brief.
 
 ## Steps
 1. **Find the friction.** Ask what recurring workflow, pain point, or failure this addresses.

@@ -19,6 +19,7 @@ Used by `build-skill` at step 6 (writing) and step 7 (dogfooding).
 | Observable finish | Does "Done when" name a concrete signal (test passes, file exists, user approved)? |
 | Human decisions | Does "Your call" list the decisions that must stay with the user? |
 | Public repo | No absolute home paths, no secrets. |
+| Provenance | Does derived material have a `references/provenance.md` entry? (Format owned by `derive-skill`.) |
 
 Add extra controls (hard gates, state files, checkpoints) only for a failure you have actually
 seen. If you can't name the failure, don't add the control.

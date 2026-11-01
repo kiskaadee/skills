@@ -33,7 +33,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Active skills to install
-ACTIVE_PORTABLE_SKILLS=(build-skill code-review diagnose document git-manager gitea-plan gitea-pr inspect-flake-update journal-builder nix-devshell practice reconcile-docs tdd verify-slice)
+ACTIVE_PORTABLE_SKILLS=(build-skill code-review derive-skill diagnose document git-manager gitea-plan gitea-pr inspect-flake-update journal-builder nix-devshell practice reconcile-docs tdd verify-slice)
 ACTIVE_EXTENSION_SKILLS=(draft-curation)
 
 # Legacy / deprecated skills to clean up or back up if found in target
