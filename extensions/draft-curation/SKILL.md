@@ -29,4 +29,4 @@ description: >-
 - Staged draft is relocated, removed from `00-inbox/`, and repository validation passes cleanly.
 
 ## Hands off to
-- `git-commit`: to inspect working-tree diff and commit curated documents with semantic commit types.
+- `git-manager`: to stage and commit curated documents with semantic commit types.

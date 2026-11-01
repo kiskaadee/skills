@@ -10,7 +10,7 @@ description: >-
 # Document
 
 ## Use when
-- `/document` at the end of a session, or a handoff from `diagnose`, `practice`, `git-commit`.
+- `/document` at the end of a session, or a handoff from `diagnose`, `practice`, `git-manager`.
 - Routine fixes and chores need no document: a good commit message is enough.
 - Not for canonical repository documentation: use `reconcile-docs`.
 
@@ -52,4 +52,4 @@ A rich session may justify more than one (e.g. Debug Record + Discussion). Split
 
 ## Hands off to
 - `draft-curation`: to review and curate drafts staged into an inbox into lifecycle destinations.
-- `git-commit`: to commit the document if it lives directly in a repo.
+- `git-manager`: to stage and commit the document if it lives directly in a repo.

@@ -13,7 +13,7 @@ description: >-
 - Decomposing a project, feature request, or technical plan into trackable Gitea units.
 - Creating or editing milestones and issues with falsifiable acceptance criteria.
 - Setting rolling planning horizons for multi-phase epics.
-- Not for branch or worktree management: use `git-workspace`.
+- Not for branch or worktree management: use `git-manager`.
 - Not for pull request lifecycle or review tracking: use `gitea-pr`.
 
 ## Steps
@@ -48,5 +48,5 @@ description: >-
   acceptance criteria.
 
 ## Hands off to
-- `git-workspace`: to create dedicated branches or worktrees for the decomposed issues.
+- `git-manager`: to create dedicated branches or worktrees for the decomposed issues.
 - `gitea-pr`: to link, review, and close issues via pull requests.

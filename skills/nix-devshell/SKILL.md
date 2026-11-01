@@ -55,7 +55,7 @@ description: >-
   but are not presented as proof that the shell works.
 - **Unverified**: version-sensitive behavior not checked against the pinned revision,
   platforms not tested, and anything inferred rather than observed.
-- **User actions**: for example, track new files (by hand or with `git-commit`) and rerun
+- **User actions**: for example, track new files (by hand or with `git-manager`) and rerun
   the blocked checks.
 
 ## Your call
@@ -71,6 +71,6 @@ description: >-
   report has a row for every validation level.
 
 ## Hands off to
-- `git-commit`: to track or commit the new and changed files.
+- `git-manager`: to track or commit the new and changed files.
 - `diagnose`: when the root cause lies outside Nix (application bug, host fault).
 - `inspect-flake-update`: to review a lock update.

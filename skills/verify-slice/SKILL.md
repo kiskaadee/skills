@@ -33,5 +33,5 @@ description: >-
 
 ## Hands off to
 - `diagnose`: when a failed or blocked check needs root-cause investigation.
-- `git-commit`: when packaging approved verification or repair changes.
+- `git-manager`: when committing verified repair changes or managing test branches.
 - `document`: when verification uncovers a durable architectural insight or decision.

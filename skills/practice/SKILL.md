@@ -47,4 +47,4 @@ Never edit files in working repo or run implementation commands unless explicitl
 
 ## Hands off to
 - `document`: when a durable insight came out of the session.
-- `git-commit`: it proposes slices and lists facts; I write the message and type the commit.
+- `git-manager`: in `learning` mode or `/practice`, lists diff facts while I write the message and run the commit.

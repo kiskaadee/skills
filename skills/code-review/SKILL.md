@@ -39,4 +39,4 @@ description: >-
 ## Hands off to
 - `diagnose`: when a finding exposes a root cause that requires deeper troubleshooting.
 - `verify-slice`: to execute behavioral and runtime verification scenarios.
-- `git-commit`: when committing review fixes or test adjustments.
+- `git-manager`: when branching, committing review fixes, or rebasing.

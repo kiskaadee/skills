@@ -46,4 +46,4 @@ Write only in this repo. Never create copies elsewhere or wrapper skills for sla
 - The skill passes the checklist and one real dogfood run behaves as the spec says.
 
 ## Hands off to
-- `git-commit`: to commit the new or changed skill.
+- `git-manager`: for branch isolation, checkpoint commits, or repository operations.

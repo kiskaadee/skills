@@ -37,4 +37,4 @@ description: >-
 - The Reconciliation Report is approved by the user, canonical documentation files are written or updated, and consistency validation passes cleanly.
 
 ## Hands off to
-- `git-commit`: to review diffs and commit updated documentation files.
+- `git-manager`: for branch setup or committing updated documentation files.

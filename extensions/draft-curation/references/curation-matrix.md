@@ -15,7 +15,7 @@ Detailed specifications and epistemic classification table for ingesting inbox d
 2. **The Validation Gate**: If the vault has an automated validator (e.g. `python scripts/validate-brain.py`), a curated document must pass before any commit is made.
 3. **Zero Dangling Drafts**: Once a draft is curated and relocated to its destination, the original file in the staging directory must be deleted.
 4. **Interactive Checkpoint**: The agent must present the proposed destination, frontmatter, and rationale to the user before relocating files, unless explicitly instructed to process autonomously.
-5. **Atomic Curation Boundary**: Each curated document or cohesive bundle is relocated and validated as an independent unit. Git history is mutated only through `git-commit`.
+5. **Atomic Curation Boundary**: Each curated document or cohesive bundle is relocated and validated as an independent unit, then committed following `git-manager` conventions.
 6. **Unique Daily Journal & Reconciliation**: A daily journal (`03-records/journal/YYYY-MM-DD.md`) is a unique daily artifact. When a curated draft targets a date whose journal already exists, reconcile it with the existing record rather than creating a duplicate file (`-2.md`) or blindly overwriting. Reconciliation must preserve existing human edits, union the `assessed_commits` frontmatter list, and integrate genuinely new wins, artifacts, objectives, and reflections while avoiding duplicate entries.
 
 ## 2. Epistemic Classification Matrix

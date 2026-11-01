@@ -46,7 +46,7 @@ validation, never as proof that the devShell starts or compiles the project.
   output. Never report a command that was not executed in this session.
 - **Untracked files in Git-backed flakes**: when a newly created `flake.nix` or imported local
   file is untracked, Git-filtered flake evaluation cannot see it.
-  - Do **not** run `git add` (staging belongs to the user / `git-commit`).
+  - Do **not** run `git add` inside `nix-devshell` validation (staging and commits belong to `git-manager`).
   - Do **not** substitute `path:.` by default (it bypasses Git source filtering, copies the whole
     directory including untracked files into the Nix store, and does not test what contributors
     will run).
@@ -55,7 +55,7 @@ validation, never as proof that the devShell starts or compiles the project.
   - Still run any check that does not depend on the untracked flake (static review of the file,
     syntax check with `nix-instantiate --parse <file>`, or validation of an existing `shell.nix`),
     and state clearly that parsing does not prove evaluation, realization, or runtime.
-  - Under **User actions**, ask the user to track the file (manually or via `git-commit`) and
+  - Under **User actions**, note that the file must be tracked (manually or via `git-manager`) and
     rerun the blocked levels.
 
 ## 3. Symptom-to-evidence table
@@ -64,7 +64,7 @@ Treat symptoms as hypotheses. Inspect first, then make the smallest justified ch
 
 | Symptom | Phase | What to inspect first | Smallest next step |
 |---|---|---|---|
-| Flake says a visible local file does not exist | Evaluation | `git status` (is the path untracked?) | Explain Git source filtering; do not stage; ask user to track the path (or use `git-commit`). |
+| Flake says a visible local file does not exist | Evaluation | `git status` (is the path untracked?) | Explain Git source filtering; do not stage inside `nix-devshell`; track the path via `git-manager` (or ask user on `main`/`master`). |
 | `experimental Nix feature 'nix-command' / 'flakes' is disabled` | CLI / Evaluation | `nix --version`, `/etc/nix/nix.conf`, `~/.config/nix/nix.conf`, project docs | Follow the project's documented invocation or use classic `shell.nix` if supported. |
 | `attribute 'devShells.<sys>.default' missing` or unsupported system | Evaluation / Realization | Flake outputs and package `meta.platforms` in pinned nixpkgs | Add only required systems; wrap OS-specific packages in `lib.optionals`. |
 | `cannot coerce a function to a string` in package list | Evaluation | Error trace and the `packages` / `buildInputs` list syntax | Parenthesize function application inside lists (`(pkgs.foo.withPackages ...)`), or pass required args. |

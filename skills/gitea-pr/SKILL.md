@@ -4,7 +4,7 @@ description: >-
   Manage pull request lifecycle on Gitea: verify branch readiness, synthesize structured PR
   descriptions from code-review and verify-slice evidence packets, link issues, digest review
   feedback, and report merge readiness. Not for code inspection: use code-review. Not for
-  runtime QA: use verify-slice. Not for Git branch or merge mechanics: use git-workspace.
+  runtime QA: use verify-slice. Not for Git branch, commit, or merge mechanics: use git-manager.
 ---
 
 # Gitea PR
@@ -15,7 +15,7 @@ description: >-
 - Tracking review comments, requested changes, and CI checks toward merge readiness.
 - Not for static code inspection: use `code-review`.
 - Not for runtime behavioral verification: use `verify-slice`.
-- Not for branch creation, rebasing, or local history integration: use `git-workspace`.
+- Not for branch creation, committing, rebasing, or local history integration: use `git-manager`.
 
 ## Steps
 1. **Verify branch readiness.** Confirm the local working tree is clean (`git status --short`),
@@ -57,5 +57,4 @@ description: >-
 ## Hands off to
 - `code-review`: if the diff changes and needs renewed static inspection.
 - `verify-slice`: if new code requires runtime verification.
-- `git-commit`: to package review fixes into atomic commits.
-- `git-workspace`: to rebase or update the branch against upstream base.
+- `git-manager`: to commit review fixes, rebase, or update the branch against upstream base.

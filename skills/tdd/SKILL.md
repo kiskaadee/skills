@@ -37,4 +37,4 @@ description: >-
 - `code-review`: to inspect the resulting diff, code smells, defensive invariants, and test seam integrity.
 - `verify-slice`: when the slice also needs live runtime, browser DOM, or multi-service verification.
 - `diagnose`: when an unexpected test or fixture failure needs root-cause investigation.
-- `git-commit`: to commit cohesive vertical slices.
+- `git-manager`: for branch isolation or committing cohesive vertical slices.

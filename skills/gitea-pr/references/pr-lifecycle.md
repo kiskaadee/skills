@@ -12,7 +12,7 @@ Draft (WIP) -> Review -> Changes Requested -> Ready for Merge -> Merged
 
 1. **Draft (WIP)**: PR opened early for visibility. In Gitea, prefixed with `WIP:` or flagged `--draft`. CI may run; reviews are informal.
 2. **Review**: Feature complete, working tree clean, static `code-review` and runtime `verify-slice` evidence packets attached. Ready for formal audit.
-3. **Changes Requested**: Reviewer identified defects, missing tests, or security concerns. Agent addresses feedback via `git-commit` and refreshes evidence.
+3. **Changes Requested**: Reviewer identified defects, missing tests, or security concerns. Agent addresses feedback, commits fixes via `git-manager`, and refreshes evidence.
 4. **Ready for Merge**: All review threads resolved, static review confirms `Ready`, runtime checks pass, and mergeability is green.
 5. **Merged**: Merged into target base branch by the human owner. Associated issues are closed automatically by Gitea.
 
@@ -70,7 +70,7 @@ When comments or change requests arrive on a PR:
    - *Nits / Polish*: Minor style preferences that do not violate repo standards (human owner decides priority).
 3. **Implement fixes on the feature branch**:
    - Use `tdd` or direct edits.
-   - Commit fixes using `git-commit` with conventional commit scope (e.g. `fix(gitea-pr): address review feedback`).
+   - Commit fixes incrementally following `git-manager` conventions (e.g. `fix(gitea-pr): address review feedback`).
 4. **Re-verify after changes**:
    - Run `code-review` to confirm the updated diff fingerprint is clean.
    - Run `verify-slice` to substantiate runtime assertions.

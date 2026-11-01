@@ -31,19 +31,19 @@ Redact secrets (tokens, keys, connection strings) from anything you print or sav
 
 ## Checkpoints
 At risky or multi-system transitions (domain narrowed, hypothesis ruled out, change applied,
-ready to commit or deploy), pause and report in six short parts:
+ready to integrate or deploy), pause and report in six short parts:
 **Current state** (known vs unknown), **Reasoning**, **Changes**, **Validation**
 (expected vs actual), **Next action**, **Recovery** (how to roll back).
 For trivial issues, a one-sentence status is enough.
 
 ## Your call
 - Which hypothesis to chase when the evidence is ambiguous.
-- Approving any step that changes state: commit, push, deploy, data change.
+- Approving risky state transitions: push, deploy, data change, or exception-case Git operations per `profile/AGENTS.md`.
 - Whether the root cause taught something worth recording.
 
 ## Done when
 - The fix is verified where the failure happened, and all temporary probes are removed.
 
 ## Hands off to
-- `git-commit`: to package the fix once recovery is verified.
+- `git-manager`: for branch isolation, checkpoint commits, or recovery operations.
 - `document`: when the investigation revealed a non-obvious failure mode or design flaw.

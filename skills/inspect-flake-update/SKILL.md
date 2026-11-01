@@ -11,7 +11,7 @@ description: >-
 ## Use when
 - `flake.lock` has uncommitted modifications after updating inputs.
 - Inspecting, auditing, or reviewing revisions introduced by flake updates.
-- Not for general git diff inspections (use `/git-commit`).
+- Not for general Git operations or history management (use `/git-manager`).
 - Not for troubleshooting unrelated NixOS build failures (use `/diagnose`).
 
 ## Steps
@@ -30,17 +30,17 @@ description: >-
 4. **Synthesize changes and suggest commit message.** Summarize all inspected inputs,
    noting their updated versions and key upstream changes. Suggest a Conventional Commit
    message (e.g. `chore(flake): bump <input> to <rev>` or `chore(deps): update inputs`).
-5. **Hand off.** Hand off to `git-commit` to stage `flake.lock` and execute the commit.
+5. **Hand off.** Hand off to `git-manager` to stage `flake.lock` and commit per session-mode rules.
 
 ## Your call
 - Deciding whether to accept an input update or roll it back.
 - Choosing whether to run additional dry builds beyond `nix flake check`.
-- Approving the suggested commit message.
+- Approving the commit when on `main`/`master` or in `learning` mode per `profile/AGENTS.md`.
 
 ## Done when
 - All updated inputs have been reviewed, `nix flake check` passes cleanly, the change
-  summary and commit message are produced, and handoff to `git-commit` is ready.
+  summary and commit message are produced, and handoff to `git-manager` is ready.
 
 ## Hands off to
-- `git-commit`: to review staged changes and create the commit.
+- `git-manager`: to stage `flake.lock` and record the commit.
 - `diagnose`: if `nix flake check` or derivation evaluation fails.
