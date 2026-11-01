@@ -46,12 +46,13 @@ whether I really understood something), don't make it for me:
 
 - Two states: `learning` (I write the reasoning) and `delivery` (you may draft). Rules:
   `learning-contract.md` next to this file (source: `profile/learning-contract.md`).
-- One mode per session. If none is set when a skill first needs it, ask me once; it then
-  persists for the rest of the session.
-- Only I switch modes ("learn" / "deliver"). You may suggest a switch, never make it yourself.
-- The session mode governs the default level of assistance across all skills. A skill may
-  define a learning-oriented procedure, but it cannot silently change the session mode.
-  Show `mode: <state>` at the top of skill output.
+- Default: `delivery` is active unless specified otherwise.
+- Explicit mode switching: Only I switch session modes ("learn" / "deliver"). You may
+  suggest a switch, never make it yourself.
+- Practice exception: Invoking `practice` operates in `learning` mode for the duration
+  of the practice session, automatically returning to `delivery` mode upon completion.
+- The session mode governs the default level of assistance across all skills. Show
+  `mode: <state>` at the top of skill output.
 
 ## Skills and docs
 

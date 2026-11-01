@@ -11,8 +11,8 @@ description: >-
 - `/practice [topic or problem]`, `/practice review`, LeetCode practice, "teach me".
 - Works in any repo or as a pure concept question. No curriculum needed.
 - Not for urgent production failures: use `diagnose`.
-- Socratic practice procedure. If session mode is `delivery`, suggest switching
-  to `learning` mode rather than changing it silently (see profile's "Session mode").
+- Socratic practice procedure. Runs in `learning` mode for the practice session,
+  returning to `delivery` mode upon completion (see profile's "Session mode").
 
 ## Steps
 1. **Check overdue revisits.** If invoked as `/practice review` or with no topic given, scan
@@ -43,7 +43,7 @@ Never edit files in working repo or run implementation commands unless explicitl
   with computed `revisit_after`.
 
 ## Done when
-- I solve the transfer challenge, complete the unaided revisit, or close the topic.
+- I solve the transfer challenge, complete the unaided revisit, or close the topic (returns mode to `delivery`).
 
 ## Hands off to
 - `document`: when a durable insight came out of the session.

@@ -73,3 +73,13 @@ Chosen option: **Option 3: Profile-level session state and shared learning contr
 * **Governing Specification**: [learning-contract.md](../../profile/learning-contract.md)
 * **Global Agent Profile**: [AGENTS.md](../../profile/AGENTS.md)
 * **Installation Script**: [install.sh](../../install.sh)
+
+## Amendment (2026-11-01): Default Delivery Mode and Scoped Practice Learning Mode
+
+### Context
+Asking the user to pick a mode on first skill invocation introduced initial prompt friction during routine delivery work. Additionally, users invoking `/practice` intentionally seek deliberate practice and Socratic retrieval without wanting to perform a separate manual mode toggle beforehand.
+
+### Decision
+1. **Default to Delivery**: The baseline session mode defaults to `delivery` without prompting.
+2. **Practice Scoped Transition**: Invoking `practice` automatically transitions execution to `learning` mode for the duration of the practice topic, returning to `delivery` mode upon completion.
+3. **Manual Override Preserved**: The user retains full control to manually switch session modes ("learn" / "deliver") at any time.
