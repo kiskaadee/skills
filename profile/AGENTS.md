@@ -76,4 +76,5 @@ whether I really understood something), don't make it for me:
 - If `gitea.roadtotech.me` or `roadtotech.me` times out with `dial tcp ...:443: i/o timeout`:
   - The residential ISP dynamic WAN IP has renewed and public DNS is pointing to an expired IP.
   - Run `cf-ddns` in bash to automatically sync Cloudflare DNS records with the current public WAN IP.
+  - *Context*: `cf-ddns` is a temporary manual workaround. The server-side `dynu-monitor` is deprecated following infrastructure migration to Cloudflare, while the general-purpose `ddns-monitor` (`~/Projects/active/ddns-monitor`) is not yet production-ready.
 
