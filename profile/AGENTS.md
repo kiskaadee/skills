@@ -70,3 +70,10 @@ whether I really understood something), don't make it for me:
 - When resolving a project from task context, search these workspace roots before asking the user.
 - To create new projects or repositories, always use `new-repo` (source: `~/Projects/active/new-repo`). It supports organization targeting (`-o`), GitHub push mirroring, licenses, and templates.
 
+## Homelab and connectivity
+
+- Sovereign Gitea origin lives at `gitea.roadtotech.me` (hosted on `server-local` at `192.168.1.36`).
+- If `gitea.roadtotech.me` or `roadtotech.me` times out with `dial tcp ...:443: i/o timeout`:
+  - The residential ISP dynamic WAN IP has renewed and public DNS is pointing to an expired IP.
+  - Run `cf-ddns` in bash to automatically sync Cloudflare DNS records with the current public WAN IP.
+
