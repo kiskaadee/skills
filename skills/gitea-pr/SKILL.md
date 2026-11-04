@@ -34,15 +34,17 @@ description: >-
    - Static Review Provenance: Base/head SHAs, diff SHA256, and 4-axis disposition.
    - Runtime Verification Ledger: Markdown table of executed checks and outcomes.
    - Residual Risks and Rollback: Operational considerations and reversibility.
-4. **Present for human approval.** Present the proposed title, target base branch, milestone,
+4. **Present for human approval.** Present proposed title, target base branch, milestone,
    and description body to the user per `profile/AGENTS.md`. Stop for confirmation before
    creating or editing the pull request.
-5. **Create or update pull request via `tea`.** Run verified commands from
-   [references/tea-pulls.md](references/tea-pulls.md) (`tea pulls create --description-file -`).
-   Pass `--draft` if work remains in progress.
-6. **Track review feedback and merge readiness.** Inspect incoming review comments
-   (`tea pulls review-comments <index>`) and mergeability status. Synthesize actionable
-   feedback. When all checks pass and review feedback is resolved, report `Ready for Merge`.
+5. **Create or update pull request via `gt pr`.** Run verified commands from
+   [references/gt-pulls.md](references/gt-pulls.md):
+   `gt pr create -t "<title>" -B "<base>" -H "<branch>" -F <body-file> --json number,url`.
+   Pass `--draft` if work remains in progress. Extract verified PR number and URL.
+6. **Track review feedback and merge readiness.** Inspect status checks (`gt pr checks <number>`),
+   mergeability (`gt pr view <number> --json mergeable,review_decision`), and review comments
+   (`gt pr review comments <number>`). When all checks pass and review feedback is resolved,
+   report `Ready for Merge`.
    Release and merge authority belongs exclusively to the human owner: never merge automatically.
 
 ## Your call

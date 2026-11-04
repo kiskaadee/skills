@@ -62,7 +62,7 @@ When comments or change requests arrive on a PR:
 
 1. **Extract review comments**:
    ```sh
-   tea pulls review-comments <index>
+   gt pr review comments <number>
    ```
 2. **Categorize comments**:
    - *Defects & Invariants*: Logic errors, broken tests, edge-case crashes (require code fix).
@@ -74,9 +74,9 @@ When comments or change requests arrive on a PR:
 4. **Re-verify after changes**:
    - Run `code-review` to confirm the updated diff fingerprint is clean.
    - Run `verify-slice` to substantiate runtime assertions.
-5. **Reply and resolve threads via `tea`**:
-   - Reply to comment: `tea pulls reply <index> <comment-id> "Fixed in <sha>"`
-   - Resolve thread: `tea pulls resolve <comment-id>`
+5. **Reply and resolve threads via `gt pr`**:
+   - Reply to comment: `gt pr review reply <number> <comment-id> "Fixed in <sha>"`
+   - Resolve thread: `gt pr review resolve <comment-id>`
 6. **Push updates to remote**:
    - `git push origin <branch>`
 
@@ -85,5 +85,5 @@ When comments or change requests arrive on a PR:
 ## 4. Release Authority Guardrail
 
 Automated skills and checks inform the human owner; they never make the merge decision independently:
-- Neither passing unit tests nor a `Ready` code review implies permission to execute `tea pulls merge`.
+- Neither passing unit tests nor a `Ready` code review implies permission to execute `gt pr merge`.
 - The human owner reviews the consolidated ledger, assesses residual risks, and explicitly authorizes merge execution.
