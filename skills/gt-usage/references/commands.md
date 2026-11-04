@@ -43,6 +43,12 @@ gt project list --json id,title,state,url
 
 # View project cards and columns
 gt project view <id>
+
+# List board columns with IDs
+gt api /repos/{owner}/{repo}/projects/<project-id>/columns --jq '.[].id, .[].title'
+
+# Move issue card between columns (requires global issue ID, e.g. from `gt issue list --json id,number`)
+gt api -X POST /repos/{owner}/{repo}/projects/<project-id>/issues/<global-issue-id>/move -F column_id=<target-col-id>
 ```
 
 ## 4. Issues
