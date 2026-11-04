@@ -57,6 +57,9 @@ gt api -X POST /repos/{owner}/{repo}/projects/<project-id>/issues/<global-issue-
 # Create issue attached to milestone and project
 gt issue create -t "<title>" -F <body-file> -m <milestone-id> -p <project-id> --json number,title,url
 
+# List open issues with global IDs and numbers
+gt issue list --json id,number,title,state,url
+
 # List open issues in a milestone
 gt issue list -m <milestone-id> --json number,title,state,url
 

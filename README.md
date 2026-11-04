@@ -141,6 +141,28 @@ When run:
 
 ---
 
+## Behavioral Regression Testing
+
+To ensure portable skills and Gitea integrations maintain behavioral invariants across updates, run the deterministic regression test harness:
+
+```bash
+# Run full behavioral contract and invariant test suite
+./tests/fixtures/run_regression.sh
+```
+
+Validates:
+- Prerequisite verification and actionable `gt` CLI setup guidance.
+- Anti-hallucination querying rules (preventing hardcoded milestone/issue sequence numbers).
+- Adaptive proportionality scaling (lightweight docs vs full test ceremony).
+- Canonical 5-tuple workflow node schema and dynamic Mermaid projections.
+- Security invariant verification seams.
+- State-preserving failure/rework routing.
+- Execution deviation logging.
+- Strict dry-run zero-mutation invariants.
+- Skill line caps (≤80 lines), em-dash absence, and path portability.
+
+---
+
 ## Governing Design Rules
 
 1. **One authoritative owner per rule.** If a rule belongs in `AGENTS.md`, do not restate it in every skill.
