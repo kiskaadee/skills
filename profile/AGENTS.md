@@ -77,4 +77,7 @@ whether I really understood something), don't make it for me:
   - The residential ISP dynamic WAN IP has renewed and public DNS is pointing to an expired IP.
   - Run `cf-ddns` in bash to automatically sync Cloudflare DNS records with the current public WAN IP.
   - *Context*: `cf-ddns` is a temporary manual workaround. The server-side `dynu-monitor` is deprecated following infrastructure migration to Cloudflare, while the general-purpose `ddns-monitor` (`~/Projects/active/ddns-monitor`) is not yet production-ready.
+- If git/ssh fails with `Bad owner or permissions on /home/kiskaadee/.ssh/config`:
+  - Home Manager has symlinked `~/.ssh/config` to `/nix/store/...` (owned by `nobody:nogroup`), which OpenSSH strictly rejects.
+  - Run `cp -L ~/.ssh/config ~/.ssh/config.tmp && mv ~/.ssh/config.tmp ~/.ssh/config && chmod 600 ~/.ssh/config` to de-symlink it to a regular file owned by the user.
 
