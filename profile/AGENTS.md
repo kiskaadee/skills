@@ -73,6 +73,8 @@ whether I really understood something), don't make it for me:
 ## Homelab and connectivity
 
 - Sovereign Gitea origin lives at `gitea.roadtotech.me` (hosted on `server-local` at `192.168.1.36`).
+- For `gt` (Gitea CLI) repository discovery against sovereign SSH remote on port 2223:
+  - Run `gt config set ssh_host gitea.roadtotech.me:2223 --host https://gitea.roadtotech.me` so `gt` maps SSH remotes like `ssh://git@gitea.roadtotech.me:2223/...` to `https://gitea.roadtotech.me`.
 - If `gitea.roadtotech.me` or `roadtotech.me` times out with `dial tcp ...:443: i/o timeout`:
   - The residential ISP dynamic WAN IP has renewed and public DNS is pointing to an expired IP.
   - Run `cf-ddns` in bash to automatically sync Cloudflare DNS records with the current public WAN IP.

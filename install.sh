@@ -33,14 +33,41 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Active skills to install
-ACTIVE_PORTABLE_SKILLS=(build-skill code-review derive-skill diagnose document git-manager gitea-plan gitea-pr implement-slice inspect-flake-update journal-builder nix-devshell practice reconcile-docs tdd verify-slice)
+ACTIVE_PORTABLE_SKILLS=(build-skill code-review derive-skill diagnose document git-manager gitea-plan gitea-pr gt-usage implement-slice inspect-flake-update journal-builder nix-devshell practice reconcile-docs tdd verify-slice)
 ACTIVE_EXTENSION_SKILLS=(draft-curation)
 
 # Legacy / deprecated skills to clean up or back up if found in target
 OBSOLETE_SKILLS=(engineering-tutor engineering-investigation skill-builder documentation-router inbox-curation commit-logger git-commit git-workspace)
 OBSOLETE_AGENTS=(anne-droid.md)
 
+check_prerequisites() {
+  local status=0
+  if ! command -v git >/dev/null 2>&1; then
+    echo "  [ERROR] git is required but not found in PATH." >&2
+    status=1
+  fi
+  if ! command -v gt >/dev/null 2>&1; then
+    echo "  [WARNING] 'gt' CLI not found in PATH." >&2
+    echo "            Gitea skills (gt-usage, gitea-plan, gitea-pr, implement-slice) require the official Gitea CLI (v1.0.0+)." >&2
+    echo "            Install via package manager or download from https://gitea.com/gitea/cli/releases" >&2
+  else
+    local missing_subcommands=()
+    for sub in issue milestone project pr; do
+      if ! gt "$sub" --help >/dev/null 2>&1; then
+        missing_subcommands+=("$sub")
+      fi
+    done
+    if [[ ${#missing_subcommands[@]} -gt 0 ]]; then
+      echo "  [WARNING] 'gt' CLI found but lacks required capabilities: ${missing_subcommands[*]}" >&2
+      echo "            Update gt to the official release (https://gitea.com/gitea/cli)." >&2
+    fi
+  fi
+  return "$status"
+}
+
 echo "=== Target: $TARGET_DIR (mode: $MODE) ==="
+
+check_prerequisites
 
 if [[ "$CHECK_ONLY" -eq 1 ]]; then
   echo "Checking installation state..."
