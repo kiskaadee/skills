@@ -2,7 +2,20 @@
 
 Reference for `implement-slice`. Every delegation uses explicit, bounded schemas so subagents execute deterministically and return compact evidence packets.
 
-## 1. Implementation Assignment (Orchestrator -> Worker)
+## 1. Preflight Branch and Worktree Safeguards
+
+Before decomposing or delegating work, inspect `git status --short` and `git branch -v`:
+
+| Working Tree & Branch State | Classification | Orchestrator Action |
+| :--- | :--- | :--- |
+| **Clean tree on target base branch** | `CLEAN_BASE` | Proceed directly to plan formulation. |
+| **Tree contains uncommitted changes matching the target slice** | `ADOPTABLE_DIFF` | Offer to adopt uncommitted changes into the new slice branch. |
+| **Tree has uncommitted edits to unrelated files or sits on an unmerged PR branch** | `CONFLICTING_STATE` | **Hard Stop.** Report active branch and diff stat. Offer structured options (stash, commit to existing branch, switch). |
+| **Current branch does not match intended base** | `WRONG_BASE` | **Hard Stop.** Halt and prompt user to switch to target base before branching. |
+
+---
+
+## 2. Implementation Assignment (Orchestrator -> Worker)
 
 Provide before spawning (or messaging) an implementation worker:
 
@@ -14,7 +27,7 @@ Provide before spawning (or messaging) an implementation worker:
 - **Checkpoint Expectation**: Expected coherent commit boundary (or boundaries) following `git-manager` Conventional Commits.
 - **Required Compact Report**: Request concise structured output (no raw multi-hundred-line logs unless a check fails).
 
-## 2. Implementation Report (Worker -> Orchestrator)
+## 3. Implementation Report (Worker -> Orchestrator)
 
 Require each worker to return:
 
@@ -26,7 +39,7 @@ Require each worker to return:
 
 ---
 
-## 3. Pre-Committed QA Rubric Assignment (Orchestrator -> QA Subagent)
+## 4. Pre-Committed QA Rubric Assignment (Orchestrator -> QA Subagent)
 
 The rubric is written and approved during Step 3 (before implementation begins). When spawning the QA subagent:
 
@@ -35,7 +48,7 @@ The rubric is written and approved during Step 3 (before implementation begins).
 - **Pre-Committed Falsifiable Checks**: Numbered checks with scope (`local` vs. `live-infra`), exact pass conditions, `FAIL if ...` signals, and any `code-review` Step 6 `RV-*` checks.
 - **Authorization Boundary**: Explicitly state whether any `live-infra` check has human owner authorization for this run (default: unauthorized -> record `BLOCKED (out-of-bounds)`).
 
-## 4. QA Report (QA Subagent -> Orchestrator)
+## 5. QA Report (QA Subagent -> Orchestrator)
 
 Follows the `verify-slice` disposition contract:
 
@@ -46,7 +59,47 @@ Follows the `verify-slice` disposition contract:
 
 ---
 
-## 5. Failure Triage and Rubric Amendment Routing
+## 6. The Tripartite Workflow Contract Schemas
+
+### A. Planned Workflow Schema (Step 3 Gate)
+```markdown
+### Planned Workflow
+- **Task Breakdown**:
+  - `TASK-01`: <Objective> (Role: Worker, Scope: <files>, Commits: <expected-commits>)
+- **Verification Plan**:
+  - `CHK-01`: Claim: <invariant>, Method: <cmd>, Executor: <role>, Pass: <condition>, Failure: <route>
+- **Workflow Graph**:
+  ```mermaid
+  <dynamic-projection-from-nodes>
+  ```
+```
+
+### B. Execution Record Schema (Steps 4–5 Log)
+Updated dynamically in orchestrator turns:
+```markdown
+| Node ID | Claim / Invariant | Method | Executor | Evidence | Pass Condition | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `TASK-01` | <claim> | <method> | <role> | Commit `<sha>` | Clean tree | `passed` |
+| `CHK-01`  | <claim> | <method> | <role> | Exit 0 stdout | Exit 0 | `passed` |
+```
+
+### C. Deviation Report Schema (Step 6 Handoff)
+```markdown
+### Execution Deviation Report
+- **Skipped Checks**: <None | List of skipped checks with explicit rationale>
+- **Added Checks**: <None | New checks introduced in response to findings>
+- **Rework Iterations**: <0 | Details of remediation loops and commit references>
+- **Scope Drift**: <None | Differences between planned and actual seams>
+```
+
+### Dynamic Mermaid Projection Rules
+- **Derive directly from nodes**: Nodes in the graph must match `node_id`s from the planned workflow table.
+- **Expose falsification routes**: Graph edges must explicitly show failure paths (e.g. `QA -- "Fail (rework)" --> Worker`).
+- **Never paste generic templates**: Every diagram must reflect the exact slice tasks and assurance checks.
+
+---
+
+## 7. Failure Triage and Rubric Amendment Routing
 
 Never relay "QA failed" blindly. Classify each non-passing outcome and route to the right owner:
 
@@ -61,7 +114,7 @@ Never relay "QA failed" blindly. Classify each non-passing outcome and route to 
 
 ---
 
-## 6. Final-HEAD Evidence Invariant and Terminal Delivery
+## 8. Final-HEAD Evidence Invariant and Terminal Delivery
 
 ### The Invariant
 

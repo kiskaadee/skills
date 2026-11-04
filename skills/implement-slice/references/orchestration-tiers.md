@@ -6,7 +6,7 @@ Reference for `implement-slice`. Defines how the orchestrator combines existing 
 
 These boundaries hold across every slice size and risk tier:
 
-1. **No implementation or self-certified QA**: The orchestrator never edits product or test files, creates ad-hoc fixup commits, executes mutations to repair broken code, or declares runtime QA passing without worker/QA evidence. Read-only inspection (`tea`, `git status`, `git log`, `git diff --stat`, targeted file reads to check a contradiction) is allowed.
+1. **No implementation or self-certified QA**: The orchestrator never edits product or test files, creates ad-hoc fixup commits, executes mutations to repair broken code, or declares runtime QA passing without worker/QA evidence. Read-only inspection (`gt`, `git status`, `git log`, `git diff --stat`, targeted file reads to check a contradiction) is allowed.
 2. **Context-budget discipline**:
    - **Retain in orchestrator context**: approved slice plan, task dependency status, assigned workspace/branch refs, checkpoint commit SHAs, QA check dispositions, active blockers, and open human decisions.
    - **Delegate out of orchestrator context**: full test suite transcripts, build logs, browser traces, and line-by-line edit narratives. Require concise structured reports with exact references (commit SHAs, `path:line` locations, check IDs, or log/artifact paths) and inspect raw output only when resolving a discrepancy or failure.
@@ -46,3 +46,55 @@ Explicit ownership prevents concurrent working-tree corruption and keeps Git rec
 1. **Sequential default**: Prefer sequential task delegation on a single slice branch when tasks touch related modules or take minutes rather than hours; parallel worktrees pay an integration cost.
 2. **Mandatory isolation for concurrency**: Never run two implementation subagents concurrently in the same working directory. Concurrent implementation tasks require separate `git-manager` worktrees and an explicit integration step before final-`HEAD` review.
 3. **Stateful worker reuse**: Retain each worker's subagent `conversationId`. When QA or `code-review` routes actionable rework back on a task, message that existing worker (`send_message`) so it retains design context instead of spawning a cold worker. Spawn a fresh worker only for a distinct new task or when the original worker session is unavailable.
+
+---
+
+## 4. Canonical Workflow Node Schema & Proportional Scaling
+
+Every task, check, and gate in the slice workflow is represented by a structured node to enable inspectability and comparison:
+
+### Mandatory Core Fields (All Nodes)
+- **`node_id`**: Stable identifier (e.g. `TASK-01`, `CHK-UNIT-01`, `GATE-MERGE`).
+- **`claim`**: The observable behavior, contract, or invariant being asserted.
+- **`method`**: Concrete execution mechanism or harness (e.g. `node:test`, `pytest -m contract`, `git diff --check`, manual user review).
+- **`executor`**: Specific assigned role (`Implementation Worker`, `Independent QA Subagent`, `Reviewer Subagent`, `Human Owner`).
+- **`pass_condition`**: Deterministic pass/fail criterion (e.g. exit code 0, regex match, zero uncommitted files).
+- **`status`**: Evidence-backed execution state:
+  * `planned`: Defined, not yet executed.
+  * `blocked`: Cannot run due to unmet prerequisite.
+  * `skipped`: Deliberately omitted, with recorded rationale.
+  * `failed`: Ran and failed pass condition (failure log recorded).
+  * `passed`: Verified with concrete evidence. Missing evidence strictly prohibits `passed`.
+
+### Optional / Scaled Fields (Omitted or Simplified for Simple Slices)
+- **`failure_route`**: For routine/doc tasks, defaults to *"rework in-place and rerun affected check"*; complex slices specify explicit rework loops across delegated subagents.
+- **`evidence`**: Simple doc/format tasks record exit code and commit SHA; complex code tasks attach stdout, DOM snapshots, or test run logs.
+- **Separate QA Executor**: Documentation and routine edits use the implementation agent directly; high-risk slices mandate independent verifier subagents.
+
+---
+
+## 5. Runtime Observability Timeline & Dry-Run Invariants
+
+Observability is an active oversight instrument during execution, not a retrospective summary:
+
+1. **Pre-Execution (Gate 1)**: Orchestrator surfaces the **Planned Workflow** (structured node definitions and dynamic Mermaid projection) in chat prose for human approval before spawning workers.
+2. **During Execution (Runtime Updates)**: Orchestrator dynamically updates the **Execution Record** as nodes transition states (`planned` -> `passed` / `failed` / `blocked` / `skipped`), exposing progress and failure-rework loops in orchestrator turn updates.
+3. **Post-Execution (Step 6 Handoff)**: Orchestrator presents the **Deviation Report** comparing actual execution against the plan, alongside links to verified commit SHAs.
+
+### Dry-Run Mode (`/implement-slice --dry-run`)
+Dry-run mode is defined strictly by **zero side-effects and zero mutations**:
+- Produces the complete planned workflow, scope analysis, verification 5-tuples, and proposed diffs.
+- Enforces 0 uncommitted changes, 0 new Git commits, 0 remote pushes, and 0 Gitea issue/PR/milestone mutations.
+
+---
+
+## 6. Policy-Aware Integration Strategy Matrix
+
+The choice between direct fast-forward merge and opening a Gitea pull request is governed by repository policy and authorization, not developer convenience:
+
+| Factor | Direct Fast-Forward Merge | Pull Request (`gt pr create`) |
+| :--- | :--- | :--- |
+| **Repository `AGENTS.md`** | Must explicitly permit direct commits/merges to `main`. | Mandatory whenever repo policy prohibits direct commits to `main`. |
+| **CI / Actions Requirement** | Permitted only if no remote CI workflows are required before merge. | Mandatory whenever remote Gitea Actions CI or deployment pipelines must validate branch. |
+| **Review & QA Status** | Final-`HEAD` `code-review` and `verify-slice` evidence packets must be clean. | Packaged into PR body (`Closes #<id>`, review provenance, verification ledger). |
+| **Human Authorization** | Explicit human approval required before merging. | Human owner authorizes creation and final merge. |
