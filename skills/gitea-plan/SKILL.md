@@ -33,8 +33,10 @@ description: >-
    issues with audit disposition. Stop for approval before creating Gitea entities.
 6. **Execute Gitea operations via `gt` CLI.** Use verified commands from `gt-usage`:
    - Milestones: `gt milestone create "<title>" -d "<desc>" --json id,url`.
-   - Projects: `gt project create "<title>" --template basic_kanban --json id,url`.
-   - Issues: `gt issue create -t "<title>" -F <file> -m <id> -p <id> --json number,url`.
+   - Projects: `gt project create "<title>" --template basic_kanban --json id,url`
+     (for multi-repo orgs, root at org level with `--org <org>`).
+   - Issues: `gt issue create -t "<title>" -F <file> -m <id> -p <id> --json number,url`
+     (or attach to org board: `gt issue edit <number> -R <repo> --add-project <id>`).
    Extract server IDs directly; never guess sequence numbers or construct `/milestone/1`.
 7. **Verify created state.** Inspect `gt issue list` and `gt milestone list` to
    confirm server IDs, board cards, and non-hallucinated canonical URLs.

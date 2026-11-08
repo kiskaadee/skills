@@ -35,14 +35,19 @@ gt milestone view <id>
 Projects provide spatial Kanban workflow stages.
 
 ```bash
-# Create project board with basic kanban columns
+# Create repository project board with basic kanban columns
 gt project create "<title>" --template basic_kanban -d "<description>" --json id,title,url
 
-# List open projects
+# Create organization-level project board
+gt project create "<title>" --org <org> --template basic_kanban -d "<description>" --json id,title,url
+
+# List open projects (repository or organization)
 gt project list --json id,title,state,url
+gt project list --org <org> --json id,title,state,url
 
 # View project cards and columns
 gt project view <id>
+gt project view <id> --org <org>
 
 # List board columns with IDs
 gt api /repos/{owner}/{repo}/projects/<project-id>/columns --jq '.[].id, .[].title'
@@ -56,6 +61,9 @@ gt api -X POST /repos/{owner}/{repo}/projects/<project-id>/issues/<global-issue-
 ```bash
 # Create issue attached to milestone and project
 gt issue create -t "<title>" -F <body-file> -m <milestone-id> -p <project-id> --json number,title,url
+
+# Add an existing issue in a child repo to an organization project
+gt issue edit <number> -R <owner/repo> --add-project <project-id>
 
 # List open issues with global IDs and numbers
 gt issue list --json id,number,title,state,url

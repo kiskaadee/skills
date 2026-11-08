@@ -71,3 +71,12 @@ When planning large epics, avoid waterfall decomposition where every future task
 1. **Active Milestone (Immediate Horizon)**: Decomposed into 2 to 5 concrete deliverable issues with falsifiable acceptance criteria.
 2. **Future Milestones (Deferred Horizons)**: Represented as high-level milestones or single coarse placeholder issues in Gitea.
 3. **Architecture Synchronization**: Update repository docs (`reconcile-docs`) before decomposing the next rolling milestone.
+
+---
+
+## 6. Multi-Repository Organizations and Shared Boards
+
+When planning across multi-repository architectures (where an organization hub coordinates multiple deliverable repositories or services):
+- **Root Kanban at Organization Level**: Create the shared board at the organization level (`gt project create "<title>" --org <org> --template basic_kanban`). Do not isolate tracking into separate child repository boards.
+- **Attach Child Issues to Org Board**: Deliverable issues and pull requests created in child repositories attach to the organization board via `gt issue create ... -p <project-id>` or `gt issue edit <number> -R <owner/repo> --add-project <project-id>`.
+- **Hub Documentation Alignment**: Architectural strategy, shared documentation, and roadmaps remain centralized in the hub repository, while the organization-level Kanban board coordinates unified cross-repo delivery status.
