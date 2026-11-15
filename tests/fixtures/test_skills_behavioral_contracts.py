@@ -474,6 +474,12 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
         self.assertIn("journal-builder", install_sh)
         self.assertIn("draft-curation", install_sh)
 
+        # 3. Vertical per-submodule Red->Green decomposition in gitea-plan and implement-slice
+        plan_all = "\n".join(p.read_text() for p in (REPO_ROOT / "skills" / "gitea-plan").rglob("*.md"))
+        impl_all = "\n".join(p.read_text() for p in (REPO_ROOT / "skills" / "implement-slice").rglob("*.md"))
+        self.assertIn("Vertical Submodule TDD Grouping", plan_all)
+        self.assertIn("Vertical Submodule TDD Decomposition (Anti-Horizontal Batching)", impl_all)
+
     def test_skill_inventory_and_skeletons(self):
         """Proves all 16 active skills meet line count (<= 80), em-dash, and path portability rules."""
         for skill_name in EXPECTED_SKILLS:

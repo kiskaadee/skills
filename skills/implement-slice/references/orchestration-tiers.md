@@ -71,6 +71,11 @@ Every task, check, and gate in the slice workflow is represented by a structured
 - **`evidence`**: Simple doc/format tasks record exit code and commit SHA; complex code tasks attach stdout, DOM snapshots, or test run logs.
 - **Separate QA Executor**: Documentation and routine edits use the implementation agent directly; high-risk slices mandate independent verifier subagents.
 
+### Vertical Submodule TDD Decomposition (Anti-Horizontal Batching)
+When a slice spans multiple modules or layers (for example, `protocols.py` -> `ssap.py` -> `pointer.py` -> `manager.py`), never decompose the workflow horizontally into `TASK-00: write all tests for every module` followed by `TASK-01..02: implement all modules`. Instead, sequence tasks as **bottom-up vertical Red->Green cycles per submodule or capability**:
+1. Each submodule task writes its own focused Red test(s) (committing a Red `@pytest.mark.xfail(strict=True)` checkpoint when requested by repo SOP), implements that submodule to turn its tests Green, and commits the Green checkpoint before the next higher-level submodule writes its tests against the settled lower layer.
+2. This preserves organic Git history (`git log` and `git bisect` trace each building block in dependency order) and prevents writing tests against imagined lower-level interfaces.
+
 ---
 
 ## 5. Runtime Observability Timeline & Dry-Run Invariants

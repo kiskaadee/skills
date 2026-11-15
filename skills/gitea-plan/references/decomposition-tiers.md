@@ -7,6 +7,7 @@ Reference for `gitea-plan`. Guidelines for scaling planning ceremony to risk and
 - An **Issue** represents an **independently deliverable outcome** (what is built, verified, and closed by a pull request). It defines falsifiable acceptance criteria and expected behavior.
 - A **Commit** represents an **atomic, reversible implementation checkpoint** (a step within that issue's branch). Commits must compile and pass tests, but do not need to represent an entire closed issue on their own.
 - **Anti-pattern**: Never create 1:1 Gitea issues for micro-commits (such as "fix typo", "add helper function", or "clean up lint"). Group cohesive checkpoints under a single deliverable issue.
+- **Vertical Submodule TDD Grouping**: Inside a multi-module issue, organize acceptance criteria and TDD test drafts vertically by submodule or dependency layer (e.g. `protocols` -> `ssap` -> `pointer` -> `manager`) rather than a single horizontal "write all tests for the entire issue first" section, so `implement-slice` executes incremental Red->Green cycles per submodule.
 
 ---
 

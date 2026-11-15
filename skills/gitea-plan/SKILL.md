@@ -27,7 +27,9 @@ description: >-
 2. **Assess scope and select tier.** Assign `Small`, `Medium`, or `Large`.
    Emit explicit `### Project Board Policy: <Omitted|Recommended|Required> (Rationale)`.
 3. **Decompose into deliverable outcome slices.** Map work into verifiable issues
-   with test seams and falsifiable acceptance criteria (Context, Solution, Criteria).
+   with test seams and falsifiable acceptance criteria (Context, Solution, Criteria),
+   grouping TDD test seams vertically by submodule or capability rather than a single
+   monolithic upfront test block across all modules.
 4. **Run independent reproducibility audit.** Spawn clean-room subagent with raw
    input manifest (commit SHA, specs, proposed issue markdown). Review 5-section
    evaluation to resolve material ambiguities before human gate.
