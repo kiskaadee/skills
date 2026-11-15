@@ -9,8 +9,10 @@ Treat each source according to its temporal role and authority:
 | Source | Temporal role | Epistemic authority |
 | :--- | :--- | :--- |
 | Chronological records (vault notes, logs, discussions) | Past | Historical evidence. Explains how the system arrived here. |
-| Repository implementation (code, tests, configuration) | Present | Canonical technical truth. Determines what the system is right now. |
-| Existing repository documentation | Present | Canonical unless contradicted by current implementation. |
+| Merged PRs & published `code-review` comments (`gt pr`) | Past -> Present | Primary record of slice-level contract evolutions, accepted trade-offs, and deferred nits. |
+| Repository implementation (code, tests, configuration, `AGENTS.md`) | Present | Canonical technical truth. Determines what the system is right now. |
+| Existing repository documentation (`ARCHITECTURE.md`, `docs/designs/*.md`) | Present | Canonical unless contradicted by current implementation. |
+| Gitea Milestones & Project Board (`Completed` vs. `Backlog`/`Ready`) | Present -> Future | Read-only delivery state: `Completed` cards are present truth; `Backlog`/`Ready` cards are future intent. |
 | Active plans (roadmaps, proposals, pending designs) | Future | Planned intent. Describes where the system may go next. |
 | ADRs | Past -> Present | Historical decision record that remains valid until superseded. |
 | ROADMAP | Future | Intended technical trajectory. |
@@ -53,3 +55,8 @@ Flag contradictions explicitly during reconciliation rather than quietly smoothi
 ### Amnesiac Implementation
 - *Symptom*: The codebase contains complex boundaries, non-standard conventions, or unusual workarounds, but history contains no explanation.
 - *Resolution*: Document the current reality in `ARCHITECTURE.md` and surface an ADR candidate during the Step 5 human checkpoint so the engineer can supply the missing rationale.
+
+
+### Mid-Slice Spec Drift
+- *Symptom*: A merged slice intentionally evolved a shared type, configuration model, error class, or boundary (documented in `AGENTS.md` or PR review comments), leaving an active design specification (`docs/designs/*.md`) or `ARCHITECTURE.md` referencing the pre-slice contract.
+- *Resolution*: Reconcile the affected sections of `docs/designs/*.md` and `ARCHITECTURE.md` to match the merged implementation on `main` before downstream slices execute.

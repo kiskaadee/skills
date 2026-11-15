@@ -99,3 +99,14 @@ Only items that represent intentional, validated future trajectory belong here.
 ### Contract Invariants
 - Never include implemented features as active roadmap items.
 - Avoid dumping every scratchpad TODO into the roadmap; include only items with deliberate commitment or research interest.
+
+
+---
+
+## 5. Active Design Specifications (docs/designs/*.md)
+
+**Core Question**: What is the approved technical specification for an active multi-slice feature or epic?
+
+### Contract Invariants
+- When an earlier slice in a multi-slice milestone intentionally evolves a shared interface, config schema, or error taxonomy on `main` (and codifies it in `AGENTS.md` or PR review comments), update the affected sections of `docs/designs/*.md` so subsequent slices (`implement-slice` Step 1) do not build against stale contracts.
+- Never modify read-only historical proof-of-concept directories (`docs/poc/`).

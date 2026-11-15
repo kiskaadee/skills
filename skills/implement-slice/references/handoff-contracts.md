@@ -89,7 +89,7 @@ Updated dynamically in orchestrator turns:
 - **Skipped Checks**: <None | List of skipped checks with explicit rationale>
 - **Added Checks**: <None | New checks introduced in response to findings>
 - **Rework Iterations**: <0 | Details of remediation loops and commit references>
-- **Scope Drift**: <None | Differences between planned and actual seams>
+- **Scope Drift**: <None | Differences between planned and actual seams; if an approved contract evolution leaves `docs/designs/*.md` or `ARCHITECTURE.md` stale, flag a `reconcile-docs` handoff before the next slice>
 ```
 
 ### Dynamic Mermaid Projection Rules

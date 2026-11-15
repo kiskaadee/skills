@@ -15,6 +15,7 @@ Verifies:
 9. Skill inventory, line count (<= 80), em-dash absence, and path portability
 10. Review comment publishing ownership (code-review drafts, gitea-pr posts with guards)
 11. Project board 5-column reconciliation, semantic hex colors, and transition ownership
+12. reconcile-docs read-only Gitea ingestion and bidirectional hooks with gitea-plan / implement-slice
 """
 
 import os
@@ -427,6 +428,29 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
             re.search(r"/projects/[^\n]*/move", cr_text),
             "code-review must remain read-only and never execute project board card moves",
         )
+
+    def test_reconcile_docs_gitea_ingestion_and_hooks(self):
+        """Proves reconcile-docs ingests Gitea state read-only and hooks into gitea-plan and implement-slice."""
+        rd_dir = REPO_ROOT / "skills" / "reconcile-docs"
+        rd_skill = (rd_dir / "SKILL.md").read_text()
+        rd_all = "\n".join(p.read_text() for p in rd_dir.rglob("*.md"))
+        plan_skill = (REPO_ROOT / "skills" / "gitea-plan" / "SKILL.md").read_text()
+        impl_skill = (REPO_ROOT / "skills" / "implement-slice" / "SKILL.md").read_text()
+
+        # 1. reconcile-docs reads Gitea PR comments and board state, and targets docs/designs/*.md
+        self.assertIn("docs/designs/*.md", rd_skill)
+        self.assertIn("Project Board", rd_skill)
+        self.assertIn("Never mutate Gitea issues, PRs, or board cards", rd_skill)
+        self.assertIn("Mid-Slice Spec Drift", rd_all)
+        self.assertIsNone(
+            re.search(r"(/projects/[^\n]*/move|gt (issue|pr|project) (create|edit|close|merge))", rd_all),
+            "reconcile-docs must never mutate Gitea issues, PRs, or project boards",
+        )
+
+        # 2. Bidirectional hooks across reconcile-docs, gitea-plan, and implement-slice
+        self.assertIn("gitea-plan", rd_skill)
+        self.assertIn("reconcile-docs", plan_skill)
+        self.assertIn("reconcile-docs", impl_skill)
 
     def test_skill_inventory_and_skeletons(self):
         """Proves all 17 active skills meet line count (<= 80), em-dash, and path portability rules."""

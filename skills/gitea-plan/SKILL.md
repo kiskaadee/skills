@@ -19,9 +19,11 @@ description: >-
 
 ## Steps
 1. **Reconcile artifacts bidirectionally.** Check specs, roadmaps, assets, and Gitea
-   state for contradictions. Flag zombie in-progress, premature done, or horizon
-   divergence conflicts before planning new work. See
-   [references/decomposition-tiers.md](references/decomposition-tiers.md).
+   state for contradictions. Flag zombie in-progress, premature completed, or horizon
+   divergence conflicts before planning new work. When closing a milestone or before
+   decomposing the next rolling milestone, if `ARCHITECTURE.md`, `ROADMAP.md`, or
+   `docs/designs/*.md` lag behind `Completed` board cards, hand off to `reconcile-docs`
+   first. See [references/decomposition-tiers.md](references/decomposition-tiers.md).
 2. **Assess scope and select tier.** Assign `Small`, `Medium`, or `Large`.
    Emit explicit `### Project Board Policy: <Omitted|Recommended|Required> (Rationale)`.
 3. **Decompose into deliverable outcome slices.** Map work into verifiable issues
@@ -70,3 +72,4 @@ description: >-
 - `implement-slice`: to orchestrate end-to-end delivery of an approved issue or slice.
 - `git-manager`: to create dedicated branches or worktrees for decomposed issues.
 - `gitea-pr`: to link, review, and close issues via pull requests.
+- `reconcile-docs`: when canonical docs or design specs lag behind completed slices or milestone boundaries.
