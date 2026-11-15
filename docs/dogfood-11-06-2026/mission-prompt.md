@@ -1,3 +1,7 @@
+> [!NOTE]
+> **Provenance & Transcription Disclosure:**
+> This document is an edited transcription of the research mission prompt, annotated with architectural context and schema diagrams. It is not a bit-for-bit verbatim transcript of the original user prompt turn.
+
 # Mission: Reconstruct and Audit the Dogfooding Experiments
 
 **Mode: Research and Delivery**  
