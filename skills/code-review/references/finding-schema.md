@@ -93,3 +93,50 @@ systemctl reload app-daemon.service && systemctl is-active --quiet app-daemon.se
 - **Status**: `Ready` | `Needs Rework` | `Blocked`
 - **Next Action**: State whether to hand off to `verify-slice` for runtime verification, `diagnose` for root-cause fixes, or present to human owner for adjudication. Static provenance and runtime verification remain distinct inputs; neither authorizes release on its own.
 ```
+
+## 4. PR Comment Block (Drafted Here, Published by `gitea-pr`)
+
+When the review target is an open pull request, `code-review` also drafts a PR comment block so the findings stay attached to the change they describe. `code-review` never posts it: it hands the block to `gitea-pr`, which publishes it after the human owner approves.
+
+### What goes in
+- Every finding except `Rejected` ones (those stay in the local ledger only).
+- Zero eligible findings: draft nothing. A clean review is not posted unless the owner asks.
+
+### Per-finding routing (proposed here, decided by the owner)
+| Field | Values | Rule |
+| :--- | :--- | :--- |
+| **Placement** | `inline` or `body` | `inline` only when the location is a committed line inside a diff hunk at the reviewed head SHA. Unstaged, staged, file-level, or cross-cutting findings go in `body`. |
+| **Follow-up** | `record` or `issue` | `record`: the comment is the whole record (accepted nit, trade-off). `issue`: the owner intends to fix it later, so it needs a tracked issue (created via `gitea-plan`) and the comment links to it. A PR comment is a record, not a task tracker. |
+
+### Identity across re-reviews
+Finding IDs (`CR-01`) are only unique within one review. The block header names the reviewed head SHA, and any cross-review reference uses `<short-sha>/CR-01`. `gitea-pr` uses the header SHA to avoid posting the same review twice.
+
+### Files
+Write both files to an untracked scratch location (never inside the repository tree):
+
+`review-body.md`:
+```markdown
+**Code review @ `<short-head-sha>`** (`<base-ref>`..`<head-ref>`): `<Ready | Needs Rework | Blocked>`
+
+Covered state: `<Clean | fingerprint>`. Tier: `<tier>`. Static provenance only; merge authority stays with the owner.
+
+| ID | Axis | Severity | Disposition | Placement | Follow-up |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| CR-01 | Standards & Smells | Low | Accepted Trade-off | inline | record |
+
+### Body-placed findings
+- **CR-02** (`<location>`): <invariant, impact, and suggested change>.
+```
+
+`inline-comments.json` (the `gt pr review --comments-file` format; `new_position` is the line number in the new version of the file and must fall inside a diff hunk):
+```json
+[
+  {
+    "path": "src/pkg/config.py",
+    "new_position": 40,
+    "body": "**CR-01** (Low, Accepted Trade-off, record): <invariant and impact>. <Suggested change>."
+  }
+]
+```
+
+Every inline entry also appears in the body table, so the record stays complete if inline placement is rejected and the entry moves to the body.

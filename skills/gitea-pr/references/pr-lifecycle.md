@@ -68,6 +68,7 @@ When comments or change requests arrive on a PR:
    - *Defects & Invariants*: Logic errors, broken tests, edge-case crashes (require code fix).
    - *Spec & Scope Clarifications*: Questions about intent or architectural fit (require response or doc update).
    - *Nits / Polish*: Minor style preferences that do not violate repo standards (human owner decides priority).
+   Findings published from a `code-review` comment block arrive pre-labelled with their ID, disposition, and follow-up route (`record` or `issue`); keep those labels instead of re-categorizing.
 3. **Implement fixes on the feature branch**:
    - Use `tdd` or direct edits.
    - Commit fixes incrementally following `git-manager` conventions (e.g. `fix(gitea-pr): address review feedback`).

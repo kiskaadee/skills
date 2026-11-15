@@ -27,9 +27,11 @@ description: >-
 5. **Aggregate without silent resolution.** When multiple reviewers or passes disagree, keep the disagreement visible under `Unresolved` until evidence settles it.
 6. **Emit executable runtime checks.** For stateful or high-risk paths that static inspection cannot prove, emit runnable fenced shell commands for `verify-slice` following the Step 6 contract in [finding-schema](references/finding-schema.md) (stating purpose, `local` vs. `live-infra` scope classification, explicit pass condition, and explicit failure signal).
 7. **Present the review summary.** Group findings by axis and apply the decision matrix from [axes](references/axes.md): `Needs Rework` (confirmed defects require changes), `Blocked` (unresolved Critical/High risks or unestablished scope), or `Ready` (all four axes completed, no confirmed or unresolved blocking findings remain, and exact covered revisions plus working-tree state are recorded). Static review establishes static provenance for that diff only; never authorize release.
+8. **Draft the PR comment block.** When the target is an open pull request, draft `review-body.md` and `inline-comments.json` per section 4 of [finding-schema](references/finding-schema.md), proposing `inline`/`body` placement and `record`/`issue` follow-up for each non-rejected finding. Never post to Gitea yourself: hand the block to `gitea-pr`.
 
 ## Your call
 - **Handling findings**: decide whether confirmed findings block merge, trigger a rework loop, or become tracked follow-up issues.
+- **Publishing findings**: decide whether the PR comment block is posted, and confirm each finding's placement and follow-up route.
 - **Adjudicating unresolved disagreements**: resolve conflicting reviewer perspectives or accepted architectural trade-offs.
 - **Authorizing release**: verification and review evidence inform decisions, but the human owner remains the sole release authority.
 
@@ -40,3 +42,4 @@ description: >-
 - `diagnose`: when a finding exposes a root cause that requires deeper troubleshooting.
 - `verify-slice`: to execute behavioral and runtime verification scenarios.
 - `git-manager`: when branching, committing review fixes, or rebasing.
+- `gitea-pr`: to publish the drafted PR comment block on the pull request after owner approval.

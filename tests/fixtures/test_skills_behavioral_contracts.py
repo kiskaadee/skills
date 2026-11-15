@@ -13,6 +13,7 @@ Verifies:
 7. Deviation reporting on skipped checks
 8. Strict dry-run zero-mutation invariants
 9. Skill inventory, line count (<= 80), em-dash absence, and path portability
+10. Review comment publishing ownership (code-review drafts, gitea-pr posts with guards)
 """
 
 import os
@@ -360,6 +361,31 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
         # The only allowed diff is the test file itself if it is running in-tree
         # But during execution, zero new commits and zero external branch creation
         self.assertEqual(initial_commit, current_commit)
+
+    def test_review_comment_publishing_ownership(self):
+        """Proves code-review only drafts the PR comment block and gitea-pr alone posts it, guarded."""
+        cr_dir = REPO_ROOT / "skills" / "code-review"
+        cr_text = "\n".join(p.read_text() for p in cr_dir.rglob("*.md"))
+        # code-review drafts the block but never contains a posting command
+        self.assertIn("review-body.md", cr_text)
+        self.assertIn("inline-comments.json", cr_text)
+        self.assertIsNone(
+            re.search(r"gt pr (comment|review)\s+<", cr_text),
+            "code-review must not contain gt posting commands; gitea-pr owns publishing",
+        )
+
+        pr_skill = (REPO_ROOT / "skills" / "gitea-pr" / "SKILL.md").read_text()
+        recipes = (REPO_ROOT / "skills" / "gitea-pr" / "references" / "gt-pulls.md").read_text()
+        self.assertIn("Publish review findings", pr_skill)
+        publish = recipes.split("### Publish a `code-review` Comment Block", 1)[1].split("\n## ", 1)[0]
+        post_cmd = re.search(r"gt pr review <number> --comment[^\n]*\n[^\n]*", publish).group(0)
+        # pinned to the reviewed commit, comment-only, no blanket confirmation
+        self.assertIn("--commit <reviewed-head-sha>", post_cmd)
+        for forbidden in ("--approve", "--request-changes", "--yes"):
+            self.assertNotIn(forbidden, post_cmd)
+        # staleness and duplicate guards precede posting
+        self.assertLess(publish.index("head_sha"), publish.index(post_cmd))
+        self.assertLess(publish.index("gt pr review list"), publish.index(post_cmd))
 
     def test_skill_inventory_and_skeletons(self):
         """Proves all 17 active skills meet line count (<= 80), em-dash, and path portability rules."""

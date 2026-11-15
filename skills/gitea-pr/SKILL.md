@@ -13,6 +13,7 @@ description: >-
 - Opening or updating a pull request on Gitea after implementing an issue or feature.
 - Synthesizing static code review and runtime verification evidence into a reviewable PR.
 - Tracking review comments, requested changes, and CI checks toward merge readiness.
+- Publishing a `code-review` PR comment block (findings and nits) onto an open pull request.
 - Not for static code inspection: use `code-review`.
 - Not for runtime behavioral verification: use `verify-slice`.
 - Not for branch creation, committing, rebasing, or local history integration: use `git-manager`.
@@ -41,7 +42,13 @@ description: >-
    [references/gt-pulls.md](references/gt-pulls.md):
    `gt pr create -t "<title>" -B "<base>" -H "<branch>" -F <body-file> --json number,url`.
    Pass `--draft` if work remains in progress. Extract verified PR number and URL.
-6. **Track review feedback and merge readiness.** Inspect status checks (`gt pr checks <number>`),
+6. **Publish review findings (when a `code-review` comment block exists).** Follow
+   [references/gt-pulls.md](references/gt-pulls.md) section 3: confirm the remote PR head equals
+   the reviewed head SHA (else stop and re-run `code-review`), confirm no pending review and no
+   prior review for that SHA exists, show the body and inline list for approval, then post one
+   `--comment` review pinned with `--commit`. Never `--approve` or `--request-changes`. Findings
+   routed `issue` get their issue (via `gitea-plan`) before posting so the comment links to it.
+7. **Track review feedback and merge readiness.** Inspect status checks (`gt pr checks <number>`),
    mergeability (`gt pr view <number> --json mergeable,review_decision`), and review comments
    (`gt pr review comments <number>`). When all checks pass and review feedback is resolved,
    report `Ready for Merge`.
@@ -49,6 +56,7 @@ description: >-
 
 ## Your call
 - **PR title and description approval**: review and approve the draft PR content and issue linkage.
+- **Publishing review findings**: approve the comment block and each finding's placement and follow-up route before it is posted.
 - **Review feedback triage**: decide how to address review comments (rework, clarification, deferral).
 - **Merge and release authorization**: decide when to merge the PR into the target base branch.
 
@@ -60,3 +68,4 @@ description: >-
 - `code-review`: if the diff changes and needs renewed static inspection.
 - `verify-slice`: if new code requires runtime verification.
 - `git-manager`: to commit review fixes, rebase, or update the branch against upstream base.
+- `gitea-plan`: to create the follow-up issue for a finding routed `issue` before publishing.
