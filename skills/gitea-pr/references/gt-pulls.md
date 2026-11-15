@@ -119,12 +119,14 @@ gt pr close <number>
 gt pr reopen <number>
 ```
 
-### Merge Pull Request (Requires Explicit Human Authorization)
-Release and merge authority belongs exclusively to the human owner.
+### Merge Pull Request and Move Card `Review -> Completed` (Requires Explicit Human Authorization)
+Release and merge authority belongs exclusively to the human owner. Once the owner explicitly approves merging:
 ```bash
-# Fast-forward / merge commit
+# 1. Merge pull request (fast-forward / merge commit, or --squash --delete-branch)
 gt pr merge <number>
 
-# Squash and merge
-gt pr merge <number> --squash --delete-branch
+# 2. Extract global issue ID of the linked issue and move its project board card to Completed
+issue_global_id=$(gt issue view <issue-number> --json id -q .id)
+gt api -X POST /repos/{owner}/{repo}/projects/<project-id>/issues/${issue_global_id}/move -F column_id=<completed-col-id>
 ```
+Do not attach the PR itself (`-p <project-id>`) as a duplicate board card when the linked issue is already on the board; if a PR card was attached separately, move it to `Completed` as well.

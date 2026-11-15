@@ -131,3 +131,17 @@ Never relay "QA failed" blindly. Classify each non-passing outcome and route to 
 
 - **PR applies**: Once `code-review` (`Ready`) and `verify-slice` (zero unhandled `FAIL`) match final `HEAD`, hand off both packets to `gitea-pr` to draft the PR description, pause for human PR approval, create/update the PR, and report merge readiness.
 - **No PR applies** (local repo, approved solo-branch workflow, or bounded spike): Enforce the identical final-`HEAD` evidence invariant, then present the commit range (`<base>..HEAD`), static review disposition, runtime verification ledger, and any open residual-risk decisions directly to the user.
+
+
+---
+
+## 9. Project Board Card Transitions Owned by `implement-slice`
+
+When the repository tracks a Gitea Project Board (resolved from the `AGENTS.md` planning contract or `gt project list`), `implement-slice` owns moving the target issue's card across the pipeline using the `gt-usage` move recipe (`POST /repos/{owner}/{repo}/projects/<project-id>/issues/<global-issue-id>/move -F column_id=<target-col-id>`):
+
+| Step | Transition | Condition |
+| :--- | :--- | :--- |
+| **Step 1 (Preflight & Readiness)** | `Backlog -> Ready` | Blocking issues are closed, issue acceptance criteria are reconciled against current `HEAD` and `AGENTS.md`, and `--dry-run` is **not** active. |
+| **Step 4 (Worker Delegation)** | `Ready -> Work in Progress` | Human owner approved the Step 3 Planned Workflow and implementation branch/worker starts. |
+| **Step 7 (Final-HEAD Gate)** | `Work in Progress -> Review` | Final-`HEAD` `code-review` (`Ready`) and `verify-slice` pass with zero unhandled `FAIL` outcomes. |
+| **Step 7 (Direct Merge Only)** | `Review -> Completed` | Only when repository policy permits direct fast-forward merge to `main`, human owner approves, and the issue is closed. Otherwise `gitea-pr` owns `Review -> Completed`. |

@@ -34,19 +34,22 @@ description: >-
    audit disposition. Stop for approval before mutating Gitea entities or `AGENTS.md`.
 6. **Execute Gitea operations via `gt` CLI.** Use verified commands from `gt-usage`:
    - Milestones: `gt milestone create "<title>" -d "<desc>" --json id,url`.
-   - Projects: `gt project create "<title>" --template basic_kanban --json id,url`
-     (for multi-repo orgs, root at org level with `--org <org>`).
-   - Issues: `gt issue create -t "<title>" -F <file> -m <id> -p <id> --json number,url`
+   - Projects: create with `gt project create "<title>" --template none --json id,url` if
+     missing (with `--org <org>` for multi-repo orgs), or reconcile an existing board in
+     place (`PATCH` matched role aliases, `POST` missing columns, set `Backlog` default,
+     and apply the Deep Signal hex colors per [decomposition-tiers](references/decomposition-tiers.md)).
+   - Issues: `gt issue create -t "<title>" -F <file> -m <id> -p <id> --json id,number,url`
      (or attach to org board: `gt issue edit <number> -R <repo> --add-project <id>`).
    Extract server IDs directly; never guess sequence numbers or construct `/milestone/1`.
-7. **Verify created state.** Inspect `gt issue list` and `gt milestone list` to
-   confirm server IDs, board cards, and non-hallucinated canonical URLs.
+7. **Verify created state.** Inspect `gt issue list`, `gt milestone list`, and board
+   columns to confirm server IDs, column colors/order, and non-hallucinated canonical URLs.
 8. **Formalize repo planning contract in `AGENTS.md`.** When establishing or changing
    `Medium`/`Large` planning structure, record or reconcile a concise sync rule in the
    repository's `AGENTS.md` so day-to-day coding agents keep trackers updated without
    reloading `gitea-plan`:
    - Pin **stable structural coordinates only**: canonical roadmap/checklist paths
-     (e.g., `docs/roadmap.md`, `todo.txt`), authoritative Gitea repo + Project Board ID,
+     (e.g., `docs/roadmap.md`, `todo.txt`), authoritative Gitea repo + Project Board ID
+     + `{Backlog, Ready, Work in Progress, Review, Completed -> column_id}` map,
      remote mirror policy (e.g., GitHub code-only), and the escalation trigger to
      re-run `gitea-plan` on scope shifts or epic Readiness Gates.
    - **Never** hardcode rotating sprint state (active milestone numbers or open issue

@@ -14,13 +14,28 @@ Reference for `gitea-plan`. Guidelines for scaling planning ceremony to risk and
 
 Each Gitea planning primitive tracks a distinct dimension of engineering reality:
 - **Issue State (`Open` vs. `Closed`)**: Deliverable completion on `main`.
-- **Board State (Columns: *Backlog*, *Ready*, *In Progress*, *Review*, *Done*)**: Spatial workflow stage in the active pipeline.
+- **Board State (Columns: *Backlog*, *Ready*, *Work in Progress*, *Review*, *Completed*)**: Spatial workflow stage in the active pipeline.
 - **Milestone**: Strategic delivery horizon (capacity-driven or time-bounded release boundary).
+
+### Canonical 5-Column Pipeline & Semantic Colors (Deep Signal Palette)
+
+| Sorting | Canonical Title | Role Aliases (Matched Case-Insensitively) | Hex Color | Default | Transition Owner |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `0` | **Backlog** | `backlog`, `to-do`, `todo`, `icebox`, `triage` | `#475569` (Slate Gray) | `true` | `gitea-plan` (default placement for dependent issues) |
+| `1` | **Ready** | `ready`, `next`, `up next`, `queued`, `groomed` | `#1d76db` (Signal Blue) | `false` | `implement-slice` (Step 1 preflight readiness check) |
+| `2` | **Work in Progress** | `work in progress`, `in progress`, `wip`, `doing`, `active` | `#d97706` (Warm Amber) | `false` | `implement-slice` (Step 4 worker start) |
+| `3` | **Review** | `review`, `in review`, `qa`, `testing`, `verification` | `#6d28d9` (Royal Purple) | `false` | `implement-slice` (Step 7 final-HEAD pass) / `gitea-pr` |
+| `4` | **Completed** | `completed`, `done`, `closed`, `shipped` | `#15803d` (Forest Green) | `false` | `gitea-pr` (on owner-authorized merge) / `implement-slice` |
+
+### Board Provisioning & Non-Destructive Reconciliation (`gitea-plan`)
+1. **Create if missing**: When `Project Board Policy` is `Recommended` or `Required` and no open board exists, create one with `gt project create "<title>" --template none -d "<desc>" --json id,title,url`, then `POST` the 5 canonical columns (`sorting: 0..4`) with their Deep Signal hex colors and set `Backlog` as `default: true` (using the recipes in `gt-usage`).
+2. **Reconcile in place if existing**: Never assume an existing board already adheres to the convention, and never delete columns that hold cards. Query `/projects/<id>/columns`, match existing columns to the 5 roles by their case-insensitive aliases, and `PATCH` matched columns in place (`title`, `color`, `sorting`) so attached cards stay intact. Create only the missing canonical columns via `POST`, and ensure `Backlog` is marked `default: true`.
+3. **Pin column IDs in `AGENTS.md`**: Record the resolved Project Board ID and `{Backlog, Ready, Work in Progress, Review, Completed -> column_id}` map in the repository's `AGENTS.md` planning contract so `implement-slice` and `gitea-pr` move cards without guessing names.
 
 ### Meaningful Conflict Reconciliation
 Never mechanically mirror or silently mutate state. Instead, detect and report semantic conflicts:
-- **Zombie In-Progress**: Issue is closed on Gitea, but its card still sits in *Backlog*, *Ready*, or *In Progress* on the board.
-- **Premature Done**: Card is moved to *Done*, but the issue remains open or lacks a merged PR / commit on `main`.
+- **Zombie In-Progress**: Issue or PR is closed on Gitea, but its card still sits in *Backlog*, *Ready*, *Work in Progress*, or *Review* on the board.
+- **Premature Completed**: Card is moved to *Completed*, but the issue remains open or lacks a merged PR / commit on `main`.
 - **Review Orphan**: Card sits in *Review*, but no active PR or static review packet exists.
 - **Horizon Divergence**: Open issue is assigned to a milestone that is closed or diverges from the active milestone in `ROADMAP.md`.
 
@@ -31,7 +46,7 @@ Never mechanically mirror or silently mutate state. Instead, detect and report s
 | Tier | Typical Work | Gitea Primitives | Project Board Policy | Decomposition Rule |
 | :--- | :--- | :--- | :--- | :--- |
 | **Small** | Single-step bugfix, documentation tweak, dependency bump, routine chore | 1 Issue linked directly to 1 PR / Commit | **Omitted by Policy** (issue tracker suffices) | Zero milestones. Zero project boards. Keep description concise (Context, Solution, Acceptance Criteria). |
-| **Medium** | Vertical feature slice, multi-step refactor, performance spike (2 to 5 issues) | 1 Milestone + 2 to 5 Issues | **Recommended** (Basic Kanban: *Backlog*, *Ready*, *In Progress*, *Review*, *Done*) | Each issue has its own branch and PR. All issues include explicit numbered acceptance criteria and test seams. |
+| **Medium** | Vertical feature slice, multi-step refactor, performance spike (2 to 5 issues) | 1 Milestone + 2 to 5 Issues | **Recommended** (5-column Kanban: *Backlog*, *Ready*, *Work in Progress*, *Review*, *Completed*) | Each issue has its own branch and PR. All issues include explicit numbered acceptance criteria and test seams. |
 | **Large** | Architectural epic, platform cutover, multi-service evolution | Roadmap Doc + Rolling Milestones + Deliverable Issues | **Required** (Board coordinates rolling horizons) | Source of truth remains in repo docs (`ARCHITECTURE.md`, `ROADMAP.md`, ADRs). Gitea coordinates rolling execution. |
 
 **Deterministic Output Header**: Every planning proposal must explicitly state:
@@ -77,6 +92,6 @@ When planning large epics, avoid waterfall decomposition where every future task
 ## 6. Multi-Repository Organizations and Shared Boards
 
 When planning across multi-repository architectures (where an organization hub coordinates multiple deliverable repositories or services):
-- **Root Kanban at Organization Level**: Create the shared board at the organization level (`gt project create "<title>" --org <org> --template basic_kanban`). Do not isolate tracking into separate child repository boards.
+- **Root Kanban at Organization Level**: Create the shared board at the organization level (`gt project create "<title>" --org <org> --template none`) and reconcile the 5 canonical columns. Do not isolate tracking into separate child repository boards.
 - **Attach Child Issues to Org Board**: Deliverable issues and pull requests created in child repositories attach to the organization board via `gt issue create ... -p <project-id>` or `gt issue edit <number> -R <owner/repo> --add-project <project-id>`.
 - **Hub Documentation Alignment**: Architectural strategy, shared documentation, and roadmaps remain centralized in the hub repository, while the organization-level Kanban board coordinates unified cross-repo delivery status.

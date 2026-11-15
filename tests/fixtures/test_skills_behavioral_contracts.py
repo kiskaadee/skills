@@ -14,6 +14,7 @@ Verifies:
 8. Strict dry-run zero-mutation invariants
 9. Skill inventory, line count (<= 80), em-dash absence, and path portability
 10. Review comment publishing ownership (code-review drafts, gitea-pr posts with guards)
+11. Project board 5-column reconciliation, semantic hex colors, and transition ownership
 """
 
 import os
@@ -386,6 +387,46 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
         # staleness and duplicate guards precede posting
         self.assertLess(publish.index("head_sha"), publish.index(post_cmd))
         self.assertLess(publish.index("gt pr review list"), publish.index(post_cmd))
+
+    def test_project_board_reconciliation_and_card_transitions(self):
+        """Proves 5-column board reconciliation, Deep Signal colors, and card transition ownership."""
+        tiers_text = (REPO_ROOT / "skills" / "gitea-plan" / "references" / "decomposition-tiers.md").read_text()
+        gt_cmds = (REPO_ROOT / "skills" / "gt-usage" / "references" / "commands.md").read_text()
+        impl_skill = (REPO_ROOT / "skills" / "implement-slice" / "SKILL.md").read_text()
+        impl_handoff = (REPO_ROOT / "skills" / "implement-slice" / "references" / "handoff-contracts.md").read_text()
+        pr_skill = (REPO_ROOT / "skills" / "gitea-pr" / "SKILL.md").read_text()
+        pr_pulls = (REPO_ROOT / "skills" / "gitea-pr" / "references" / "gt-pulls.md").read_text()
+        cr_dir = REPO_ROOT / "skills" / "code-review"
+        cr_text = "\n".join(p.read_text() for p in cr_dir.rglob("*.md"))
+
+        # 1. Canonical 5 columns and Deep Signal hex colors in gitea-plan
+        expected_columns = {
+            "Backlog": "#475569",
+            "Ready": "#1d76db",
+            "Work in Progress": "#d97706",
+            "Review": "#6d28d9",
+            "Completed": "#15803d",
+        }
+        for col_title, hex_color in expected_columns.items():
+            self.assertIn(col_title, tiers_text)
+            self.assertIn(hex_color, tiers_text)
+        self.assertIn("PATCH", tiers_text)
+        self.assertIn("PATCH /repos/{owner}/{repo}/projects/<project-id>/columns/<column-id>", gt_cmds)
+
+        # 2. Card transition ownership across implement-slice and gitea-pr
+        self.assertIn("Backlog -> Ready", impl_skill)
+        self.assertIn("Ready -> Work in Progress", impl_skill)
+        self.assertIn("Work in Progress -> Review", impl_skill)
+        self.assertIn("Backlog -> Ready", impl_handoff)
+        self.assertIn("Work in Progress -> Review", pr_skill)
+        self.assertIn("Review -> Completed", pr_skill)
+        self.assertIn("/issues/${issue_global_id}/move -F column_id=<completed-col-id>", pr_pulls)
+
+        # 3. code-review never mutates project boards
+        self.assertIsNone(
+            re.search(r"/projects/[^\n]*/move", cr_text),
+            "code-review must remain read-only and never execute project board card moves",
+        )
 
     def test_skill_inventory_and_skeletons(self):
         """Proves all 17 active skills meet line count (<= 80), em-dash, and path portability rules."""

@@ -32,27 +32,42 @@ gt milestone view <id>
 
 ## 3. Project Boards
 
-Projects provide spatial Kanban workflow stages.
+Projects provide spatial Kanban workflow stages (`Backlog`, `Ready`, `Work in Progress`, `Review`, `Completed`).
 
 ```bash
-# Create repository project board with basic kanban columns
-gt project create "<title>" --template basic_kanban -d "<description>" --json id,title,url
+# Create repository project board without default template columns (to provision canonical 5-column pipeline)
+gt project create "<title>" --template none -d "<description>" --json id,title,url
 
 # Create organization-level project board
-gt project create "<title>" --org <org> --template basic_kanban -d "<description>" --json id,title,url
+gt project create "<title>" --org <org> --template none -d "<description>" --json id,title,url
 
 # List open projects (repository or organization)
 gt project list --json id,title,state,url
 gt project list --org <org> --json id,title,state,url
 
-# View project cards and columns
-gt project view <id>
-gt project view <id> --org <org>
+# View project details
+gt project view <id> --json id,title,state,url
+gt project view <id> --org <org> --json id,title,state,url
 
-# List board columns with IDs
-gt api /repos/{owner}/{repo}/projects/<project-id>/columns --jq '.[].id, .[].title'
+# List board columns with IDs, titles, sorting order, default flag, and hex colors
+# (For org boards, replace /repos/{owner}/{repo} with /orgs/<org>)
+gt api /repos/{owner}/{repo}/projects/<project-id>/columns --jq '.[] | {id, title, sorting, default, color}'
 
-# Move issue card between columns (requires global issue ID, e.g. from `gt issue list --json id,number`)
+# Create a column with title and 6-digit hex color
+gt api -X POST /repos/{owner}/{repo}/projects/<project-id>/columns \
+  -f title="<title>" -f color="#<RRGGBB>" --jq '{id, title, color, sorting}'
+
+# Update an existing column in place (preserving attached cards)
+gt api -X PATCH /repos/{owner}/{repo}/projects/<project-id>/columns/<column-id> \
+  -f title="<title>" -f color="#<RRGGBB>" -F sorting=<0..4> --jq '{id, title, color, sorting}'
+
+# Mark a column as the default column for newly attached issues
+gt api -X POST /repos/{owner}/{repo}/projects/<project-id>/columns/<column-id>/default
+
+# List cards (issues/PRs) currently in a column
+gt api /repos/{owner}/{repo}/projects/<project-id>/columns/<column-id>/issues --jq '.[] | {id, number, title, state}'
+
+# Move issue card between columns (requires global issue ID from `gt issue view <number> --json id,number`)
 gt api -X POST /repos/{owner}/{repo}/projects/<project-id>/issues/<global-issue-id>/move -F column_id=<target-col-id>
 ```
 

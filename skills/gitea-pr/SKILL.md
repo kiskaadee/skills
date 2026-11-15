@@ -38,21 +38,23 @@ description: >-
 4. **Present for human approval.** Present proposed title, target base branch, milestone,
    and description body to the user per `profile/AGENTS.md`. Stop for confirmation before
    creating or editing the pull request.
-5. **Create or update pull request via `gt pr`.** Run verified commands from
-   [references/gt-pulls.md](references/gt-pulls.md):
+5. **Create or update pull request via `gt pr` and move card to `Review`.** Run verified
+   commands from [references/gt-pulls.md](references/gt-pulls.md):
    `gt pr create -t "<title>" -B "<base>" -H "<branch>" -F <body-file> --json number,url`.
-   Pass `--draft` if work remains in progress. Extract verified PR number and URL.
+   Pass `--draft` if work remains in progress. Extract verified PR number and URL, and ensure
+   the linked issue card is in `Review` (`Work in Progress -> Review`) on the project board.
 6. **Publish review findings (when a `code-review` comment block exists).** Follow
    [references/gt-pulls.md](references/gt-pulls.md) section 3: confirm the remote PR head equals
    the reviewed head SHA (else stop and re-run `code-review`), confirm no pending review and no
    prior review for that SHA exists, show the body and inline list for approval, then post one
    `--comment` review pinned with `--commit`. Never `--approve` or `--request-changes`. Findings
    routed `issue` get their issue (via `gitea-plan`) before posting so the comment links to it.
-7. **Track review feedback and merge readiness.** Inspect status checks (`gt pr checks <number>`),
-   mergeability (`gt pr view <number> --json mergeable,review_decision`), and review comments
+7. **Track review feedback, merge on owner approval, and move card `Review -> Completed`.**
+   Inspect status checks (`gt pr checks <number>`), mergeability
+   (`gt pr view <number> --json mergeable,review_decision`), and review comments
    (`gt pr review comments <number>`). When all checks pass and review feedback is resolved,
-   report `Ready for Merge`.
-   Release and merge authority belongs exclusively to the human owner: never merge automatically.
+   report `Ready for Merge`. Never merge automatically: once the human owner explicitly
+   authorizes merge, run `gt pr merge <number>` and move the linked issue card `Review -> Completed`.
 
 ## Your call
 - **PR title and description approval**: review and approve the draft PR content and issue linkage.

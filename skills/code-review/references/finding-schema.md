@@ -96,7 +96,7 @@ systemctl reload app-daemon.service && systemctl is-active --quiet app-daemon.se
 
 ## 4. PR Comment Block (Drafted Here, Published by `gitea-pr`)
 
-When the review target is an open pull request, `code-review` also drafts a PR comment block so the findings stay attached to the change they describe. `code-review` never posts it: it hands the block to `gitea-pr`, which publishes it after the human owner approves.
+When the review target is an open pull request, `code-review` also drafts a PR comment block so the findings stay attached to the change they describe. `code-review` never posts it and never mutates Gitea project boards: it hands the block to `gitea-pr` (or `implement-slice`), which publishes the review and ensures the issue card sits in `Review` when the verdict is `Ready`.
 
 ### What goes in
 - Every finding except `Rejected` ones (those stay in the local ledger only).
