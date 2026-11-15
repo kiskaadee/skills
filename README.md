@@ -43,16 +43,13 @@ flowchart TD
         PRAC["practice<br/>learn it: Socratic & recall"]
         DIAG["diagnose<br/>find out: evidence-first RCA"]
         GIT["git-manager<br/>branches, commits & recovery"]
-        JB["journal-builder<br/>synthesize it: facts & scaffold"]
     end
-    DOC["document<br/>classify & author: 6 epistemic types"]
-    REC["reconcile-docs<br/>reconcile: history, code, roadmap"]
-    Storage["Vault / Repo Docs"]
+    DOC["document<br/>classify & author: 5 epistemic types"]
+    REC["reconcile-docs<br/>reconcile: history, code, Gitea, roadmap"]
+    Storage["Repo docs/ & .internal/"]
 
     SB --> Core
     Core --> DOC
-    Core --> JB
-    JB --> DOC
     DOC --> Storage
     Storage --> REC
     REC --> Storage
@@ -68,54 +65,45 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 
 | Skill | Trigger / Command | Purpose | Length |
 | :--- | :--- | :--- | :--- |
-| **[`practice`](skills/practice/SKILL.md)** | `/practice [topic]`, `/practice review` | Socratic tutoring and delayed retrieval. Learner writes all code; uses graduated assistance, rubric calibration, and recall-before-reveal. | 50 lines |
+| **[`practice`](skills/practice/SKILL.md)** | `/practice [topic]`, `/practice review` | Socratic tutoring and delayed retrieval. Learner writes all code; uses graduated assistance, rubric calibration, and recall-before-reveal in gitignored `.internal/practice/`. | 51 lines |
 | **[`diagnose`](skills/diagnose/SKILL.md)** | `/diagnose [symptom]` | Evidence-first troubleshooting. Progresses from raw logs to proven root cause and minimal, reversible fixes. | 49 lines |
 | **[`git-manager`](skills/git-manager/SKILL.md)** | `/git-manager` | Repository hygiene, branch and worktree lifecycle, incremental Conventional Commits (autonomous on working branches in delivery mode; user-authored in learning mode), integration, conflict stops, and evidence-first reflog recovery. | 65 lines |
-| **[`gitea-plan`](skills/gitea-plan/SKILL.md)** | `/gitea-plan` | Translates technical goals and plans into Gitea milestones and issues with tiered sizing and falsifiable acceptance criteria. | 54 lines |
-| **[`implement-slice`](skills/implement-slice/SKILL.md)** | `/implement-slice` | Orchestrates end-to-end delivery of an issue or vertical slice across worker and QA subagents, pre-committed rubrics, and final-HEAD gates without editing code directly. | 44 lines |
-| **[`gitea-pr`](skills/gitea-pr/SKILL.md)** | `/gitea-pr` | Manages Gitea pull request lifecycle: branch readiness, review/verification synthesis, issue closing, and merge readiness. | 60 lines |
-| **[`gt-usage`](skills/gt-usage/SKILL.md)** | `/gt-usage` | Work with Gitea repositories, issues, milestones, projects, and pull requests via the official gt CLI. Verified JSON recipes and anti-hallucination rules. | 44 lines |
-| **[`document`](skills/document/SKILL.md)** | `/document` | Second-order knowledge classifier (Discussion, ADR, Plan, Debug Record, Knowledge, Journal). User confirms type and provides core insight. | 55 lines |
-| **[`journal-builder`](skills/journal-builder/SKILL.md)** | `/journal-builder` or `/journal` | Two-phase daily engineering review: generates factual skeleton with question blanks, then reviews and calibrates user reasoning. | 58 lines |
-| **[`reconcile-docs`](skills/reconcile-docs/SKILL.md)** | `/reconcile-docs [path]` | Reconciles historical evidence, present code reality, and future plans into canonical repo docs (README, ARCHITECTURE, ADR, ROADMAP). | 40 lines |
+| **[`gitea-plan`](skills/gitea-plan/SKILL.md)** | `/gitea-plan` | Translates technical goals and plans into Gitea milestones, 5-column Kanban boards, and issues with tiered sizing and falsifiable acceptance criteria. | 75 lines |
+| **[`implement-slice`](skills/implement-slice/SKILL.md)** | `/implement-slice` | Orchestrates end-to-end delivery of an issue or vertical slice across worker and QA subagents, pre-committed rubrics, Kanban card transitions, and final-HEAD gates without editing code directly. | 45 lines |
+| **[`gitea-pr`](skills/gitea-pr/SKILL.md)** | `/gitea-pr` | Manages Gitea pull request lifecycle: branch readiness, review/verification synthesis, PR review comment publishing, issue closing, and merge readiness. | 73 lines |
+| **[`gt-usage`](skills/gt-usage/SKILL.md)** | `/gt-usage` | Work with Gitea repositories, issues, milestones, projects, and pull requests via the official gt CLI. Verified JSON recipes and anti-hallucination rules. | 45 lines |
+| **[`document`](skills/document/SKILL.md)** | `/document` | Second-order knowledge classifier (Discussion, ADR, Plan, Debug Record, Knowledge) scoped to the active repository's `docs/` (or `.internal/`). User confirms type and provides core insight. | 55 lines |
+| **[`reconcile-docs`](skills/reconcile-docs/SKILL.md)** | `/reconcile-docs [path]` | Reconciles historical evidence, present code reality, Gitea delivery state, and future plans into canonical repo docs (`README`, `ARCHITECTURE`, `docs/adr/`, `ROADMAP`, `docs/designs/*.md`). | 44 lines |
 | **[`build-skill`](skills/build-skill/SKILL.md)** | `/build-skill [topic]` | Interactive design, sizing, authoring, and empirical dogfooding of agent skills. Enforces design review gate before file creation. | 50 lines |
 | **[`derive-skill`](skills/derive-skill/SKILL.md)** | `/derive-skill <url-or-path>` | Evaluates an external skill (source, license, scripts), sorts material into preserve/adapt/reject, and decides new skill, merge, or reject. Hands an approved derivation brief to `build-skill`. | 58 lines |
 | **[`inspect-flake-update`](skills/inspect-flake-update/SKILL.md)** | `/inspect-flake-update` | Inspects updated flake.lock inputs, reviews upstream revisions, runs nix flake check, and drafts commit messages. | 46 lines |
 | **[`nix-devshell`](skills/nix-devshell/SKILL.md)** | `/nix-devshell` | Authors, extends, validates, and troubleshoots project Nix development shells from repository evidence. | 76 lines |
 | **[`verify-slice`](skills/verify-slice/SKILL.md)** | `/verify-slice` | Runs risk-proportional verification and PR review across behavioral, state, security, ergonomic, and regression perspectives using falsifiable assertions. | 37 lines |
-| **[`code-review`](skills/code-review/SKILL.md)** | `/code-review` | Inspects diffs across four isolated axes: Spec & Scope (including strategic project alignment), Standards & Smells, Seam & Test Integrity, and Defensive Invariants. | 42 lines |
+| **[`code-review`](skills/code-review/SKILL.md)** | `/code-review` | Inspects diffs across four isolated axes: Spec & Scope (including strategic project alignment), Standards & Smells, Seam & Test Integrity, and Defensive Invariants, plus drafting PR comment blocks. | 45 lines |
 | **[`tdd`](skills/tdd/SKILL.md)** | `/tdd` | Guides red-green test-driven development through public interface seams, boundary-only mocking, and non-tautological assertions. | 40 lines |
-
-### Vault Extensions (`extensions/`)
-
-| Skill | Status | Purpose |
-| :--- | :--- | :--- |
-| **[`draft-curation`](extensions/draft-curation/SKILL.md)** | Active | Triages, classifies, and commits incoming notes from an inbox/staging directory into structured lifecycle directories. |
 
 ---
 
 ## Skill Interaction Matrix
 
-| From \ To | Practice | Diagnose | Git Manager | Journal Builder | Document | Reconcile Docs |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Practice** | - | yields for production incidents | learner writes message & runs commit | feeds learning edges | optional handoff on key insights | - |
-| **Diagnose** | yields if user wants to find cause | - | branches, commits fix & recovers | feeds incident root causes | hands off if RCA reveals non-obvious lesson | - |
-| **Git Manager** | learner-controlled in practice/learning | manages branches & packages fixes | - | provides commit history for review | delegates if commit warrants deeper doc | provides commit history |
-| **Journal Builder** | hands off unresolved gaps | hands off active defects | assesses commit history | - | hands off candidate journal draft | - |
-| **Document** | consumes practice milestones | consumes RCA findings | commits docs if stored in repo | consumes completed journal drafts | - | provides ADRs and plans |
-| **Reconcile Docs** | - | - | verifies commit reality & commits docs | - | audits ADRs and plans | - |
+| From \ To | Practice | Diagnose | Git Manager | Document | Reconcile Docs |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Practice** | - | yields for production incidents | learner writes message & runs commit | optional handoff on key insights | - |
+| **Diagnose** | yields if user wants to find cause | - | branches, commits fix & recovers | hands off if RCA reveals non-obvious lesson | - |
+| **Git Manager** | learner-controlled in practice/learning | manages branches & packages fixes | - | delegates if commit warrants deeper doc | provides commit history |
+| **Document** | consumes practice milestones | consumes RCA findings | commits docs in repo `docs/` | - | provides ADRs and plans |
+| **Reconcile Docs** | - | - | verifies commit reality & commits docs | audits ADRs, discussions, and plans | - |
 
 ---
 
 ## Canonical Flows
 
-1. **Investigation to History**: `diagnose` (verify root cause) -> `git-manager` (checkpoint commit) -> `document` (optional Debug Record / ADR).
-2. **Deliberate Practice to Knowledge**: `practice` (solve transfer challenge) -> `document` (author durable knowledge article).
-3. **Retrospective Scaffolding to Journal**: `journal-builder` (reconstruct facts & question blanks from repository history) -> user fills reasoning -> curation & calibration -> `draft-curation`.
-4. **Documentation Reconciliation**: `reconcile-docs` (audit history, code reality, roadmap) -> propose updates to README / ARCHITECTURE / ADRs -> user approves.
-5. **Skill Design Loop**: `build-skill` (approve spec) -> dogfood run -> minimal mechanism refinement.
-6. **Branch Lifecycle & Integration**: `git-manager` (branch-before-edits or isolated worktree) -> implementation & incremental checkpoint commits -> `code-review` / `verify-slice` -> `git-manager` (rebase or integration).
-7. **Issue Planning to PR Delivery**: `gitea-plan` (tiered sizing & falsifiable acceptance criteria) -> `implement-slice` (orchestrates `git-manager` workspace isolation, worker `tdd` checkpoints, pre-committed `verify-slice` QA rubrics, and final-HEAD `code-review`) -> `gitea-pr` (PR synthesis, feedback triage, issue closing).
+1. **Investigation to History**: `diagnose` (verify root cause) -> `git-manager` (checkpoint commit) -> `document` (optional Debug Record / ADR in `docs/`).
+2. **Deliberate Practice to Knowledge**: `practice` (solve transfer challenge, log in `.internal/practice/`) -> `document` (optional durable knowledge article in `docs/knowledge/`).
+3. **Documentation Reconciliation**: `reconcile-docs` (audit repo history, code reality, Gitea state, roadmap) -> propose updates to `README` / `ARCHITECTURE` / `docs/adr/` / `ROADMAP` / `docs/designs/*.md` -> user approves.
+4. **Skill Design Loop**: `build-skill` (approve spec) -> dogfood run -> minimal mechanism refinement.
+5. **Branch Lifecycle & Integration**: `git-manager` (branch-before-edits or isolated worktree) -> implementation & incremental checkpoint commits -> `code-review` / `verify-slice` -> `git-manager` (rebase or integration).
+6. **Issue Planning to PR Delivery**: `gitea-plan` (tiered sizing, 5-column Kanban reconciliation, & falsifiable acceptance criteria) -> `implement-slice` (orchestrates `git-manager` workspace isolation, worker `tdd` checkpoints, pre-committed `verify-slice` QA rubrics, Kanban card transitions, and final-HEAD `code-review`) -> `gitea-pr` (PR synthesis, review comment publishing, feedback triage, merge & `Review -> Completed`).
 
 ---
 

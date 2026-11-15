@@ -1,7 +1,7 @@
 # Practice Record Template
 
-Default location: configured notes inbox (or project `docs/`) as `practice-YYYY-MM-DD-<topic>.md`.
-Before saving, ask where it goes (2-3 options, configured notes inbox recommended).
+Default location: gitignored `.internal/practice/practice-YYYY-MM-DD-<topic>.md` at the repository root (or current directory). Ensure `.internal/` is listed in `.gitignore`.
+Before saving, confirm whether to save to `.internal/practice/` (recommended) or discard.
 
 ```markdown
 ---

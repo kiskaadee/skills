@@ -17,7 +17,7 @@ Create a Knowledge Article when an engineering effort, investigation, practice d
 2. **Non-Trivial Mental Model**: The subject involves non-obvious trade-offs, subtle failure modes, or conceptual hurdles that standard API docs or cursory tutorials gloss over.
 3. **Pedagogical Durability**: The explanation will remain valuable to an engineer months or years later, independent of transient project tasks.
 
-### Target Placement within Knowledge Base or Vault
+### Target Placement within the Repository (`docs/knowledge/` or `.internal/knowledge/`)
 * **`concepts/`**: Disciplinary and theoretical ideas: data structures, algorithmic paradigms, concurrency models, distributed systems principles (`type: knowledge`).
 * **`methods/`**: Reusable engineering practices, workflows, and disciplines: testing strategies, investigative techniques, architectural paradigms, documentation methods (`type: knowledge`).
 * **`technologies/`**: Deep dives into tools, runtimes, and languages: environment managers, container engines, frameworks, standard library mechanics (`type: knowledge`).
@@ -26,14 +26,14 @@ Create a Knowledge Article when an engineering effort, investigation, practice d
 
 ## 2. When NOT to Create a Knowledge Article
 
-To prevent vault bloat and respect epistemic boundaries, do **NOT** create a Knowledge Article for:
+To prevent documentation bloat and respect epistemic boundaries, do **NOT** create a Knowledge Article for:
 
-* **Session Transcripts & Raw Notes**: Temporary meeting logs, scratch notes, or raw command histories (keep in `00-inbox/` or discard).
-* **Project Implementation Blueprints**: Roadmaps, milestone breakdowns, or task tickets for building a specific feature (use **Plan** $\to$ `01-plans/`).
-* **Point-in-Time Architectural Commitments**: Decisions selecting a specific stack, framework, or model for a specific repository (use **ADR** $\to$ `03-records/decisions/`).
-* **Historical Failure Postmortems**: Empirical diagnosis and logs of a specific broken system or production outage (use **Debug Record** $\to$ `03-records/debug/`).
-* **Project Discussions & Trade-offs**: Debates exploring competing directions for a specific system (use **Discussion** $\to$ `02-discussions/`).
-* **Runbooks & Operational SOPs**: Step-by-step procedures for administering a specific deployed service (use **Guide** $\to$ `04-learning/guides/`).
+* **Session Transcripts & Raw Notes**: Temporary meeting logs, scratch notes, or raw command histories (keep in gitignored `.internal/` or discard).
+* **Project Implementation Blueprints**: Roadmaps, milestone breakdowns, or task tickets for building a specific feature (use **Plan** $\to$ `docs/designs/`).
+* **Point-in-Time Architectural Commitments**: Decisions selecting a specific stack, framework, or model for a specific repository (use **ADR** $\to$ `docs/adr/`).
+* **Historical Failure Postmortems**: Empirical diagnosis and logs of a specific broken system or production outage (use **Debug Record** $\to$ `docs/debug/`).
+* **Project Discussions & Trade-offs**: Debates exploring competing directions for a specific system (use **Discussion** $\to$ `docs/discussions/`).
+* **Runbooks & Operational SOPs**: Step-by-step procedures for administering a specific deployed service (use **Guide** $\to$ `docs/guides/`).
 * **Shallow API Summaries**: Regurgitating command flags or library cheatsheets that are better found by typing `--help` or reading upstream documentation.
 
 ---
@@ -52,8 +52,8 @@ Knowledge Articles coexist cleanly with other epistemic documents by enforcing s
 
 ### Rule of Epistemic Purpose
 The same engineering lesson may inform multiple artifacts, but each must serve its native purpose:
-* An investigation post-mortem records the raw failure in a **Debug Record** (`03-records/debug/`).
-* If the root cause exposed a generalizable diagnostic technique or systems principle, that principle is abstracted into a **Knowledge Article** (`04-learning/knowledge/methods/`), omitting the incident's transient logs.
+* An investigation post-mortem records the raw failure in a **Debug Record** (`docs/debug/`).
+* If the root cause exposed a generalizable diagnostic technique or systems principle, that principle is abstracted into a **Knowledge Article** (`docs/knowledge/methods/` or `.internal/knowledge/methods/`), omitting the incident's transient logs.
 
 ---
 

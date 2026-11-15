@@ -8,7 +8,7 @@ Treat each source according to its temporal role and authority:
 
 | Source | Temporal role | Epistemic authority |
 | :--- | :--- | :--- |
-| Chronological records (vault notes, logs, discussions) | Past | Historical evidence. Explains how the system arrived here. |
+| Chronological records (`git log`, `docs/discussions/`, `docs/debug/`) | Past | Historical evidence. Explains how the system arrived here. |
 | Merged PRs & published `code-review` comments (`gt pr`) | Past -> Present | Primary record of slice-level contract evolutions, accepted trade-offs, and deferred nits. |
 | Repository implementation (code, tests, configuration, `AGENTS.md`) | Present | Canonical technical truth. Determines what the system is right now. |
 | Existing repository documentation (`ARCHITECTURE.md`, `docs/designs/*.md`) | Present | Canonical unless contradicted by current implementation. |

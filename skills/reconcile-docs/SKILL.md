@@ -4,8 +4,8 @@ description: >-
   Audit, reconcile, and generate canonical repository documentation (README.md,
   ARCHITECTURE.md, docs/adr/, ROADMAP.md, docs/designs/*.md) against commit
   history, code reality, Gitea delivery state, and active plans. Use when
-  updating a repository's official documentation. For capturing session notes
-  or personal insights into the vault, use document.
+  updating a repository's official documentation. For capturing a single
+  session's decision, debug record, or insight into repo docs, use document.
 ---
 
 # Reconcile Docs
@@ -13,12 +13,11 @@ description: >-
 ## Use when
 - `/reconcile-docs [history-path]`: audit or reconcile repository documentation against history, Gitea state, and active plans.
 - Closing a milestone or resolving mid-milestone design spec drift flagged by `code-review` or `implement-slice`.
-- Not for capturing a single session's insight (use `/document`).
-- Not for triaging inbox notes into vault directories (use `draft-curation`).
+- Not for capturing a single session's insight or incident record (use `/document`).
 
 ## Steps
 1. **Discover Present State.** Inspect working-tree status, repository source, tests, configuration, `AGENTS.md`, and existing docs. Build a present-state inventory of components, responsibilities, boundaries, and dependencies.
-2. **Reconstruct History.** Read chronological notes and commit history from the provided history source (vault records, discussions, previous ADRs) and, when a Gitea remote exists, read merged PRs and published `code-review` PR comments/reviews via `gt` (using `gt-usage` read-only queries). Extract decisions, accepted trade-offs, mid-slice contract pivots, rejected alternatives, migrations, and incidents.
+2. **Reconstruct History.** Read chronological notes and commit history from the repository (`git log`, `docs/discussions/`, `docs/debug/`, `docs/adr/`, or an optional history path) and, when a Gitea remote exists, read merged PRs and published `code-review` PR comments/reviews via `gt` (using `gt-usage` read-only queries). Extract decisions, accepted trade-offs, mid-slice contract pivots, rejected alternatives, migrations, and incidents.
 3. **Extract Future Intent.** Identify active plans, roadmaps (`ROADMAP.md`, `docs/designs/*.md`), and, when a Gitea remote exists, read open/closed Gitea milestones, issues, and Project Board column placement (`Completed` vs. `Backlog`, `Ready`, `Work in Progress`, `Review`) read-only via `gt`. Classify each item as committed, planned, exploratory, or superseded. Never mutate Gitea issues, PRs, or board cards.
 4. **Reconcile and Detect Conflicts.** Correlate past claims, present code reality, and future plans using [references/reconciliation-matrix.md](references/reconciliation-matrix.md). Flag contradictions (historical claims contradicted by code, mid-slice spec drift in `docs/designs/*.md`, or `Backlog` plans masquerading as current implementation).
 5. **Human Checkpoint.** Present a Reconciliation Report following [references/checkpoint-format.md](references/checkpoint-format.md) listing present architecture, recovered decisions, resolved and unresolved conflicts, and proposed document mutations. Stop for user approval.

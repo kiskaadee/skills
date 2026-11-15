@@ -2,9 +2,9 @@
 name: document
 description: >-
   Capture decisions, trade-offs, debugging insights, or plans from a session into the
-  personal knowledge vault (00-inbox/). Use when the user asks to document an insight
-  or session outcome. For auditing or updating canonical repository documentation
-  (README, ARCHITECTURE, repository ADRs), use reconcile-docs.
+  active repository's docs/ directory (or current directory). Use when the user asks
+  to document an insight or session outcome. For auditing or updating canonical
+  repository documentation (README, ARCHITECTURE, repository ADRs), use reconcile-docs.
 ---
 
 # Document
@@ -20,36 +20,36 @@ description: >-
    surprising failure, a reusable insight.
 2. **Classify by the kind of knowledge, not by the activity that produced it:**
 
-| Knowledge                                             | Type         | Spec                                             |
-| ----------------------------------------------------- | ------------ | :----------------------------------------------- |
-| Why: exploration, alternatives, trade-offs            | Discussion   | [discussion](references/discussion-authoring.md) |
-| What we decided (architecture)                        | ADR          | [adr](references/adr-authoring.md)               |
-| How to build it: phases, constraints, done-definition | Plan         | [plan](references/plan-authoring.md)             |
-| What broke and why (root cause)                       | Debug Record | [debug](references/debug-record-authoring.md)    |
-| A general mental model or technique                   | Knowledge    | [knowledge](references/knowledge-authoring.md)   |
-| Daily synthesis: facts, reasoning, calibration        | Journal      | [journal](references/journal-authoring.md)       |
+| Knowledge                                             | Type         | Default Repo Path   | Spec                                             |
+| ----------------------------------------------------- | ------------ | ------------------- | :----------------------------------------------- |
+| Why: exploration, alternatives, trade-offs            | Discussion   | `docs/discussions/` | [discussion](references/discussion-authoring.md) |
+| What we decided (architecture)                        | ADR          | `docs/adr/`         | [adr](references/adr-authoring.md)               |
+| How to build it: phases, constraints, done-definition | Plan         | `docs/designs/`     | [plan](references/plan-authoring.md)             |
+| What broke and why (root cause)                       | Debug Record | `docs/debug/`       | [debug](references/debug-record-authoring.md)    |
+| A general mental model or technique                   | Knowledge    | `docs/knowledge/`   | [knowledge](references/knowledge-authoring.md)   |
 
 A rich session may justify more than one (e.g. Debug Record + Discussion). Split them; don't write one hybrid document.
 
 3. **Draft** each document following its spec. Read the spec before writing.
-4. **Avoid overlap.**  Each fact has one owning document: the Discussion owns the reasoning,
+4. **Avoid overlap.** Each fact has one owning document: the Discussion owns the reasoning,
    the ADR the decision, the Plan the steps, the Debug Record the evidence, Knowledge the
-   general lesson. Others link to it instead of repeating it. 
-5. **Keep references portable**: Use relative paths or context-defined placeholders. Never write absolute file-system paths into documentation. 
-6. **Save** to the location I choose (see below). Discussions and Debug Records are
-   historical and never rewritten later. ADRs and Plans get `status: superseded` when replaced.
+   general lesson. Others link to it instead of repeating it.
+5. **Keep references portable**: Use relative paths or context-defined placeholders. Never write absolute file-system paths into documentation.
+6. **Save** inside the repository or directory where `/document` was called, at the path I confirm.
+   Discussions and Debug Records are historical and never rewritten later. ADRs and Plans get
+   `status: superseded` when replaced.
 
 ## Your call
 - **Type(s)**: confirm the classification from step 2.
 - **The key sentence**: before drafting, ask me to state the core in my own words: the
   decision, the root cause, or the insight. Build the draft around my sentence.
 - **Insights:** when the core insight is unclear, ask about the intent behind important choices, rejected alternatives, and relevant trade-offs. Use these questions to validate the user's understanding, not to expand the scope of the session.
-- **Where it goes**: offer 2-3 options, recommended first, e.g.
-  default notes inbox (from profile) / the project's `docs/` / typed record folder.
+- **Where it goes**: offer 2-3 options scoped to the active repository (or current directory if outside a repo), recommended first, e.g.
+  typed folder (`docs/adr/`, `docs/designs/`, `docs/discussions/`, `docs/debug/`, `docs/knowledge/`) / project `docs/` root / gitignored `.internal/` (when personal-only).
 
 ## Done when
-- The file exists at the chosen location, or we agreed no document is needed.
+- The file exists at the chosen repository-local location, or we agreed no document is needed.
 
 ## Hands off to
-- `draft-curation`: to review and curate drafts staged into an inbox into lifecycle destinations.
-- `git-manager`: to stage and commit the document if it lives directly in a repo.
+- `git-manager`: to stage and commit the document if stored in `docs/`.
+- `reconcile-docs`: when a new ADR or Plan updates canonical repository architecture or roadmap direction.

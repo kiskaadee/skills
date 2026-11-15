@@ -1,6 +1,6 @@
 # Learning contract
 
-Rules for any skill with a learning mode (`practice`, `git-manager`, `journal-builder`, `document`).
+Rules for any skill with a learning mode (`practice`, `git-manager`, `document`).
 The session mode itself is defined in the profile (`AGENTS.md`, "Session mode"). This file
 defines what each mode means.
 

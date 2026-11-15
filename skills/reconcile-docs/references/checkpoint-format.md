@@ -24,7 +24,7 @@ During Step 5 of `reconcile-docs`, the agent pauses before modifying or creating
 ## 4. Conflict Log
 | Conflict | Source Claim | Code Evidence | Proposed Resolution |
 | :--- | :--- | :--- | :--- |
-| Historical Contradiction | [e.g. Brain notes claim PostgreSQL] | [Code uses SQLite WAL] | [Supersede note, draft migration ADR] |
+| Historical Contradiction | [e.g. Earlier discussion claims PostgreSQL] | [Code uses SQLite WAL] | [Supersede note, draft migration ADR] |
 | Premature Promotion | [e.g. Plan states gRPC API ready] | [Only REST API exists] | [Move to ROADMAP near-term] |
 | Zombie Documentation | [e.g. README mentions Worker daemon] | [Worker removed in commit abc1234] | [Remove from README/ARCHITECTURE] |
 

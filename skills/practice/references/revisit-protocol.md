@@ -7,9 +7,8 @@ Protocol for spacing and successive relearning in `practice`. Implements recall-
 ## 1. Discovery
 
 When `/practice` runs without arguments, or with `/practice review`, scan for existing practice records in:
-- Notes inbox (e.g. `00-inbox/` or configured vault inbox)
-- Learning guides (e.g. `04-learning/`)
-- Project-local documentation (e.g. `docs/`)
+- Repository-local `.internal/practice/` (gitignored personal practice records)
+- Project-local documentation (`docs/` if present)
 
 Filter for markdown files where frontmatter has `type: practice` and `revisit_after` is on or before today's date (`YYYY-MM-DD`). If matches exist, surface up to 3 due topics and ask whether to review one or start a new topic.
 

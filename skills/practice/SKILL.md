@@ -16,9 +16,10 @@ description: >-
 
 ## Steps
 1. **Check overdue revisits.** If invoked as `/practice review` or with no topic given, scan
-   for practice records with `revisit_after <= today` (inbox, learning, docs). If any exist,
-   surface up to 3 and ask whether to review one or start a new topic. When reviewing,
-   execute recall-before-reveal per [references/revisit-protocol.md](references/revisit-protocol.md).
+   for practice records with `revisit_after <= today` in gitignored `.internal/practice/` (and
+   `docs/` if present). If any exist, surface up to 3 and ask whether to review one or start a
+   new topic. When reviewing, execute recall-before-reveal per
+   [references/revisit-protocol.md](references/revisit-protocol.md).
 2. **Establish target.** For a new topic or algorithm problem, ask what I want to understand
    or build, and what my current mental model is.
 3. **Help at lowest level that works**, moving up only when I am stuck:

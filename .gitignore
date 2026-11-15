@@ -1,4 +1,5 @@
 .obsidian
+.internal/
 __pycache__/
 *.py[cod]
 

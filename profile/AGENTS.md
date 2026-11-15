@@ -60,7 +60,7 @@ whether I really understood something), don't make it for me:
 ## Skills and docs
 
 - My skills live in `~/Projects/active/skills`. Edit them there, never in an installed copy.
-- Durable notes default to `~/Brain/00-inbox/`. Use `document` to decide if one is warranted.
+- Durable engineering notes default to `docs/` in the active repository (or current directory when outside a repo); personal learning/practice records and intermediate agent artifacts live in gitignored `.internal/` at the repository root. Use `document` to decide if a durable note is warranted.
 - For `todo.txt` task files, use non-interactive `tuxedo` CLI subcommands (`tuxedo ls --json`, `tuxedo lsp`, `tuxedo do <N>`, `tuxedo add ...`); never invoke bare `tuxedo`, `tuxedo n`, or the interactive shell alias `todo` in agent subshells (they launch the full-screen TUI or fail to resolve).
 
 ## Workspaces and resolution
@@ -69,7 +69,6 @@ whether I really understood something), don't make it for me:
   - `~/Projects/active/` (active tools and applications)
   - `~/Projects/tests/` (benchmarks, experiments, and spikes)
   - `~/Homelab/` Shared space for Homelab's Core and Sites repositories
-  - `~/Brain/` (knowledge vault)
   - `~/Config/` (system and NixOS configuration)
 - When resolving a project from task context, search these workspace roots before asking the user.
 - To create new projects or repositories, always use `new-repo` (source: `~/Projects/active/new-repo`). It supports organization targeting (`-o`), GitHub push mirroring, licenses, and templates.

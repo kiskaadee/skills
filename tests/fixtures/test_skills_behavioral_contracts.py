@@ -41,7 +41,6 @@ EXPECTED_SKILLS = [
     "gt-usage",
     "implement-slice",
     "inspect-flake-update",
-    "journal-builder",
     "nix-devshell",
     "practice",
     "reconcile-docs",
@@ -452,8 +451,31 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
         self.assertIn("reconcile-docs", plan_skill)
         self.assertIn("reconcile-docs", impl_skill)
 
+    def test_repo_scoped_documentation_and_vault_deprecation(self):
+        """Proves ~/Brain, 00-inbox, draft-curation, and journal-builder are deprecated in favor of repo docs/ and .internal/."""
+        doc_dir = REPO_ROOT / "skills" / "document"
+        doc_all = "\n".join(p.read_text() for p in doc_dir.rglob("*.md"))
+        prac_dir = REPO_ROOT / "skills" / "practice"
+        prac_all = "\n".join(p.read_text() for p in prac_dir.rglob("*.md"))
+        profile_agents = (REPO_ROOT / "profile" / "AGENTS.md").read_text()
+        install_sh = (REPO_ROOT / "install.sh").read_text()
+
+        # 1. No ~/Brain, 00-inbox, or draft-curation in active skills or profile
+        for forbidden in ("~/Brain", "00-inbox", "draft-curation", "journal-builder"):
+            self.assertNotIn(forbidden, doc_all)
+            self.assertNotIn(forbidden, prac_all)
+            self.assertNotIn(forbidden, profile_agents)
+
+        # 2. Repo-scoped paths present
+        self.assertIn("docs/adr/", doc_all)
+        self.assertIn("docs/designs/", doc_all)
+        self.assertIn(".internal/practice/", prac_all)
+        self.assertIn("OBSOLETE_SKILLS=(", install_sh)
+        self.assertIn("journal-builder", install_sh)
+        self.assertIn("draft-curation", install_sh)
+
     def test_skill_inventory_and_skeletons(self):
-        """Proves all 17 active skills meet line count (<= 80), em-dash, and path portability rules."""
+        """Proves all 16 active skills meet line count (<= 80), em-dash, and path portability rules."""
         for skill_name in EXPECTED_SKILLS:
             skill_path = REPO_ROOT / "skills" / skill_name / "SKILL.md"
             self.assertTrue(skill_path.exists(), f"Missing skill file: {skill_path}")
