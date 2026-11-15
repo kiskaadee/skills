@@ -38,6 +38,9 @@ whether I really understood something), don't make it for me:
   Pause for approval only on `main`/`master`, in `learning` mode, or when hitting conflicts,
   reverts, cherry-picks, shared-history rewrites, failing checks, unfamiliar working-tree
   changes, or destructive git.
+- Commit messages must be explicit for reviewers: for any commit touching multiple files or
+  non-trivial behavior, always include a structured body with `-` bullets stating what changed
+  and why per area (never a subject-only commit).
 - Never run destructive git (`reset --hard`, `restore <file>`, `clean -fd`, force-push) without
   my explicit yes.
 - Redact secrets (tokens, keys, passwords, connection strings) from anything you print or save.
@@ -58,6 +61,7 @@ whether I really understood something), don't make it for me:
 
 - My skills live in `~/Projects/active/skills`. Edit them there, never in an installed copy.
 - Durable notes default to `~/Brain/00-inbox/`. Use `document` to decide if one is warranted.
+- For `todo.txt` task files, use non-interactive `tuxedo` CLI subcommands (`tuxedo ls --json`, `tuxedo lsp`, `tuxedo do <N>`, `tuxedo add ...`); never invoke bare `tuxedo`, `tuxedo n`, or the interactive shell alias `todo` in agent subshells (they launch the full-screen TUI or fail to resolve).
 
 ## Workspaces and resolution
 

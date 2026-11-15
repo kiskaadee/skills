@@ -29,8 +29,9 @@ description: >-
 4. **Run independent reproducibility audit.** Spawn clean-room subagent with raw
    input manifest (commit SHA, specs, proposed issue markdown). Review 5-section
    evaluation to resolve material ambiguities before human gate.
-5. **Present decomposition for approval.** Present proposed milestone, board, and
-   issues with audit disposition. Stop for approval before creating Gitea entities.
+5. **Present decomposition for approval.** Present proposed milestone, board,
+   issues, and any proposed repository `AGENTS.md` planning-contract diff with
+   audit disposition. Stop for approval before mutating Gitea entities or `AGENTS.md`.
 6. **Execute Gitea operations via `gt` CLI.** Use verified commands from `gt-usage`:
    - Milestones: `gt milestone create "<title>" -d "<desc>" --json id,url`.
    - Projects: `gt project create "<title>" --template basic_kanban --json id,url`
@@ -40,15 +41,27 @@ description: >-
    Extract server IDs directly; never guess sequence numbers or construct `/milestone/1`.
 7. **Verify created state.** Inspect `gt issue list` and `gt milestone list` to
    confirm server IDs, board cards, and non-hallucinated canonical URLs.
+8. **Formalize repo planning contract in `AGENTS.md`.** When establishing or changing
+   `Medium`/`Large` planning structure, record or reconcile a concise sync rule in the
+   repository's `AGENTS.md` so day-to-day coding agents keep trackers updated without
+   reloading `gitea-plan`:
+   - Pin **stable structural coordinates only**: canonical roadmap/checklist paths
+     (e.g., `docs/roadmap.md`, `todo.txt`), authoritative Gitea repo + Project Board ID,
+     remote mirror policy (e.g., GitHub code-only), and the escalation trigger to
+     re-run `gitea-plan` on scope shifts or epic Readiness Gates.
+   - **Never** hardcode rotating sprint state (active milestone numbers or open issue
+     lists) inside `AGENTS.md`; let `docs/roadmap.md`, `todo.txt`, and `gt` hold state.
 
 ## Your call
 - **Planning tier selection**: confirm Small vs. Medium vs. Large ceremony level.
 - **Issue decomposition boundaries**: approve or revise proposed issue slices.
-- **Batch entity creation**: approve structured batch creation per `profile/AGENTS.md`.
+- **Batch entity creation**: approve structured batch creation and `AGENTS.md` contract edits per `profile/AGENTS.md`.
 
 ## Done when
 - Target milestone, board, and issues exist on Gitea with verified server IDs,
   canonical URLs, and falsifiable acceptance criteria.
+- Repository `AGENTS.md` contains an accurate, state-free planning sync contract
+  whenever `Medium`/`Large` planning structure is created or updated.
 
 ## Hands off to
 - `implement-slice`: to orchestrate end-to-end delivery of an approved issue or slice.

@@ -16,9 +16,9 @@ Reference for `git-manager`. Conventions for slicing changes, formatting Convent
 ## 3. Message Conventions and Depth Matching
 - Use the repository's `AGENTS.md` commit types and scopes when defined; otherwise use Conventional Commits (`feat`, `fix`, `refactor`, `docs`, `test`, `build`, `ci`, `chore`, `perf`, `security`).
 - Match message depth to change significance:
-  - **Trivial or mechanical**: concise imperative subject line only (`<= 72` characters).
-  - **Multi-part slice**: subject line + concise bullet list of concrete behavioral changes.
-  - **Non-obvious constraint or trade-off**: subject line + bullets + `Rationale:` line explaining why this approach was chosen over alternatives.
+  - **Trivial or mechanical** (single-file typo, formatting, or one-line fix): concise imperative subject line (`<= 72` characters).
+  - **Multi-file or non-trivial slice**: subject line + explicit `-` bullet list detailing what changed and why per area/file so reviewers can understand the slice without opening every diff.
+  - **Non-obvious constraint or trade-off**: subject line + explicit bullets + `Rationale:` line explaining why this approach was chosen over alternatives.
 - Link issues (`Closes #<id>` or `Refs #<id>`) only when the commit or branch genuinely satisfies those criteria.
 - Trust the staged diff over conversation claims; never overclaim untested behavior.
 
