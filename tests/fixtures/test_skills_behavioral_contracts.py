@@ -16,6 +16,7 @@ Verifies:
 10. Review comment publishing ownership (code-review drafts, gitea-pr posts with guards)
 11. Project board 5-column reconciliation, semantic hex colors, and transition ownership
 12. reconcile-docs read-only Gitea ingestion and bidirectional hooks with gitea-plan / implement-slice
+13. Polyglot TDD hardening (Mode A/B, 5 languages, 5 empirical invariants), code-review Axis 3 binding, and Suggested Next Step soft-chaining
 """
 
 import os
@@ -479,6 +480,53 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
         impl_all = "\n".join(p.read_text() for p in (REPO_ROOT / "skills" / "implement-slice").rglob("*.md"))
         self.assertIn("Vertical Submodule TDD Grouping", plan_all)
         self.assertIn("Vertical Submodule TDD Decomposition (Anti-Horizontal Batching)", impl_all)
+
+    def test_polyglot_tdd_hardening_code_review_binding_and_soft_chaining(self):
+        """Proves dual-mode tdd, 5-language invariants, single-owner code-review Axis 3 binding, and Suggested Next Step soft-chaining."""
+        tdd_dir = REPO_ROOT / "skills" / "tdd"
+        tdd_skill = (tdd_dir / "SKILL.md").read_text()
+        seams = (tdd_dir / "references" / "seams-and-mocking.md").read_text()
+        quality = (tdd_dir / "references" / "test-quality.md").read_text()
+        tdd_refs = seams + "\n" + quality
+
+        # 1. Dual-mode tdd & 5 target languages
+        self.assertIn("Mode A", tdd_skill)
+        self.assertIn("Mode B", tdd_skill)
+        for lang in ("Python", "TypeScript", "Bash", "Rust", "Java"):
+            self.assertIn(lang, seams)
+            self.assertIn(lang, quality)
+
+        # 2. All 5 empirical invariants live in tdd/references/
+        self.assertIn("sleep_fn", seams)
+        self.assertIn("Deterministic Async Synchronization and Guaranteed Teardown", seams)
+        self.assertIn("[min - 1, min, max, max + 1]", quality)
+        self.assertIn("production value constants", quality)
+        self.assertIn("Single-Behavior Test Naming and Focus", quality)
+        self.assertIn("Mode B Audit and Hardening Checklist", quality)
+
+        # 3. code-review binds Axis 3 directly to tdd/references/ without duplicating fenced code blocks, and isolates Axis 3 in High-Assurance
+        cr_skill = (REPO_ROOT / "skills" / "code-review" / "SKILL.md").read_text()
+        axes = (REPO_ROOT / "skills" / "code-review" / "references" / "axes.md").read_text()
+        schema = (REPO_ROOT / "skills" / "code-review" / "references" / "finding-schema.md").read_text()
+        self.assertIn("../tdd/references/seams-and-mocking.md", cr_skill)
+        self.assertIn("../tdd/references/test-quality.md", cr_skill)
+        self.assertIn("../../tdd/references/seams-and-mocking.md", axes)
+        self.assertIn("../../tdd/references/test-quality.md", axes)
+        self.assertIn("dedicated isolated reviewer to **Seam & Test Integrity**", axes)
+        self.assertNotIn("calculate_total", axes)
+        self.assertIn("Suggested Next Step", schema)
+
+        # 4. Canonical Suggested Next Step + suppression contract in skeleton.md and handoff-contracts.md
+        skeleton = (REPO_ROOT / "skills" / "build-skill" / "references" / "skeleton.md").read_text()
+        handoffs = (REPO_ROOT / "skills" / "implement-slice" / "references" / "handoff-contracts.md").read_text()
+        self.assertIn("Suggested Next Step", skeleton)
+        self.assertIn("Suppress", handoffs)
+        self.assertNotIn("Steps 4–5", handoffs)
+
+        # 5. All 6 chained skills include Suggested Next Step routing
+        for skill_name in ("gitea-plan", "implement-slice", "tdd", "code-review", "gitea-pr", "reconcile-docs"):
+            text = (REPO_ROOT / "skills" / skill_name / "SKILL.md").read_text()
+            self.assertIn("Suggested Next Step:", text, f"{skill_name} missing Suggested Next Step routing")
 
     def test_skill_inventory_and_skeletons(self):
         """Proves all 16 active skills meet line count (<= 80), em-dash, and path portability rules."""

@@ -53,3 +53,4 @@ description: >-
 - **No em-dashes** in skill text.
 - **The `name` is the slash command.** Must match `^[a-z0-9-]+$`. Never use underscores (`_`) or uppercase; never create a separate wrapper skill to expose a command.
 - **Public repo hygiene.** Never hardcode user home paths (`/home/...`) or secrets.
+- **Next-step chaining & subagent suppression.** Skills that chain into downstream workflows emit one outcome-matched `Suggested Next Step: /<skill> <args>` line at the end of standalone turns (inside `## Hands off to` or their output template). Delegated subagent runs omit that footer and return only their parent handoff format.

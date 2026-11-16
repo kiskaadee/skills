@@ -39,5 +39,6 @@ description: >-
 - The Reconciliation Report is approved by the user, canonical documentation files are written or updated, and consistency validation passes cleanly.
 
 ## Hands off to
-- `git-manager`: for branch setup or committing updated documentation files.
-- `gitea-plan`: when reconciled `ROADMAP.md` or `docs/designs/*.md` require new or updated Gitea milestones, issues, or board reconciliation.
+- `git-manager`: for branch setup or committing updated documentation (`Suggested Next Step: /git-manager`).
+- `gitea-plan`: when reconciled `ROADMAP.md` or `docs/designs/*.md` require new or updated Gitea milestones, issues, or board reconciliation (`Suggested Next Step: /gitea-plan`).
+- Emit one outcome-matched `Suggested Next Step` on standalone turns per [skeleton](../../build-skill/references/skeleton.md).

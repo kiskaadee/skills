@@ -25,7 +25,7 @@ Provide before spawning (or messaging) an implementation worker:
 - **Scope Boundary**: In-scope files/interfaces and explicit out-of-scope exclusions (preventing opportunistic refactors).
 - **Acceptance Criteria**: Numbered, falsifiable conditions this task must satisfy.
 - **Checkpoint Expectation**: Expected coherent commit boundary (or boundaries) following `git-manager` Conventional Commits.
-- **Required Compact Report**: Request concise structured output (no raw multi-hundred-line logs unless a check fails).
+- **Required Compact Report**: Request concise structured output (no raw multi-hundred-line logs unless a check fails) and instruct the worker to suppress standalone `Suggested Next Step` footers.
 
 ## 3. Implementation Report (Worker -> Orchestrator)
 
@@ -46,7 +46,7 @@ The rubric is written and approved during Step 3 (before implementation begins).
 - **Target Revision & Workspace**: Exact commit SHA (`HEAD`), base ref, and workspace path. State clearly: do not modify tracked files; leave `git status --short` clean.
 - **Assurance Tier & Mode**: `Lightweight`, `Standard`, or `High-Assurance` per `verify-slice`. For `High-Assurance` black-box runs, withhold the diff narrative and worker self-audit.
 - **Pre-Committed Falsifiable Checks**: Numbered checks with scope (`local` vs. `live-infra`), exact pass conditions, `FAIL if ...` signals, and any `code-review` Step 6 `RV-*` checks.
-- **Authorization Boundary**: Explicitly state whether any `live-infra` check has human owner authorization for this run (default: unauthorized -> record `BLOCKED (out-of-bounds)`).
+- **Authorization Boundary**: Explicitly state whether any `live-infra` check has human owner authorization for this run (default: unauthorized -> record `BLOCKED (out-of-bounds)`). Suppress standalone `Suggested Next Step` footers; return only the compact QA report.
 
 ## 5. QA Report (QA Subagent -> Orchestrator)
 
@@ -74,7 +74,7 @@ Follows the `verify-slice` disposition contract:
   ```
 ```
 
-### B. Execution Record Schema (Steps 4–5 Log)
+### B. Execution Record Schema (Steps 4-5 Log)
 Updated dynamically in orchestrator turns:
 ```markdown
 | Node ID | Claim / Invariant | Method | Executor | Evidence | Pass Condition | Status |

@@ -91,7 +91,8 @@ systemctl reload app-daemon.service && systemctl is-active --quiet app-daemon.se
 
 ## Overall Recommendation
 - **Status**: `Ready` | `Needs Rework` | `Blocked`
-- **Next Action**: State whether to hand off to `verify-slice` for runtime verification, `diagnose` for root-cause fixes, or present to human owner for adjudication. Static provenance and runtime verification remain distinct inputs; neither authorizes release on its own.
+- **Next Action**: State whether to hand off to `verify-slice` for runtime verification, `diagnose` for root-cause fixes, `tdd` for Mode B test hardening, or `gitea-pr` for PR packaging/comment publishing. Static provenance and runtime verification remain distinct inputs; neither authorizes release on its own.
+- **Suggested Next Step**: `/<skill> <args>` (emit one concrete command matched to the recommendation on standalone turns; omit when running inside a delegated subagent).
 ```
 
 ## 4. PR Comment Block (Drafted Here, Published by `gitea-pr`)

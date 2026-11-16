@@ -48,16 +48,11 @@ description: >-
 7. **Verify created state.** Inspect `gt issue list`, `gt milestone list`, and board
    columns to confirm server IDs, column colors/order, and non-hallucinated canonical URLs.
 8. **Formalize repo planning contract in `AGENTS.md`.** When establishing or changing
-   `Medium`/`Large` planning structure, record or reconcile a concise sync rule in the
-   repository's `AGENTS.md` so day-to-day coding agents keep trackers updated without
-   reloading `gitea-plan`:
-   - Pin **stable structural coordinates only**: canonical roadmap/checklist paths
-     (e.g., `docs/roadmap.md`, `todo.txt`), authoritative Gitea repo + Project Board ID
-     + `{Backlog, Ready, Work in Progress, Review, Completed -> column_id}` map,
-     remote mirror policy (e.g., GitHub code-only), and the escalation trigger to
-     re-run `gitea-plan` on scope shifts or epic Readiness Gates.
-   - **Never** hardcode rotating sprint state (active milestone numbers or open issue
-     lists) inside `AGENTS.md`; let `docs/roadmap.md`, `todo.txt`, and `gt` hold state.
+   `Medium`/`Large` planning structure, record a concise sync rule in `AGENTS.md`:
+   - Pin **stable coordinates only**: roadmap/checklist paths (`docs/roadmap.md`, `todo.txt`),
+     Gitea repo + Project Board ID + `{Backlog, Ready, Work in Progress, Review, Completed -> column_id}`
+     map, mirror policy, and the trigger to re-run `gitea-plan` on scope shifts or Readiness Gates.
+   - **Never** hardcode rotating sprint state (milestone numbers or open issues) in `AGENTS.md`.
 
 ## Your call
 - **Planning tier selection**: confirm Small vs. Medium vs. Large ceremony level.
@@ -71,7 +66,8 @@ description: >-
   whenever `Medium`/`Large` planning structure is created or updated.
 
 ## Hands off to
-- `implement-slice`: to orchestrate end-to-end delivery of an approved issue or slice.
+- `implement-slice`: to deliver an approved issue (`Suggested Next Step: /implement-slice #<first-ready-issue>`).
 - `git-manager`: to create dedicated branches or worktrees for decomposed issues.
 - `gitea-pr`: to link, review, and close issues via pull requests.
-- `reconcile-docs`: when canonical docs or design specs lag behind completed slices or milestone boundaries.
+- `reconcile-docs`: when canonical docs lag behind completed cards (`Suggested Next Step: /reconcile-docs`).
+- Emit one outcome-matched `Suggested Next Step` per [skeleton](../../build-skill/references/skeleton.md).

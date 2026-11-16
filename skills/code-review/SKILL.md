@@ -21,7 +21,7 @@ description: >-
 3. **Inspect the four axes.** Evaluate the diff against each axis independently using [axes](references/axes.md):
    - **Spec & Scope**: originating requirements satisfied, aligned with canonical project direction (`ARCHITECTURE.md`, `ROADMAP.md`, ADRs, active milestone) when present, minimal shared-file footprint, zero scope creep.
    - **Standards & Smells**: repository rules and Fowler smell diagnostics from [smell-heuristics](references/smell-heuristics.md) (evaluated as confirmed violations, potential smells, or contextual trade-offs).
-   - **Seam & Test Integrity**: tests verify public interface seams, assertions are non-tautological, negative/boundary paths covered, vertical slices prioritized over bulk imagined tests.
+   - **Seam & Test Integrity**: audit test diffs against [seams-and-mocking](../tdd/references/seams-and-mocking.md) and [test-quality](../tdd/references/test-quality.md) (public seams, injected timing callables, deterministic waits/teardown, non-tautological literals, boundary coverage, single-behavior naming).
    - **Defensive Invariants**: system properties from [defensive-invariants](references/defensive-invariants.md) (trust boundaries, authority, consistency, failure semantics, resource limits).
 4. **Record structured findings.** Record every finding using the schema in [finding-schema](references/finding-schema.md) (`ID`, `Axis`, `Severity`, `Evidence`, `Invariant`, `Impact`, `Disposition`). A strong pass on one axis never compensates for a failure on another.
 5. **Aggregate without silent resolution.** When multiple reviewers or passes disagree, keep the disagreement visible under `Unresolved` until evidence settles it.
@@ -39,7 +39,9 @@ description: >-
 - All four axes have been inspected across working-tree and committed changes, every finding is recorded with evidence and disposition, executable Step 6 runtime checks are emitted for `verify-slice` if needed, and the human owner has reviewed the findings.
 
 ## Hands off to
-- `diagnose`: when a finding exposes a root cause that requires deeper troubleshooting.
-- `verify-slice`: to execute behavioral and runtime verification scenarios.
+- `tdd`: when Axis 3 fails (`Suggested Next Step: /tdd <affected-test-files>`) or production rework needs test-first fixes (`Suggested Next Step: /tdd <module-or-test-path>`).
+- `diagnose`: when a finding exposes an unknown root cause (`Suggested Next Step: /diagnose`).
+- `verify-slice`: when `Ready` and runtime/`RV-*` checks are needed (`Suggested Next Step: /verify-slice`).
 - `git-manager`: when branching, committing review fixes, or rebasing.
-- `gitea-pr`: to publish the drafted PR comment block on the pull request after owner approval.
+- `gitea-pr`: when `Ready` on an open PR with clean runtime checks (`Suggested Next Step: /gitea-pr <pr-or-issue>`).
+- Emit one outcome-matched `Suggested Next Step` on standalone turns; suppress when delegated (per [skeleton](../../build-skill/references/skeleton.md)).

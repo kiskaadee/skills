@@ -67,7 +67,10 @@ description: >-
   review and mergeability status is reported to the user.
 
 ## Hands off to
-- `code-review`: if the diff changes and needs renewed static inspection.
-- `verify-slice`: if new code requires runtime verification.
-- `git-manager`: to commit review fixes, rebase, or update the branch against upstream base.
-- `gitea-plan`: to create the follow-up issue for a finding routed `issue` before publishing.
+- `code-review`: if review packet is missing/stale (`Suggested Next Step: /code-review <base>..HEAD`).
+- `verify-slice`: if runtime QA packet is missing/stale (`Suggested Next Step: /verify-slice`).
+- `gitea-plan`: to create follow-up issues routed `issue` (`Suggested Next Step: /gitea-plan`).
+- `reconcile-docs`: after merge when docs/milestones shift (`Suggested Next Step: /reconcile-docs`).
+- `implement-slice`: after merge when next issue is queued (`Suggested Next Step: /implement-slice #<next-issue>`).
+- `git-manager`: to commit review fixes, rebase, or update against base.
+- Emit one outcome-matched `Suggested Next Step` per [skeleton](../../build-skill/references/skeleton.md).

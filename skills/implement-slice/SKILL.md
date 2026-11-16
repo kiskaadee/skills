@@ -37,9 +37,9 @@ description: >-
 ## Hands off to
 - `gitea-plan`: when goals or epics require milestone and issue decomposition before slice execution.
 - `git-manager`: to create/integrate slice branches and worktrees, commit worker checkpoints, or stop on conflicts.
-- `tdd`: inside implementation workers for seam-level red-green development.
+- `tdd`: inside workers for seam-level red-green development, or standalone test hardening (`Suggested Next Step: /tdd <test-path>`).
 - `verify-slice`: inside QA subagents for pre-committed chunk and final-`HEAD` runtime verification.
 - `code-review`: for final-slice 4-axis static and strategic alignment inspection.
 - `diagnose`: when an unexpected failure requires evidence-first root-cause investigation.
-- `gitea-pr`: when policy or remote CI mandates a pull request and final-`HEAD` packets are ready.
-- `reconcile-docs`: when upstream slices or approved scope drift leave canonical docs or design specs out of sync with `HEAD`.
+- `gitea-pr`: when policy or remote CI mandates a PR and final-`HEAD` packets are ready (`Suggested Next Step: /gitea-pr #<issue>`).
+- `reconcile-docs`: when design specs drifted (`Suggested Next Step: /reconcile-docs`); on `--dry-run` or post-merge next slice, emit `Suggested Next Step: /implement-slice #<issue>`.
