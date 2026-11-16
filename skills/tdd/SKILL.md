@@ -39,4 +39,4 @@ description: >-
 - `verify-slice`: when the slice also needs live runtime, browser DOM, or multi-service verification (`Suggested Next Step: /verify-slice`).
 - `diagnose`: when an unexpected test or fixture failure needs root-cause investigation (`Suggested Next Step: /diagnose <failing-test>`).
 - `git-manager`: for branch isolation or committing cohesive vertical slices.
-- Emit one outcome-matched `Suggested Next Step` on standalone turns; suppress when delegated (per [skeleton](../../build-skill/references/skeleton.md)).
+- Emit one outcome-matched `Suggested Next Step` on standalone turns; suppress when delegated (per [skeleton](../build-skill/references/skeleton.md)).

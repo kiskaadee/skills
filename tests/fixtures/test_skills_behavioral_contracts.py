@@ -481,30 +481,39 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
         self.assertIn("Vertical Submodule TDD Grouping", plan_all)
         self.assertIn("Vertical Submodule TDD Decomposition (Anti-Horizontal Batching)", impl_all)
 
-    def test_polyglot_tdd_hardening_code_review_binding_and_soft_chaining(self):
-        """Proves dual-mode tdd, 5-language invariants, single-owner code-review Axis 3 binding, and Suggested Next Step soft-chaining."""
-        tdd_dir = REPO_ROOT / "skills" / "tdd"
-        tdd_skill = (tdd_dir / "SKILL.md").read_text()
-        seams = (tdd_dir / "references" / "seams-and-mocking.md").read_text()
-        quality = (tdd_dir / "references" / "test-quality.md").read_text()
-        tdd_refs = seams + "\n" + quality
-
-        # 1. Dual-mode tdd & 5 target languages
+    def test_tdd_supports_dual_mode_with_mode_b_gates(self):
+        """Proves tdd supports Mode A and Mode B with production-signature Your call and sensitivity Done when gates."""
+        tdd_skill = (REPO_ROOT / "skills" / "tdd" / "SKILL.md").read_text()
         self.assertIn("Mode A", tdd_skill)
         self.assertIn("Mode B", tdd_skill)
+        self.assertIn("Mode B production signature widening", tdd_skill)
+        self.assertIn("observed failing under fault/boundary check", tdd_skill)
+
+    def test_tdd_references_cover_five_target_languages(self):
+        """Proves tdd seam and quality references cover Python, TypeScript, Bash, Rust, and Java."""
+        tdd_dir = REPO_ROOT / "skills" / "tdd"
+        seams = (tdd_dir / "references" / "seams-and-mocking.md").read_text()
+        quality = (tdd_dir / "references" / "test-quality.md").read_text()
         for lang in ("Python", "TypeScript", "Bash", "Rust", "Java"):
             self.assertIn(lang, seams)
             self.assertIn(lang, quality)
 
-        # 2. All 5 empirical invariants live in tdd/references/
+    def test_tdd_references_document_five_empirical_invariants(self):
+        """Proves tdd references codify injected timing, deterministic waits/teardown, BVA bounds, constant bans, and naming."""
+        tdd_dir = REPO_ROOT / "skills" / "tdd"
+        seams = (tdd_dir / "references" / "seams-and-mocking.md").read_text()
+        quality = (tdd_dir / "references" / "test-quality.md").read_text()
         self.assertIn("sleep_fn", seams)
         self.assertIn("Deterministic Async Synchronization and Guaranteed Teardown", seams)
         self.assertIn("[min - 1, min, max, max + 1]", quality)
+        self.assertIn("[min - 1, min]", quality)
+        self.assertIn("[max, max + 1]", quality)
         self.assertIn("production value constants", quality)
         self.assertIn("Single-Behavior Test Naming and Focus", quality)
         self.assertIn("Mode B Audit and Hardening Checklist", quality)
 
-        # 3. code-review binds Axis 3 directly to tdd/references/ without duplicating fenced code blocks, and isolates Axis 3 in High-Assurance
+    def test_code_review_binds_axis_3_to_tdd_references(self):
+        """Proves code-review links Axis 3 to tdd/references/, isolates Axis 3 in High-Assurance, and avoids fenced-block duplication."""
         cr_skill = (REPO_ROOT / "skills" / "code-review" / "SKILL.md").read_text()
         axes = (REPO_ROOT / "skills" / "code-review" / "references" / "axes.md").read_text()
         schema = (REPO_ROOT / "skills" / "code-review" / "references" / "finding-schema.md").read_text()
@@ -513,20 +522,28 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
         self.assertIn("../../tdd/references/seams-and-mocking.md", axes)
         self.assertIn("../../tdd/references/test-quality.md", axes)
         self.assertIn("dedicated isolated reviewer to **Seam & Test Integrity**", axes)
-        self.assertNotIn("calculate_total", axes)
+        self.assertNotIn("```", axes)
         self.assertIn("Suggested Next Step", schema)
 
-        # 4. Canonical Suggested Next Step + suppression contract in skeleton.md and handoff-contracts.md
+    def test_skeleton_defines_suggested_next_step_suppression(self):
+        """Proves skeleton.md owns Suggested Next Step suppression and handoff-contracts.md enforces it without en-dash debt."""
         skeleton = (REPO_ROOT / "skills" / "build-skill" / "references" / "skeleton.md").read_text()
         handoffs = (REPO_ROOT / "skills" / "implement-slice" / "references" / "handoff-contracts.md").read_text()
         self.assertIn("Suggested Next Step", skeleton)
+        self.assertIn("Delegated subagent runs omit that footer", skeleton)
         self.assertIn("Suppress", handoffs)
         self.assertNotIn("Steps 4–5", handoffs)
 
-        # 5. All 6 chained skills include Suggested Next Step routing
+    def test_chained_skills_include_suggested_next_step_routing(self):
+        """Proves all 6 chained skills include Suggested Next Step routing and valid relative markdown links."""
+        link_re = re.compile(r"\]\(([^)#]+\.md)(?:#[^)]+)?\)")
         for skill_name in ("gitea-plan", "implement-slice", "tdd", "code-review", "gitea-pr", "reconcile-docs"):
-            text = (REPO_ROOT / "skills" / skill_name / "SKILL.md").read_text()
+            skill_path = REPO_ROOT / "skills" / skill_name / "SKILL.md"
+            text = skill_path.read_text()
             self.assertIn("Suggested Next Step:", text, f"{skill_name} missing Suggested Next Step routing")
+            for rel_link in link_re.findall(text):
+                resolved = (skill_path.parent / rel_link).resolve()
+                self.assertTrue(resolved.exists(), f"{skill_name} has broken relative link: {rel_link} -> {resolved}")
 
     def test_skill_inventory_and_skeletons(self):
         """Proves all 16 active skills meet line count (<= 80), em-dash, and path portability rules."""

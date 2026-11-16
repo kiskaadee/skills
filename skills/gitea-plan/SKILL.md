@@ -70,4 +70,4 @@ description: >-
 - `git-manager`: to create dedicated branches or worktrees for decomposed issues.
 - `gitea-pr`: to link, review, and close issues via pull requests.
 - `reconcile-docs`: when canonical docs lag behind completed cards (`Suggested Next Step: /reconcile-docs`).
-- Emit one outcome-matched `Suggested Next Step` per [skeleton](../../build-skill/references/skeleton.md).
+- Emit one outcome-matched `Suggested Next Step` per [skeleton](../build-skill/references/skeleton.md).

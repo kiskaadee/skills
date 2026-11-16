@@ -44,4 +44,4 @@ description: >-
 - `verify-slice`: when `Ready` and runtime/`RV-*` checks are needed (`Suggested Next Step: /verify-slice`).
 - `git-manager`: when branching, committing review fixes, or rebasing.
 - `gitea-pr`: when `Ready` on an open PR with clean runtime checks (`Suggested Next Step: /gitea-pr <pr-or-issue>`).
-- Emit one outcome-matched `Suggested Next Step` on standalone turns; suppress when delegated (per [skeleton](../../build-skill/references/skeleton.md)).
+- Emit one outcome-matched `Suggested Next Step` on standalone turns; suppress when delegated (per [skeleton](../build-skill/references/skeleton.md)).

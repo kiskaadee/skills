@@ -73,4 +73,4 @@ description: >-
 - `reconcile-docs`: after merge when docs/milestones shift (`Suggested Next Step: /reconcile-docs`).
 - `implement-slice`: after merge when next issue is queued (`Suggested Next Step: /implement-slice #<next-issue>`).
 - `git-manager`: to commit review fixes, rebase, or update against base.
-- Emit one outcome-matched `Suggested Next Step` per [skeleton](../../build-skill/references/skeleton.md).
+- Emit one outcome-matched `Suggested Next Step` per [skeleton](../build-skill/references/skeleton.md).
