@@ -368,9 +368,10 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
         """Proves code-review only drafts the PR comment block and gitea-pr alone posts it, guarded."""
         cr_dir = REPO_ROOT / "skills" / "code-review"
         cr_text = "\n".join(p.read_text() for p in cr_dir.rglob("*.md"))
-        # code-review drafts the block but never contains a posting command
+        # code-review drafts the block (including clean Ready reviews) but never contains a posting command
         self.assertIn("review-body.md", cr_text)
         self.assertIn("inline-comments.json", cr_text)
+        self.assertIn("No non-rejected findings.", cr_text)
         self.assertIsNone(
             re.search(r"gt pr (comment|review)\s+<", cr_text),
             "code-review must not contain gt posting commands; gitea-pr owns publishing",

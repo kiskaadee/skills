@@ -101,7 +101,7 @@ When the review target is an open pull request, `code-review` also drafts a PR c
 
 ### What goes in
 - Every finding except `Rejected` ones (those stay in the local ledger only).
-- Zero eligible findings: draft nothing. A clean review is not posted unless the owner asks.
+- Zero eligible findings on a `Ready` review: still draft `review-body.md` using the compact 4-axis pass template below (and omit `inline-comments.json`) so every reviewed PR head has an immutable, commit-pinned review record on Gitea.
 
 ### Per-finding routing (proposed here, decided by the owner)
 | Field | Values | Rule |
@@ -127,6 +127,22 @@ Covered state: `<Clean | fingerprint>`. Tier: `<tier>`. Static provenance only; 
 
 ### Body-placed findings
 - **CR-02** (`<location>`): <invariant, impact, and suggested change>.
+```
+
+`review-body.md` (clean `Ready` review with zero non-rejected findings; omit `inline-comments.json`):
+```markdown
+**Code review @ `<short-head-sha>`** (`<base-ref>`..`<head-ref>`): `Ready`
+
+Covered state: `<Clean | fingerprint>`. Tier: `<tier>`. Static provenance only; merge authority stays with the owner.
+
+| Axis | Disposition |
+| :--- | :--- |
+| Spec & Scope | Pass |
+| Standards & Smells | Pass |
+| Seam & Test Integrity | Pass |
+| Defensive Invariants | Pass |
+
+No non-rejected findings.
 ```
 
 `inline-comments.json` (the `gt pr review --comments-file` format; `new_position` is the line number in the new version of the file and must fall inside a diff hunk):
