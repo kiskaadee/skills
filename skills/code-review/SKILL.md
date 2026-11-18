@@ -27,11 +27,11 @@ description: >-
 5. **Aggregate without silent resolution.** When multiple reviewers or passes disagree, keep the disagreement visible under `Unresolved` until evidence settles it.
 6. **Emit executable runtime checks.** For stateful or high-risk paths that static inspection cannot prove, emit runnable fenced shell commands for `verify-slice` following the Step 6 contract in [finding-schema](references/finding-schema.md) (stating purpose, `local` vs. `live-infra` scope classification, explicit pass condition, and explicit failure signal).
 7. **Present the review summary.** Group findings by axis and apply the decision matrix from [axes](references/axes.md): `Needs Rework` (confirmed defects require changes), `Blocked` (unresolved Critical/High risks or unestablished scope), or `Ready` (all four axes completed, no confirmed or unresolved blocking findings remain, and exact covered revisions plus working-tree state are recorded). Static review establishes static provenance for that diff only; never authorize release.
-8. **Draft the PR comment block.** When the target is an open pull request, draft `review-body.md` (and `inline-comments.json` when inline findings exist) per section 4 of [finding-schema](references/finding-schema.md), including the compact 4-axis pass block on clean `Ready` reviews. Never post to Gitea yourself: hand the block to `gitea-pr`.
+8. **Draft and publish the PR review block (standalone open PR only).** Keep the codebase strictly read-only (never edit repo files or mutate project boards). When invoked standalone on an open PR, draft `review-body.md` (and `inline-comments.json` when inline findings exist) per section 4 of [finding-schema](references/finding-schema.md), including the compact 4-axis pass block on clean `Ready` reviews. Show the draft for owner approval; once approved, publish one `--comment` review pinned with `--commit <reviewed-head-sha>` (passing `head_sha` and duplicate/pending guards, and creating any `issue`-routed follow-ups via `gitea-plan` first). Skip PR publishing when delegated inside `implement-slice`.
 
 ## Your call
 - **Handling findings**: decide whether confirmed findings block merge, trigger a rework loop, or become tracked follow-up issues.
-- **Publishing findings**: decide whether the PR comment block is posted, and confirm each finding's placement and follow-up route.
+- **Publishing findings**: approve the drafted review body, inline list, and follow-up routes before `code-review` posts to the PR.
 - **Adjudicating unresolved disagreements**: resolve conflicting reviewer perspectives or accepted architectural trade-offs.
 - **Authorizing release**: verification and review evidence inform decisions, but the human owner remains the sole release authority.
 

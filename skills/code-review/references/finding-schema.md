@@ -95,9 +95,9 @@ systemctl reload app-daemon.service && systemctl is-active --quiet app-daemon.se
 - **Suggested Next Step**: `/<skill> <args>` (emit one concrete command matched to the recommendation on standalone turns; omit when running inside a delegated subagent).
 ```
 
-## 4. PR Comment Block (Drafted Here, Published by `gitea-pr`)
+## 4. PR Review Block (Drafted and Published Here After Owner Approval)
 
-When the review target is an open pull request, `code-review` also drafts a PR comment block so the findings stay attached to the change they describe. `code-review` never posts it and never mutates Gitea project boards: it hands the block to `gitea-pr` (or `implement-slice`), which publishes the review and ensures the issue card sits in `Review` when the verdict is `Ready`.
+`code-review` is strictly read-only regarding the codebase (never modifies repository files, commits, or Gitea project boards), and owns publishing comment-only PR reviews when invoked standalone on an open pull request. When running as a delegated subagent inside `implement-slice`, skip PR posting and return the compact report to the orchestrator.
 
 ### What goes in
 - Every finding except `Rejected` ones (those stay in the local ledger only).
@@ -157,3 +157,26 @@ No non-rejected findings.
 ```
 
 Every inline entry also appears in the body table, so the record stays complete if inline placement is rejected and the entry moves to the body.
+
+### Publishing via `gt pr review` (After Owner Approval)
+If any finding is routed `follow-up: issue`, create the tracked issue via `gitea-plan` first so the comment links to it. Then verify guards and publish one comment-only review pinned to the reviewed commit:
+
+```bash
+# 1. Staleness: the PR head must equal the reviewed head SHA. Mismatch: stop, re-run code-review.
+gt pr view <number> --json head_sha -q .head_sha
+
+# 2. Duplicates and pending state: stop if any review is PENDING (posting would publish its
+#    inline comments too) or if a review already exists for the reviewed SHA from this block.
+gt pr review list <number> --json id,state,commit,body
+
+# 3. After owner approval: one comment-only review, pinned to the reviewed commit.
+gt pr review <number> --comment --commit <reviewed-head-sha> \
+  -F review-body.md --comments-file inline-comments.json --json id,url
+
+# Body-only block (no inline entries): omit --comments-file.
+```
+
+- Never pass `--approve` or `--request-changes`: the verdict in the body is informational, and merge authority stays with the owner (Gitea also refuses approval on your own PR).
+- Never pass `--yes`: it exists to publish a pending review, which step 2 already rules out.
+- If Gitea rejects an inline entry (line outside a diff hunk), confirm with step 2 that no review was created, move that entry into the body, and retry once.
+- Record the returned review `id` and `url`. Later fixes use `gt pr review reply` with `Fixed in <sha>` and `gt pr review resolve` via `gitea-pr`.

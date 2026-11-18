@@ -86,28 +86,7 @@ gt pr review resolve <comment-id>
 gt pr review unresolve <comment-id>
 ```
 
-### Publish a `code-review` Comment Block
-Input: `review-body.md` and `inline-comments.json` drafted by `code-review` (section 4 of its `finding-schema.md`), plus the reviewed head SHA from the block header.
-
-```bash
-# 1. Staleness: the PR head must equal the reviewed head SHA. Mismatch: stop, re-run code-review.
-gt pr view <number> --json head_sha -q .head_sha
-
-# 2. Duplicates and pending state: stop if any review is PENDING (posting would publish its
-#    inline comments too) or if a review already exists for the reviewed SHA from this block.
-gt pr review list <number> --json id,state,commit,body
-
-# 3. After owner approval: one comment-only review, pinned to the reviewed commit.
-gt pr review <number> --comment --commit <reviewed-head-sha> \
-  -F review-body.md --comments-file inline-comments.json --json id,url
-
-# Body-only block (no inline entries): omit --comments-file.
-```
-
-- Never pass `--approve` or `--request-changes`: the verdict in the body is informational, and merge authority stays with the owner (Gitea also refuses approval on your own PR).
-- Never pass `--yes`: it exists to publish a pending review, which step 2 already rules out.
-- If Gitea rejects an inline entry (line outside a diff hunk), confirm with step 2 that no review was created, move that entry into the body, and retry once.
-- Record the returned review `id` and `url`. Later fixes use `gt pr review reply` with `Fixed in <sha>` and `gt pr review resolve`, per the triage workflow in `pr-lifecycle.md`.
+*(Publishing new `code-review` PR review blocks is owned by `code-review` in `skills/code-review/references/finding-schema.md`.)*
 
 ---
 

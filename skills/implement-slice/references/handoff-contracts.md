@@ -137,7 +137,7 @@ Never relay "QA failed" blindly. Classify each non-passing outcome and route to 
 
 ## 9. Project Board Card Transitions Owned by `implement-slice`
 
-When the repository tracks a Gitea Project Board (resolved from the `AGENTS.md` planning contract or `gt project list`), `implement-slice` owns moving the target issue's card across the pipeline using the `gt-usage` move recipe (`POST /repos/{owner}/{repo}/projects/<project-id>/issues/<global-issue-id>/move -F column_id=<target-col-id>`):
+When the repository tracks a Gitea Project Board (resolved from the `AGENTS.md` planning contract or `gt project list`), `implement-slice` owns moving the target issue's card across the pipeline using the `gt-usage` move recipe (`POST /repos/{owner}/{repo}/projects/<project-id>/issues/<global-issue-id>/move -F column_id=<target-col-id>` for repo boards, or `POST /orgs/<org>/projects/<project-id>/issues/<global-issue-id>/move -F column_id=<target-col-id>` for organization-level boards):
 
 | Step | Transition | Condition |
 | :--- | :--- | :--- |
