@@ -42,13 +42,16 @@ description: >-
    `gt pr create -t "<title>" -B "<base>" -H "<branch>" -F <body-file> --json number,url`.
    Pass `--draft` if work remains in progress. Extract verified PR number and URL, and ensure
    the linked issue card is in `Review` (`Work in Progress -> Review`) on the project board.
-6. **Track review feedback, merge on owner approval, and move card `Review -> Completed`.**
+6. **Track review feedback, enforce finding triage, merge on owner approval, and move card `Review -> Completed`.**
    Inspect status checks (`gt pr checks <number>`), mergeability
    (`gt pr view <number> --json mergeable,review_decision`), and review comments
    (`gt pr review comments <number>`). If the current PR head lacks a published `code-review`
-   comment, hand off to `code-review`. When checks pass and feedback is resolved, report
-   `Ready for Merge`. Once the owner explicitly authorizes merge, run `gt pr merge <number>`
-   and move the linked issue card `Review -> Completed`.
+   comment, hand off to `code-review`. Never report `Ready for Merge` while any `code-review`
+   finding is `Pending Triage`: every finding must first be (A) fixed in-branch, (B) promoted
+   to a live tracker (Gitea issue or `todo.txt` via `tuxedo add`) and linked in a PR reply, or
+   (C) explicitly accepted by the owner as a permanent trade-off. When checks pass and all
+   findings are triaged/resolved, report `Ready for Merge`. Once the owner explicitly authorizes
+   merge, run `gt pr merge <number>` and move the linked issue card `Review -> Completed`.
 
 ## Your call
 - **PR title and description approval**: review and approve the draft PR content and issue linkage.

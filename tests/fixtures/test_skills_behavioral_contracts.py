@@ -366,16 +366,19 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
         self.assertEqual(initial_commit, current_commit)
 
     def test_review_comment_publishing_ownership(self):
-        """Proves code-review stays codebase-read-only while owning guarded PR review publishing, and gitea-pr delegates it."""
+        """Proves code-review auto-publishes guarded PR reviews, bans self-assigned Accepted Trade-off, and gates gitea-pr merge on 3 triage exits."""
         cr_dir = REPO_ROOT / "skills" / "code-review"
         cr_text = "\n".join(p.read_text() for p in cr_dir.rglob("*.md"))
         self.assertIn("review-body.md", cr_text)
         self.assertIn("inline-comments.json", cr_text)
         self.assertIn("No non-rejected findings.", cr_text)
         self.assertIn("read-only regarding the codebase", cr_text)
+        self.assertIn("Never self-assign `Accepted Trade-off`", cr_text)
+        self.assertIn("Pending Triage", cr_text)
+        self.assertIn("live-tracker", cr_text)
 
         schema = (cr_dir / "references" / "finding-schema.md").read_text()
-        publish = schema.split("### Publishing via `gt pr review`", 1)[1]
+        publish = schema.split("### Auto-Publishing via `gt pr review`", 1)[1]
         post_cmd = re.search(r"gt pr review <number> --comment[^\n]*\n[^\n]*", publish).group(0)
         # pinned to the reviewed commit, comment-only, no blanket confirmation
         self.assertIn("--commit <reviewed-head-sha>", post_cmd)
@@ -385,9 +388,10 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
         self.assertLess(publish.index("head_sha"), publish.index(post_cmd))
         self.assertLess(publish.index("gt pr review list"), publish.index(post_cmd))
 
-        # gitea-pr no longer owns PR review block publishing (no duplicate recipe)
+        # gitea-pr gates Ready for Merge on Pending Triage resolution and no longer duplicates publish recipe
         pr_skill = (REPO_ROOT / "skills" / "gitea-pr" / "SKILL.md").read_text()
         pr_pulls = (REPO_ROOT / "skills" / "gitea-pr" / "references" / "gt-pulls.md").read_text()
+        self.assertIn("Pending Triage", pr_skill)
         self.assertNotIn("Publish review findings", pr_skill)
         self.assertNotIn("### Publish a `code-review` Comment Block", pr_pulls)
         self.assertIn("/orgs/<org>/projects/<project-id>/issues/<global-issue-id>/move", (REPO_ROOT / "skills" / "implement-slice" / "references" / "handoff-contracts.md").read_text())

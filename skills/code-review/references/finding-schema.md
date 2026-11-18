@@ -18,14 +18,19 @@ Every reported finding must populate all seven fields:
 | **Impact** | Concrete failure consequence if left unaddressed. | What breaks in production, concurrency, or maintenance (e.g., "Stored XSS when name contains `<script>`"). |
 | **Disposition** | Current evidentiary status of the finding. | `Confirmed` (proven defect backed by evidence), `Rejected` (disproven or false positive), `Unresolved` (open disagreement or missing evidence), `Accepted Trade-off` (conscious compromise approved by owner). |
 
-## 2. Disposition and Severity Rules
+## 2. Disposition, Severity, and the 3 Triage Exits
 
-1. **Blocking status**: Only `Confirmed` findings (Critical, High, or changes-required Medium/Low) trigger a `Needs Rework` verdict.
-2. **Unresolved findings**: `Unresolved Critical` or `Unresolved High` findings result in a `Blocked` verdict until resolved with evidence or owner adjudication. `Unresolved Medium` or `Low` findings can remain `Ready` if the owner accepts the trade-off.
-3. **Rejected vs. Accepted Trade-off**:
-   - `Rejected`: The finding was an invalid concern or disproven by facts.
-   - `Accepted Trade-off`: The finding identifies a genuine compromise where the owner explicitly accepts the local cost for an engineering reason.
-   Both remain in the ledger for full audit traceability.
+1. **No agent self-assigned `Accepted Trade-off`**: On a review pass, every valid finding (even `Low` severity) must be logged as `Confirmed` (or `Unresolved`). Only the human owner may assign `Accepted Trade-off`.
+2. **Verdict gating (`Needs Rework` vs. `Pending Triage` vs. `Ready`)**:
+   - `Confirmed Critical` or `Confirmed High` -> `Needs Rework`.
+   - `Unresolved Critical` or `Unresolved High` -> `Blocked`.
+   - Only `Confirmed` or `Unresolved` `Medium`/`Low` findings remain -> `Pending Triage` (never recommend merging while findings are untriaged).
+   - Zero untriaged findings remain -> `Ready`.
+3. **Three Mandatory Exits for `Pending Triage` Findings (No Silent Tech-Debt in Closed PRs)**:
+   Because future coding agents do not read closed PR comments, an unresolved problem cannot simply be left as a closed PR comment and forgotten. Prompt the human owner to choose one exit per finding before merge:
+   - **Exit A (`fix-in-branch`)**: Fix the finding on the PR branch now (`/tdd` or `/git-manager`) and re-verify.
+   - **Exit B (`live-tracker`)**: Defer the work by recording it in a live tracker that future agents read before starting the next slice: append to an upcoming Gitea issue (`gt issue edit <next>`), create a follow-up Gitea issue (`gt issue create` / `gitea-plan`), or add to `todo.txt` (`tuxedo add "(B) ..."`), and link that tracker ID on the PR.
+   - **Exit C (`record` / `Accepted Trade-off`, human-only)**: The human owner explicitly decides no future code change is desired and permanently accepts the trade-off as-is.
 4. **Severity vs. confidence**: `Severity` describes potential impact, never reviewer confidence. A suspected high-impact flaw with incomplete evidence must be logged as `High` severity with `Unresolved` disposition, not downgraded to `Low`.
 
 ## 3. Review Report Layout
@@ -90,24 +95,24 @@ systemctl reload app-daemon.service && systemctl is-active --quiet app-daemon.se
 ```
 
 ## Overall Recommendation
-- **Status**: `Ready` | `Needs Rework` | `Blocked`
-- **Next Action**: State whether to hand off to `verify-slice` for runtime verification, `diagnose` for root-cause fixes, `tdd` for Mode B test hardening, or `gitea-pr` for PR packaging/comment publishing. Static provenance and runtime verification remain distinct inputs; neither authorizes release on its own.
+- **Status**: `Ready` | `Pending Triage` | `Needs Rework` | `Blocked`
+- **Next Action**: When `Pending Triage` or `Needs Rework`, do not recommend merging; prompt the human owner to select Exit A (`fix-in-branch`), Exit B (`live-tracker`: Gitea issue or `todo.txt`), or Exit C (permanent `Accepted Trade-off`) for each finding. Static provenance and runtime verification remain distinct inputs; neither authorizes release on its own.
 - **Suggested Next Step**: `/<skill> <args>` (emit one concrete command matched to the recommendation on standalone turns; omit when running inside a delegated subagent).
 ```
 
-## 4. PR Review Block (Drafted and Published Here After Owner Approval)
+## 4. PR Review Block (Drafted and Auto-Published Here on Standalone Open PRs)
 
-`code-review` is strictly read-only regarding the codebase (never modifies repository files, commits, or Gitea project boards), and owns publishing comment-only PR reviews when invoked standalone on an open pull request. When running as a delegated subagent inside `implement-slice`, skip PR posting and return the compact report to the orchestrator.
+`code-review` is strictly read-only regarding the codebase (never modifies repository files, commits, or Gitea project boards), and automatically publishes a comment-only PR review in the same turn when invoked standalone on an open pull request. When running as a delegated subagent inside `implement-slice`, skip PR posting and return the compact report to the orchestrator.
 
 ### What goes in
 - Every finding except `Rejected` ones (those stay in the local ledger only).
-- Zero eligible findings on a `Ready` review: still draft `review-body.md` using the compact 4-axis pass template below (and omit `inline-comments.json`) so every reviewed PR head has an immutable, commit-pinned review record on Gitea.
+- Zero eligible findings on a `Ready` review: still draft and auto-publish `review-body.md` using the compact 4-axis pass template below (and omit `inline-comments.json`) so every reviewed PR head has an immutable, commit-pinned review record on Gitea.
 
-### Per-finding routing (proposed here, decided by the owner)
+### Per-finding routing (proposed here, decided by the owner before merge)
 | Field | Values | Rule |
 | :--- | :--- | :--- |
 | **Placement** | `inline` or `body` | `inline` only when the location is a committed line inside a diff hunk at the reviewed head SHA. Unstaged, staged, file-level, or cross-cutting findings go in `body`. |
-| **Follow-up** | `record` or `issue` | `record`: the comment is the whole record (accepted nit, trade-off). `issue`: the owner intends to fix it later, so it needs a tracked issue (created via `gitea-plan`) and the comment links to it. A PR comment is a record, not a task tracker. |
+| **Follow-up** | `fix-in-branch`, `live-tracker`, or `record` | Proposed triage exit: `fix-in-branch` (quick fix on PR branch), `live-tracker` (defer to Gitea issue or `todo.txt` via `tuxedo add` before merge), or `record` (only after owner grants permanent `Accepted Trade-off`). A closed PR comment is never a task tracker. |
 
 ### Identity across re-reviews
 Finding IDs (`CR-01`) are only unique within one review. The block header names the reviewed head SHA, and any cross-review reference uses `<short-sha>/CR-01`. `gitea-pr` uses the header SHA to avoid posting the same review twice.
@@ -117,13 +122,13 @@ Write both files to an untracked scratch location (never inside the repository t
 
 `review-body.md`:
 ```markdown
-**Code review @ `<short-head-sha>`** (`<base-ref>`..`<head-ref>`): `<Ready | Needs Rework | Blocked>`
+**Code review @ `<short-head-sha>`** (`<base-ref>`..`<head-ref>`): `<Ready | Pending Triage | Needs Rework | Blocked>`
 
 Covered state: `<Clean | fingerprint>`. Tier: `<tier>`. Static provenance only; merge authority stays with the owner.
 
-| ID | Axis | Severity | Disposition | Placement | Follow-up |
+| ID | Axis | Severity | Disposition | Placement | Proposed Exit |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| CR-01 | Standards & Smells | Low | Accepted Trade-off | inline | record |
+| CR-01 | Standards & Smells | Low | Confirmed | inline | fix-in-branch (or live-tracker) |
 
 ### Body-placed findings
 - **CR-02** (`<location>`): <invariant, impact, and suggested change>.
@@ -158,8 +163,8 @@ No non-rejected findings.
 
 Every inline entry also appears in the body table, so the record stays complete if inline placement is rejected and the entry moves to the body.
 
-### Publishing via `gt pr review` (After Owner Approval)
-If any finding is routed `follow-up: issue`, create the tracked issue via `gitea-plan` first so the comment links to it. Then verify guards and publish one comment-only review pinned to the reviewed commit:
+### Auto-Publishing via `gt pr review` (Standalone Open PR Runs)
+When invoked standalone on an open PR, verify guards and publish one comment-only review pinned to the reviewed commit in the same turn:
 
 ```bash
 # 1. Staleness: the PR head must equal the reviewed head SHA. Mismatch: stop, re-run code-review.
@@ -169,7 +174,7 @@ gt pr view <number> --json head_sha -q .head_sha
 #    inline comments too) or if a review already exists for the reviewed SHA from this block.
 gt pr review list <number> --json id,state,commit,body
 
-# 3. After owner approval: one comment-only review, pinned to the reviewed commit.
+# 3. Auto-publish one comment-only review, pinned to the reviewed commit.
 gt pr review <number> --comment --commit <reviewed-head-sha> \
   -F review-body.md --comments-file inline-comments.json --json id,url
 

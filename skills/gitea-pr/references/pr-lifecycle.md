@@ -13,7 +13,7 @@ Draft (WIP) -> Review -> Changes Requested -> Ready for Merge -> Merged
 1. **Draft (WIP)**: PR opened early for visibility. In Gitea, prefixed with `WIP:` or flagged `--draft`. CI may run; reviews are informal.
 2. **Review**: Feature complete, working tree clean, static `code-review` and runtime `verify-slice` evidence packets attached. Ready for formal audit.
 3. **Changes Requested**: Reviewer identified defects, missing tests, or security concerns. Agent addresses feedback, commits fixes via `git-manager`, and refreshes evidence.
-4. **Ready for Merge**: All review threads resolved, static review confirms `Ready`, runtime checks pass, and mergeability is green. Linked issue card sits in `Review`.
+4. **Ready for Merge**: All review threads resolved, every `code-review` finding has completed one of the 3 mandatory exits (fixed in-branch, promoted to an open Gitea issue or `todo.txt` task with a linked reply, or explicitly granted permanent `Accepted Trade-off` by the human owner), static review confirms `Ready` on current `head_sha`, runtime checks pass, and mergeability is green. Linked issue card sits in `Review`.
 5. **Completed (Merged)**: After explicit authorization by the human owner, `gitea-pr` merges the PR into the target base branch (`gt pr merge <number>`), verifies Gitea auto-closed the linked issue (`Closes #<id>`), and moves the issue card `Review -> Completed` on the project board.
 
 ---

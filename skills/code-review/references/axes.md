@@ -25,18 +25,16 @@ The distinction between recommendations is clear: `Needs Rework` means an establ
 
 | Condition Observed | Final Recommendation | Action Required |
 | :--- | :--- | :--- |
-| **Confirmed Critical or High** | `Needs Rework` | Fix confirmed defects before release review. |
-| **Confirmed Medium or Low requiring changes** | `Needs Rework` | Apply requested refactoring or test coverage fixes. |
+| **Confirmed Critical or High** | `Needs Rework` | Fix confirmed defects on the branch before release review. |
+| **Confirmed or Unresolved Medium or Low (untriaged)** | `Pending Triage` | Do not recommend merge. Human owner chooses 1 of 3 exits per finding: (A) fix in-branch, (B) promote to live tracker (Gitea issue or `todo.txt`), or (C) grant permanent `Accepted Trade-off`. |
 | **Unresolved Critical or High** | `Blocked` | Resolve missing evidence or escalate to human owner before proceeding. |
-| **Unresolved Medium or Low** | `Ready` (Conditional) | Human owner may adjudicate and accept trade-offs without blocking. |
 | **Scope Inability or Missing Base Ref** | `Blocked` | Establish base commit and diff boundaries before reviewing. |
-| **No Blocking Findings** | `Ready` | Implementation is structurally sound; proceed to `verify-slice` or release. |
+| **Zero Untriaged Findings** | `Ready` | All findings resolved, tracked in a live tracker, or explicitly granted `Accepted Trade-off` by the owner. |
 
-### `Ready` Semantics and Downstream Reuse
-`Ready` means the review completed across all four axes, no confirmed or unresolved blocking findings remain (`Needs Rework` or `Blocked`), and the report explicitly identifies the base revision, head revision, and relevant working-tree state it covered. `Ready (Conditional)` qualifies as `Ready` for downstream handshake reuse only after the human owner adjudicates the open Medium/Low items (`Accepted Trade-off` or `Rejected`). A `Ready` review establishes static provenance for that exact diff; it does not substitute for runtime verification or authorize release.
-
-### Documented Trade-Off Acceptance
-When a human owner accepts a documented trade-off for a Medium or Low finding, record the finding disposition as `Accepted Trade-off` (distinct from `Rejected`). This preserves audit traceability without misclassifying an intentional compromise as a disproven defect.
+### `Ready` vs. `Pending Triage` Semantics and Downstream Reuse
+- **No agent self-adjudication**: Reviewer agents must never self-assign `Accepted Trade-off` on a review pass. Every valid observation (including `Low` nits) starts as `Confirmed` (or `Unresolved`), producing `Pending Triage` (or `Needs Rework`) rather than `Ready`.
+- **`Pending Triage` blocks merge recommendations**: A review in `Pending Triage` qualifies as `Ready` for `gitea-pr` merge readiness only after every finding has taken one of the three explicit exits: (A) fixed in a new commit on the branch, (B) recorded in a live tracker that future agents read (an open Gitea issue or `todo.txt` via `tuxedo add`), or (C) explicitly approved by the human owner as a permanent `Accepted Trade-off` (no future action needed).
+- A `Ready` review establishes static provenance for that exact diff; it does not substitute for runtime verification or authorize release.
 
 ## 3. Risk-Scaled Execution Tiers
 
