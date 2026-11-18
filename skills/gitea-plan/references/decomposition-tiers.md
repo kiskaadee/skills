@@ -50,16 +50,17 @@ Never mechanically mirror or silently mutate state. Instead, detect and report s
 | **Medium** | Vertical feature slice, multi-step refactor, performance spike (2 to 5 issues) | 1 Milestone + 2 to 5 Issues | **Recommended** (5-column Kanban: *Backlog*, *Ready*, *Work in Progress*, *Review*, *Completed*) | Each issue has its own branch and PR. All issues include explicit numbered acceptance criteria and test seams. |
 | **Large** | Architectural epic, platform cutover, multi-service evolution | Roadmap Doc + Rolling Milestones + Deliverable Issues | **Required** (Board coordinates rolling horizons) | Source of truth remains in repo docs (`ARCHITECTURE.md`, `ROADMAP.md`, ADRs). Gitea coordinates rolling execution. |
 
-**Deterministic Output Header**: Every planning proposal must explicitly state:
+**Deterministic Output Headers**: Every planning proposal must explicitly state both headers before asking for approval:
 ```markdown
 ### Project Board Policy: <Omitted|Recommended|Required> (Rationale)
+### Reproducibility Audit: <Passed | Remediated> (Subagent: `<conversation-id>` | `Omitted: Small tier`)
 ```
 
 ---
 
-## 4. Independent Zero-Context Reproducibility Audit
+## 4. Independent Zero-Context Reproducibility Audit (`Medium` and `Large` Mandatory)
 
-Before finalizing decomposition for approval, run a clean-room audit subagent to verify plan reproducibility without conversational context:
+Before presenting a `Medium` or `Large` decomposition for approval (Step 5), spawn a clean-room audit subagent to verify plan reproducibility without conversational context and record its `<conversation-id>` in the `### Reproducibility Audit:` header:
 
 ### Input Manifest (Strict Clean-Room)
 The auditor receives strictly raw artifacts and pinned repository state:

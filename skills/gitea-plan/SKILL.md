@@ -30,12 +30,12 @@ description: >-
    with test seams and falsifiable acceptance criteria (Context, Solution, Criteria),
    grouping TDD test seams vertically by submodule or capability rather than a single
    monolithic upfront test block across all modules.
-4. **Run independent reproducibility audit.** Spawn clean-room subagent with raw
-   input manifest (commit SHA, specs, proposed issue markdown). Review 5-section
-   evaluation to resolve material ambiguities before human gate.
-5. **Present decomposition for approval.** Present proposed milestone, board,
-   issues, and any proposed repository `AGENTS.md` planning-contract diff with
-   audit disposition. Stop for approval before mutating Gitea entities or `AGENTS.md`.
+4. **Run independent reproducibility audit (`Medium`/`Large` mandatory).** For `Medium`
+   and `Large` plans, spawn a clean-room subagent with raw input manifest (commit SHA,
+   specs, proposed issue markdown) to resolve material ambiguities before the human gate.
+5. **Present decomposition for approval.** Emit `### Reproducibility Audit: <Passed|Remediated> (Subagent: <id> | Omitted: Small tier)`
+   alongside proposed milestone, board, issues, and any `AGENTS.md` contract diff. Stop
+   for approval before mutating Gitea entities or `AGENTS.md`.
 6. **Execute Gitea operations via `gt` CLI.** Use verified commands from `gt-usage`:
    - Milestones: `gt milestone create "<title>" -d "<desc>" --json id,url`.
    - Projects: create with `gt project create "<title>" --template none --json id,url` if

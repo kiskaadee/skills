@@ -17,6 +17,7 @@ Verifies:
 11. Project board 5-column reconciliation, semantic hex colors, and transition ownership
 12. reconcile-docs read-only Gitea ingestion and bidirectional hooks with gitea-plan / implement-slice
 13. Polyglot TDD hardening (Mode A/B, 5 languages, 5 empirical invariants), code-review Axis 3 binding, and Suggested Next Step soft-chaining
+14. Subagent provenance output-slot guards for High-Assurance code-review and gitea-plan reproducibility audit
 """
 
 import os
@@ -546,6 +547,20 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
             for rel_link in link_re.findall(text):
                 resolved = (skill_path.parent / rel_link).resolve()
                 self.assertTrue(resolved.exists(), f"{skill_name} has broken relative link: {rel_link} -> {resolved}")
+
+    def test_subagent_provenance_output_slot_guards(self):
+        """Proves High-Assurance code-review and Medium/Large gitea-plan require subagent provenance slots in output templates."""
+        cr_skill = (REPO_ROOT / "skills" / "code-review" / "SKILL.md").read_text()
+        cr_schema = (REPO_ROOT / "skills" / "code-review" / "references" / "finding-schema.md").read_text()
+        impl_tiers = (REPO_ROOT / "skills" / "implement-slice" / "references" / "orchestration-tiers.md").read_text()
+        plan_skill = (REPO_ROOT / "skills" / "gitea-plan" / "SKILL.md").read_text()
+        plan_tiers = (REPO_ROOT / "skills" / "gitea-plan" / "references" / "decomposition-tiers.md").read_text()
+
+        self.assertIn("record both subagent IDs in `Execution Mode`", cr_skill)
+        self.assertIn("Dedicated Axis 3 Tests subagent `<id>`", cr_schema)
+        self.assertIn("dedicated Axis 3 `Seam & Test Integrity` subagent + Axes 1/2/4 subagent", impl_tiers)
+        self.assertIn("### Reproducibility Audit:", plan_skill)
+        self.assertIn("### Reproducibility Audit:", plan_tiers)
 
     def test_skill_inventory_and_skeletons(self):
         """Proves all 16 active skills meet line count (<= 80), em-dash, and path portability rules."""

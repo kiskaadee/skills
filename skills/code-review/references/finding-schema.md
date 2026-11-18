@@ -39,7 +39,7 @@ The final review summary presented to the user must follow this structure:
 - **Base Commit**: `<base-ref>` (`<base-commit-sha>`) -> `<HEAD>` (`<head-commit-sha>`)
 - **Covered Working-Tree State**: `Clean` | Staged, unstaged, and relevant untracked summary plus content fingerprint (covering staged changes, unstaged changes, and relevant untracked file contents so downstream tools can verify zero state drift)
 - **Assigned Risk Tier**: `Lightweight` | `Standard` | `High-Assurance`
-- **Execution Mode**: `Sequential` | `Independent Passes` | `Subagent Reviewers`
+- **Execution Mode**: `Sequential` (`Lightweight` only) | `Independent Passes` (`Standard`) | `Subagent Reviewers` (`High-Assurance` mandatory: Axes 1/2/4 subagent `<id>`, Dedicated Axis 3 Tests subagent `<id>`)
 
 ## Findings Ledger
 
