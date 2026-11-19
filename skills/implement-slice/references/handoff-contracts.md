@@ -142,6 +142,6 @@ When the repository tracks a Gitea Project Board (resolved from the `AGENTS.md` 
 | Step | Transition | Condition |
 | :--- | :--- | :--- |
 | **Step 1 (Preflight & Readiness)** | `Backlog -> Ready` | Blocking issues are closed, issue acceptance criteria are reconciled against current `HEAD` and `AGENTS.md`, and `--dry-run` is **not** active. |
-| **Step 4 (Worker Delegation)** | `Ready -> Work in Progress` | Human owner approved the Step 3 Planned Workflow and implementation branch/worker starts. |
-| **Step 7 (Final-HEAD Gate)** | `Work in Progress -> Review` | Final-`HEAD` `code-review` (`Ready`) and `verify-slice` pass with zero unhandled `FAIL` outcomes. |
+| **Step 4 (Worker Delegation)** | `Ready -> Work in Progress` | Human owner approved the Step 3 Planned Workflow and implementation branch/worker starts. Also record `started_at=$(date +%s)` in the Execution Record (never use Gitea's global `stopwatch/start`, which blocks parallel issues with `409 Conflict`). |
+| **Step 7 (Final-HEAD Gate)** | `Work in Progress -> Review` | Final-`HEAD` `code-review` (`Ready`) and `verify-slice` pass with zero unhandled `FAIL` outcomes. Compute `elapsed=$(( $(date +%s) - started_at ))` (when `started_at` was recorded and `elapsed > 0`) and log it to the issue via `gt api -X POST /repos/{owner}/{repo}/issues/<issue-index>/times -F time=${elapsed}`. |
 | **Step 7 (Direct Merge Only)** | `Review -> Completed` | Only when repository policy permits direct fast-forward merge to `main`, human owner approves, and the issue is closed. Otherwise `gitea-pr` owns `Review -> Completed`. |

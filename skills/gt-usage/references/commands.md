@@ -91,6 +91,9 @@ gt issue edit <number> --title "<new-title>" -m <milestone-id>
 
 # Close an issue
 gt issue close <number>
+
+# Log elapsed implementation time (seconds) to an issue without a global stopwatch lock
+gt api -X POST /repos/{owner}/{repo}/issues/<issue-index>/times -F time=<seconds>
 ```
 
 ## 5. Pull Requests

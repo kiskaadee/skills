@@ -396,6 +396,15 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
         self.assertNotIn("### Publish a `code-review` Comment Block", pr_pulls)
         self.assertIn("/orgs/<org>/projects/<project-id>/issues/<global-issue-id>/move", (REPO_ROOT / "skills" / "implement-slice" / "references" / "handoff-contracts.md").read_text())
 
+        # Elapsed issue time tracking uses lock-free POST .../times rather than global stopwatch/start
+        gt_cmds = (REPO_ROOT / "skills" / "gt-usage" / "references" / "commands.md").read_text()
+        impl_skill = (REPO_ROOT / "skills" / "implement-slice" / "SKILL.md").read_text()
+        impl_handoff = (REPO_ROOT / "skills" / "implement-slice" / "references" / "handoff-contracts.md").read_text()
+        self.assertIn("/issues/<issue-index>/times", gt_cmds)
+        self.assertIn("started_at=$(date +%s)", impl_skill)
+        self.assertIn("/issues/<issue-index>/times", impl_handoff)
+        self.assertNotIn("stopwatch/start", impl_skill)
+
     def test_project_board_reconciliation_and_card_transitions(self):
         """Proves 5-column board reconciliation, Deep Signal colors, and card transition ownership."""
         tiers_text = (REPO_ROOT / "skills" / "gitea-plan" / "references" / "decomposition-tiers.md").read_text()
