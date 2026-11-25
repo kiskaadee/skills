@@ -10,7 +10,7 @@ A **seam** is the public interface where callers observe behavior without reachi
 
 When proposing a new seam to the human owner, state two things in one line:
 - **What it catches**: the behavioral contract verified through this boundary.
-- **What it misses**: the outer integration layer left to `verify-slice` or higher-level tests.
+- **What it misses**: the outer integration layer left to `verify` or higher-level tests.
 
 | Stack | Typical Public Seam | Avoid Testing Directly |
 | :--- | :--- | :--- |

@@ -382,6 +382,109 @@ class TestBuildReview(unittest.TestCase):
         )
         self.assertEqual(res_bad_side.returncode, 1)
 
+    def test_new_file_multi_hunk_and_empty_diff_handling(self):
+        new_and_multi_hunk_diff = """diff --git a/src/brand_new.py b/src/brand_new.py
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/src/brand_new.py
+@@ -0,0 +1,3 @@
++def greet(name):
++    return f"hi {name}"
++
+diff --git a/src/multi.py b/src/multi.py
+index 1111111..2222222 100644
+--- a/src/multi.py
++++ b/src/multi.py
+@@ -2,3 +2,4 @@ def first():
+     a = 1
++    b = 2
+     return a
+@@ -20,3 +21,4 @@ def second():
+     c = 3
++    d = 4
+     return c
+"""
+        payload_in = {
+            "findings": [
+                {
+                    "path": "src/brand_new.py",
+                    "line": 2,
+                    "side": "RIGHT",
+                    "severity": "Medium",
+                    "title": "New file anchor",
+                    "body": "Newly added file line 2 anchors on RIGHT.",
+                },
+                {
+                    "path": "src/multi.py",
+                    "line": 3,
+                    "side": "RIGHT",
+                    "severity": "Low",
+                    "title": "First hunk anchor",
+                    "body": "Added line in hunk 1 anchors on RIGHT.",
+                },
+                {
+                    "path": "src/multi.py",
+                    "line": 22,
+                    "side": "RIGHT",
+                    "severity": "Low",
+                    "title": "Second hunk anchor",
+                    "body": "Added line in hunk 2 anchors on RIGHT.",
+                },
+                {
+                    "path": "src/multi.py",
+                    "line": 12,
+                    "side": "RIGHT",
+                    "severity": "Medium",
+                    "title": "Gap between hunks",
+                    "body": "Line 12 lies between hunks and must move to body.",
+                },
+            ]
+        }
+        res = self._run(
+            payload_in,
+            diff_text=new_and_multi_hunk_diff,
+            head_sha="multi1234",
+            verdict="needs_rework",
+        )
+        self.assertEqual(res.returncode, 0, res.stderr)
+        out = json.loads(res.stdout)
+        self.assertEqual(len(out["comments"]), 3)
+        self.assertEqual(
+            [(c["path"], c["line"], c["side"]) for c in out["comments"]],
+            [
+                ("src/brand_new.py", 2, "RIGHT"),
+                ("src/multi.py", 3, "RIGHT"),
+                ("src/multi.py", 22, "RIGHT"),
+            ],
+        )
+        self.assertIn("### Findings (Unanchored / Cross-File)", out["body"])
+        self.assertIn("### CR-04: Gap between hunks", out["body"])
+
+        # Empty diff routes all findings to body
+        empty_res = self._run(
+            {
+                "findings": [
+                    {
+                        "path": "src/brand_new.py",
+                        "line": 2,
+                        "side": "RIGHT",
+                        "severity": "High",
+                        "title": "Unanchored on empty diff",
+                        "body": "Cannot anchor when diff is empty.",
+                    }
+                ]
+            },
+            diff_text="",
+            head_sha="empty0000",
+            verdict="needs_rework",
+        )
+        self.assertEqual(empty_res.returncode, 0, empty_res.stderr)
+        empty_out = json.loads(empty_res.stdout)
+        self.assertEqual(empty_out["comments"], [])
+        self.assertIn("### Findings (Unanchored / Cross-File)", empty_out["body"])
+        self.assertIn("### CR-01: Unanchored on empty diff", empty_out["body"])
+
 
 if __name__ == "__main__":
     unittest.main()

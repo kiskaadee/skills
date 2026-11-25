@@ -17,8 +17,8 @@ the exact current PR commit with `verdict=ready`:
    ```
 2. Inspect paginated PR reviews for the latest `cr-review-meta` HTML comment:
    ```bash
-   gh api --paginate repos/{owner}/{repo}/pulls/<pr-number>/reviews \
-     --jq '[.[] | select(.body | contains("cr-review-meta:"))] | last | .body'
+   gh api --paginate --slurp repos/{owner}/{repo}/pulls/<pr-number>/reviews \
+     --jq '[add[] | select((.body // "") | contains("cr-review-meta:"))] | last | .body'
    ```
    Expected marker format:
    ```html
