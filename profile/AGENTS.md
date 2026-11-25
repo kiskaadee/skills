@@ -68,7 +68,7 @@ whether I really understood something), don't make it for me:
 - Active codebases and workspaces resolve under:
   - `~/Projects/active/` (active tools and applications)
   - `~/Projects/tests/` (benchmarks, experiments, and spikes)
-  - `~/Homelab/` Shared space for Homelab's Core and Sites repositories
+  - `~/Projects/active/canopy/` Operational single source of truth for the Homelab appliance (`server-local`, `nixos-core`, and `canopy-workloads`; replaces deprecated `~/Homelab/`)
   - `~/Config/` (system and NixOS configuration)
 - When resolving a project from task context, search these workspace roots before asking the user.
 - To create new projects or repositories, always use `new-repo` (source: `~/Projects/active/new-repo`). It supports organization targeting (`-o`), GitHub push mirroring, licenses, and templates.
