@@ -33,11 +33,11 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Active skills to install
-ACTIVE_PORTABLE_SKILLS=(build-skill code-review derive-skill diagnose document git-manager gitea-plan gitea-pr gt-usage implement-slice inspect-flake-update nix-devshell practice reconcile-docs tdd verify-slice)
+ACTIVE_PORTABLE_SKILLS=(build-skill code-review derive-skill diagnose document git-manager gt-usage implement inspect-flake-update nix-devshell practice projects reconcile-docs tdd verify)
 ACTIVE_EXTENSION_SKILLS=()
 
 # Legacy / deprecated skills to clean up or back up if found in target
-OBSOLETE_SKILLS=(engineering-tutor engineering-investigation skill-builder documentation-router inbox-curation commit-logger git-commit git-workspace journal-builder draft-curation)
+OBSOLETE_SKILLS=(engineering-tutor engineering-investigation skill-builder documentation-router inbox-curation commit-logger git-commit git-workspace journal-builder draft-curation gitea-plan implement-slice verify-slice gitea-pr)
 OBSOLETE_AGENTS=(anne-droid.md)
 
 check_prerequisites() {
@@ -45,22 +45,6 @@ check_prerequisites() {
   if ! command -v git >/dev/null 2>&1; then
     echo "  [ERROR] git is required but not found in PATH." >&2
     status=1
-  fi
-  if ! command -v gt >/dev/null 2>&1; then
-    echo "  [WARNING] 'gt' CLI not found in PATH." >&2
-    echo "            Gitea skills (gt-usage, gitea-plan, gitea-pr, implement-slice) require the official Gitea CLI (v1.0.0+)." >&2
-    echo "            Install via package manager or download from https://gitea.com/gitea/cli/releases" >&2
-  else
-    local missing_subcommands=()
-    for sub in issue milestone project pr; do
-      if ! gt "$sub" --help >/dev/null 2>&1; then
-        missing_subcommands+=("$sub")
-      fi
-    done
-    if [[ ${#missing_subcommands[@]} -gt 0 ]]; then
-      echo "  [WARNING] 'gt' CLI found but lacks required capabilities: ${missing_subcommands[*]}" >&2
-      echo "            Update gt to the official release (https://gitea.com/gitea/cli)." >&2
-    fi
   fi
   return "$status"
 }
@@ -108,8 +92,9 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
   fi
   if [[ "$missing" -eq 0 ]]; then
     echo "All active skills are present."
+    exit 0
   fi
-  exit 0
+  exit 1
 fi
 
 # Prepare backup directory timestamp if needed
@@ -141,6 +126,19 @@ done
 for a in "${OBSOLETE_AGENTS[@]}"; do
   if [[ -e "$AGENTS_DIR_TARGET/$a" || -L "$AGENTS_DIR_TARGET/$a" ]]; then
     backup_if_exists "$AGENTS_DIR_TARGET/$a"
+  fi
+done
+
+# Prune repo-scoped dangling symlinks in target directory
+for entry in "$TARGET_DIR"/*; do
+  if [[ -L "$entry" && ! -e "$entry" ]]; then
+    link_target="$(readlink "$entry")"
+    case "$link_target" in
+      "$SCRIPT_DIR/skills/"*)
+        rm -f "$entry"
+        echo "  [PRUNED] dangling symlink $(basename "$entry") -> $link_target"
+        ;;
+    esac
   fi
 done
 

@@ -18,16 +18,18 @@ echo "--- [1/3] Verifying Skills Installation & Symlinks ---"
 # 2. Run Python deterministic behavioral contracts suite
 echo
 echo "--- [2/3] Running Behavioral Contract & Invariant Tests ---"
-python3 "${SCRIPT_DIR}/test_skills_behavioral_contracts.py" -v
+python3 -m unittest "${SCRIPT_DIR}/test_skills_behavioral_contracts.py" "${SCRIPT_DIR}/test_build_review.py" -v
 
 # 3. Qualitative Dogfood Protocol Verification
 echo
-echo "--- [3/3] Validating Clean-Room Reproducibility & Deviation Protocol ---"
-# Verify that gitea-plan references clean-room audit schema
-grep -q "Independent Zero-Context Reproducibility Audit" "${REPO_ROOT}/skills/gitea-plan/references/decomposition-tiers.md"
-grep -q "Auditor Report Schema" "${REPO_ROOT}/skills/gitea-plan/references/decomposition-tiers.md"
-# Verify that implement-slice defines tripartite schema
-grep -q "The Tripartite Workflow Contract Schemas" "${REPO_ROOT}/skills/implement-slice/references/handoff-contracts.md"
+echo "--- [3/3] Validating Clean-Room Reproducibility & Contract Protocols ---"
+# Verify that projects references clean-room audit schema
+grep -q "Independent Zero-Context Reproducibility Audit" "${REPO_ROOT}/skills/projects/references/tiers-and-audit.md"
+grep -q "Auditor Report Schema" "${REPO_ROOT}/skills/projects/references/tiers-and-audit.md"
+# Verify that implement defines preflight working-tree classification
+grep -q "CLEAN_BASE" "${REPO_ROOT}/skills/implement/references/preflight.md"
+# Verify that code-review defines cr-review-meta provenance marker
+grep -q "cr-review-meta" "${REPO_ROOT}/skills/code-review/references/finding-schema.md"
 # Verify that gt-usage defines project column move recipe
 grep -q "Move issue card between columns" "${REPO_ROOT}/skills/gt-usage/references/commands.md"
 
