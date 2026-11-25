@@ -1,19 +1,19 @@
 ---
 name: gt-usage
 description: >-
-  Work with Gitea repositories, issues, milestones, projects, and pull requests
-  using the official gt CLI. Use when querying or mutating Gitea entities,
-  extracting resource identifiers, or configuring instance remotes.
+  Standalone ad-hoc utility for working with Gitea repositories, issues,
+  milestones, projects, and pull requests using the official gt CLI outside the
+  GitHub core delivery loop. Use when querying or mutating Gitea entities,
+  extracting resource identifiers, or configuring Gitea instance remotes.
 ---
 
 # Gitea CLI Usage
 
 ## Use when
-- Querying, creating, or editing Gitea issues, milestones, project boards, or PRs.
+- Ad-hoc querying, creating, or editing Gitea issues, milestones, project boards, or PRs on Gitea-hosted repos or mirrors.
 - Extracting exact server identifiers and URLs via JSON output.
-- Configuring instance remotes or SSH port mappings for sovereign instances.
-- Not for planning or issue decomposition: use `gitea-plan`.
-- Not for pull request review synthesis: use `gitea-pr`.
+- Configuring instance remotes or SSH port mappings for sovereign Gitea instances.
+- Standalone utility outside the GitHub core delivery loop (`projects`, `implement`, `code-review`, `verify`).
 
 ## Steps
 1. **Verify CLI availability and auth.** Run `gt auth status`. If unauthenticated,
@@ -41,5 +41,5 @@ description: >-
 - Target Gitea entity is created, queried, or updated with confirmed server JSON output.
 
 ## Hands off to
-- `gitea-plan`: to decompose technical work into milestones and issues.
-- `gitea-pr`: to manage pull request review and merge readiness.
+- `git-manager`: for local branch, commit, or remote configuration work.
+- `projects`: when planning active delivery workflows on GitHub instead of ad-hoc Gitea usage.

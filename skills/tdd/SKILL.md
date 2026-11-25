@@ -15,7 +15,7 @@ description: >-
 - `/tdd` for Mode A (test-first implementation, red-green vertical slices, or failing bug reproduction).
 - `/tdd <test-path|branch|PR>` for Mode B (active audit and hardening of existing tests against [seams-and-mocking](references/seams-and-mocking.md) and [test-quality](references/test-quality.md)).
 - Not for trivial two-line fixes, copy, styling, declarative config, or pure wiring: edit directly instead.
-- Not for read-only pre-merge multi-axis diff inspection (`code-review`) or live runtime/browser QA (`verify-slice`).
+- Not for read-only pre-merge multi-axis diff inspection (`code-review`) or live runtime/browser QA (`verify`).
 
 ## Steps
 1. **Check applicability and select mode.** Confirm the task tests observable logic at a testable boundary (skip and edit directly for trivial config/copy when `/tdd` was not requested). Read project domain docs (`GLOSSARY.md` or local ADRs) if present. Select **Mode A** when adding new behavior, reproducing a bug, or writing a new test; select **Mode B** when asked to audit/harden existing tests or fix `code-review` Axis 3 findings, and follow the Mode B checklist in [test-quality](references/test-quality.md).
@@ -36,7 +36,7 @@ description: >-
 
 ## Hands off to
 - `code-review`: to inspect the resulting diff, smells, invariants, and Axis 3 test integrity (`Suggested Next Step: /code-review <base>..HEAD`).
-- `verify-slice`: when the slice also needs live runtime, browser DOM, or multi-service verification (`Suggested Next Step: /verify-slice`).
+- `verify`: when the slice also needs live runtime, browser DOM, or multi-service verification (`Suggested Next Step: /verify`).
 - `diagnose`: when an unexpected test or fixture failure needs root-cause investigation (`Suggested Next Step: /diagnose <failing-test>`).
 - `git-manager`: for branch isolation or committing cohesive vertical slices.
 - Emit one outcome-matched `Suggested Next Step` on standalone turns; suppress when delegated (per [skeleton](../build-skill/references/skeleton.md)).

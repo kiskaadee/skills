@@ -3,7 +3,7 @@ name: reconcile-docs
 description: >-
   Audit, reconcile, and generate canonical repository documentation (README.md,
   ARCHITECTURE.md, docs/adr/, ROADMAP.md, docs/designs/*.md) against commit
-  history, code reality, Gitea delivery state, and active plans. Use when
+  history, code reality, GitHub delivery state, and active plans. Use when
   updating a repository's official documentation. For capturing a single
   session's decision, debug record, or insight into repo docs, use document.
 ---
@@ -11,14 +11,14 @@ description: >-
 # Reconcile Docs
 
 ## Use when
-- `/reconcile-docs [history-path]`: audit or reconcile repository documentation against history, Gitea state, and active plans.
-- Closing a milestone or resolving mid-milestone design spec drift flagged by `code-review` or `implement-slice`.
+- `/reconcile-docs [history-path]`: audit or reconcile repository documentation against history, optional GitHub state, and active plans.
+- Closing a milestone or resolving mid-milestone design spec drift flagged by `code-review`, `implement`, or `verify`.
 - Not for capturing a single session's insight or incident record (use `/document`).
 
 ## Steps
-1. **Discover Present State.** Inspect working-tree status, repository source, tests, configuration, `AGENTS.md`, and existing docs. Build a present-state inventory of components, responsibilities, boundaries, and dependencies.
-2. **Reconstruct History.** Read chronological notes and commit history from the repository (`git log`, `docs/discussions/`, `docs/debug/`, `docs/adr/`, or an optional history path) and, when a Gitea remote exists, read merged PRs and published `code-review` PR comments/reviews via `gt` (using `gt-usage` read-only queries). Extract decisions, accepted trade-offs, mid-slice contract pivots, rejected alternatives, migrations, and incidents.
-3. **Extract Future Intent.** Identify active plans, roadmaps (`ROADMAP.md`, `docs/designs/*.md`), and, when a Gitea remote exists, read open/closed Gitea milestones, issues, and Project Board column placement (`Completed` vs. `Backlog`, `Ready`, `Work in Progress`, `Review`) read-only via `gt`. Classify each item as committed, planned, exploratory, or superseded. Never mutate Gitea issues, PRs, or board cards.
+1. **Discover Present State.** Inspect working-tree status, repository source, tests, configuration, `AGENTS.md`, and existing docs. Build a present-state inventory of components, responsibilities, boundaries, and dependencies. Local git/doc reconciliation runs on any repository without requiring a GitHub remote.
+2. **Reconstruct History.** Read chronological notes and commit history (`git log`, `docs/discussions/`, `docs/debug/`, `docs/adr/`, or an optional history path). When `gh repo view --json url` succeeds, also read merged PRs (`gh pr list --state merged`) and published `code-review` PR comments/reviews read-only via `gh api`. Extract decisions, mid-slice contract pivots, rejected alternatives, migrations, and incidents.
+3. **Extract Future Intent.** Identify active plans and roadmaps (`ROADMAP.md`, `docs/designs/*.md`). When `gh repo view --json url` succeeds, also read open/closed GitHub milestones (`gh api repos/{owner}/{repo}/milestones`), issues, and Projects v2 Project Board column placement (`Completed` vs. `Backlog`, `Ready`, `Work in Progress`, `Review`) read-only via `gh`. Classify each item as committed, planned, exploratory, or superseded. Never mutate GitHub issues, PRs, or board cards.
 4. **Reconcile and Detect Conflicts.** Correlate past claims, present code reality, and future plans using [references/reconciliation-matrix.md](references/reconciliation-matrix.md). Flag contradictions (historical claims contradicted by code, mid-slice spec drift in `docs/designs/*.md`, or `Backlog` plans masquerading as current implementation).
 5. **Human Checkpoint.** Present a Reconciliation Report following [references/checkpoint-format.md](references/checkpoint-format.md) listing present architecture, recovered decisions, resolved and unresolved conflicts, and proposed document mutations. Stop for user approval.
 6. **Draft or Update Canonical Docs.** Once approved, generate or update target artifacts following [references/doc-contracts.md](references/doc-contracts.md) in order:
@@ -40,5 +40,6 @@ description: >-
 
 ## Hands off to
 - `git-manager`: for branch setup or committing updated documentation (`Suggested Next Step: /git-manager`).
-- `gitea-plan`: when reconciled `ROADMAP.md` or `docs/designs/*.md` require new or updated Gitea milestones, issues, or board reconciliation (`Suggested Next Step: /gitea-plan`).
-- Emit one outcome-matched `Suggested Next Step` on standalone turns per [skeleton](../build-skill/references/skeleton.md).
+- `projects`: when reconciled `ROADMAP.md` or `docs/designs/*.md` require new or updated GitHub milestones, issues, or board reconciliation (`Suggested Next Step: /projects`).
+- `implement`: when reconciled design specs unblock the next ready vertical slice (`Suggested Next Step: /implement #<issue>`).
+- Emit one outcome-matched `Suggested Next Step:` on standalone turns; suppress when delegated per [skeleton](../build-skill/references/skeleton.md).

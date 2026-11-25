@@ -22,7 +22,7 @@ These skills exist to enforce four core principles:
 
 1. **Defeating the Comprehension Illusion**: Having an AI generate code is not the same as understanding how a system behaves. When code velocity outpaces comprehension, you end up with systems you cannot debug when production breaks. Skills like `practice` make the learner write the code and drive analysis, ensuring mental models develop alongside the codebase.
 
-2. **Intentional Epistemic Friction ("Your call")**: Great engineering requires deliberate checkpoints. Instead of letting agents make unilateral architectural choices, these skills pause at critical state transitions: requiring proven root causes before patching (`diagnose`), gating branch integration and merge readiness (`git-manager` / `gitea-pr`), or identifying learning opportunities that should be preserved as durable knowledge (`document`).
+2. **Intentional Epistemic Friction ("Your call")**: Great engineering requires deliberate checkpoints. Instead of letting agents make unilateral architectural choices, these skills pause at critical state transitions: requiring proven root causes before patching (`diagnose`), gating branch integration and merge readiness (`git-manager` / `verify`), or identifying learning opportunities that should be preserved as durable knowledge (`document`).
 
 3. **Operational Ownership**: An agent should investigate, measure, and propose concrete options, but the human engineer must own the trade-offs, failure domains, and repository history. You cannot own what you did not decide.
 
@@ -32,9 +32,9 @@ These skills exist to enforce four core principles:
 
 ## The System Architecture
 
-The system is under active testing and continuous improvement. Currently, the skills form an orchestrated pair-programming workflow. `build-skill` governs meta-level skill design. 
+The system is under active testing and continuous improvement. Currently, the skills form an orchestrated pair-programming workflow. `build-skill` governs meta-level skill design.
 
-Three core operational skills (`practice`, `diagnose`, `git-manager`) structure day-to-day engineering. `document` evaluates whether insights produced during work warrant durable preservation.
+Three core operational skills (`practice`, `diagnose`, `git-manager`) structure day-to-day engineering, while a 4-skill GitHub-native delivery loop (`projects` -> `implement` -> `code-review` -> `verify`) handles planning, slice execution, static review, and merge closeout. `document` evaluates whether insights produced during work warrant durable preservation, and `reconcile-docs` keeps canonical repository docs aligned with code and optional GitHub state.
 
 ```mermaid
 flowchart TD
@@ -44,12 +44,20 @@ flowchart TD
         DIAG["diagnose<br/>find out: evidence-first RCA"]
         GIT["git-manager<br/>branches, commits & recovery"]
     end
+    subgraph Delivery["GitHub Delivery Loop"]
+        PROJ["projects<br/>milestones, issues & board"]
+        IMPL["implement<br/>preflight, workers & Draft PR"]
+        CR["code-review<br/>4-axis audit & CR-XX reviews"]
+        VER["verify<br/>QA, CI, promote & merge"]
+        PROJ --> IMPL --> CR --> VER
+    end
     DOC["document<br/>classify & author: 5 epistemic types"]
-    REC["reconcile-docs<br/>reconcile: history, code, Gitea, roadmap"]
+    REC["reconcile-docs<br/>reconcile: history, code, GitHub, roadmap"]
     Storage["Repo docs/ & .internal/"]
 
     SB --> Core
     Core --> DOC
+    Delivery --> REC
     DOC --> Storage
     Storage --> REC
     REC --> Storage
@@ -67,20 +75,19 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 | :--- | :--- | :--- | :--- |
 | **[`practice`](skills/practice/SKILL.md)** | `/practice [topic]`, `/practice review` | Socratic tutoring and delayed retrieval. Learner writes all code; uses graduated assistance, rubric calibration, and recall-before-reveal in gitignored `.internal/practice/`. | 51 lines |
 | **[`diagnose`](skills/diagnose/SKILL.md)** | `/diagnose [symptom]` | Evidence-first troubleshooting. Progresses from raw logs to proven root cause and minimal, reversible fixes. | 49 lines |
-| **[`git-manager`](skills/git-manager/SKILL.md)** | `/git-manager` | Repository hygiene, branch and worktree lifecycle, incremental Conventional Commits (autonomous on working branches in delivery mode; user-authored in learning mode), integration, conflict stops, and evidence-first reflog recovery. | 65 lines |
-| **[`gitea-plan`](skills/gitea-plan/SKILL.md)** | `/gitea-plan` | Translates technical goals and plans into Gitea milestones, 5-column Kanban boards, and issues with tiered sizing and falsifiable acceptance criteria. | 75 lines |
-| **[`implement-slice`](skills/implement-slice/SKILL.md)** | `/implement-slice` | Orchestrates end-to-end delivery of an issue or vertical slice across worker and QA subagents, pre-committed rubrics, Kanban card transitions, and final-HEAD gates without editing code directly. | 45 lines |
-| **[`gitea-pr`](skills/gitea-pr/SKILL.md)** | `/gitea-pr` | Manages Gitea pull request lifecycle: branch readiness, review/verification synthesis, PR review comment publishing, issue closing, and merge readiness. | 73 lines |
-| **[`gt-usage`](skills/gt-usage/SKILL.md)** | `/gt-usage` | Work with Gitea repositories, issues, milestones, projects, and pull requests via the official gt CLI. Verified JSON recipes and anti-hallucination rules. | 45 lines |
+| **[`git-manager`](skills/git-manager/SKILL.md)** | `/git-manager` | Repository hygiene, branch and worktree lifecycle, incremental Conventional Commits (autonomous on working branches in delivery mode; user-authored in learning mode), integration, conflict stops, and evidence-first reflog recovery. | 67 lines |
+| **[`projects`](skills/projects/SKILL.md)** | `/projects` | Outer-loop GitHub planning: translates goals and specs into GitHub Milestones, Issues, and the canonical 5-column Projects v2 board with tiered sizing and zero-context reproducibility audits. | 75 lines |
+| **[`implement`](skills/implement/SKILL.md)** | `/implement` | Orchestrates a ready GitHub vertical-slice issue via preflight checks, Step 1 delta-test decomposition, branch-scoped checkpointing, adaptive `test-writer`/`code-writer` workers, 1:1 commits, and Draft PR publishing. | 78 lines |
+| **[`code-review`](skills/code-review/SKILL.md)** | `/code-review` | Inspects diffs and open GitHub PRs across four isolated axes (Spec & Scope, Standards & Smells, Seam & Test Integrity, Defensive Invariants), publishing monotonic `CR-XX` reviews and `RV-*` runtime checks via `build_review.py`. | 78 lines |
+| **[`verify`](skills/verify/SKILL.md)** | `/verify` | Runs black-box runtime QA and remote CI inspection against `verdict=ready` PRs, posts the verification ledger, promotes Draft PRs (`gh pr ready`, `Work in Progress -> Review`), and executes human-gated merge closeout (`Review -> Completed`). | 75 lines |
+| **[`gt-usage`](skills/gt-usage/SKILL.md)** | `/gt-usage` | Standalone ad-hoc Gitea CLI (`gt`) utility outside the GitHub core delivery loop for querying or mutating Gitea entities and configuring sovereign Gitea remotes. | 45 lines |
 | **[`document`](skills/document/SKILL.md)** | `/document` | Second-order knowledge classifier (Discussion, ADR, Plan, Debug Record, Knowledge) scoped to the active repository's `docs/` (or `.internal/`). User confirms type and provides core insight. | 55 lines |
-| **[`reconcile-docs`](skills/reconcile-docs/SKILL.md)** | `/reconcile-docs [path]` | Reconciles historical evidence, present code reality, Gitea delivery state, and future plans into canonical repo docs (`README`, `ARCHITECTURE`, `docs/adr/`, `ROADMAP`, `docs/designs/*.md`). | 44 lines |
+| **[`reconcile-docs`](skills/reconcile-docs/SKILL.md)** | `/reconcile-docs [path]` | Reconciles historical evidence, present code reality, optional read-only GitHub delivery state, and future plans into canonical repo docs (`README`, `ARCHITECTURE`, `docs/adr/`, `ROADMAP`, `docs/designs/*.md`). | 45 lines |
 | **[`build-skill`](skills/build-skill/SKILL.md)** | `/build-skill [topic]` | Interactive design, sizing, authoring, and empirical dogfooding of agent skills. Enforces design review gate before file creation. | 50 lines |
 | **[`derive-skill`](skills/derive-skill/SKILL.md)** | `/derive-skill <url-or-path>` | Evaluates an external skill (source, license, scripts), sorts material into preserve/adapt/reject, and decides new skill, merge, or reject. Hands an approved derivation brief to `build-skill`. | 58 lines |
 | **[`inspect-flake-update`](skills/inspect-flake-update/SKILL.md)** | `/inspect-flake-update` | Inspects updated flake.lock inputs, reviews upstream revisions, runs nix flake check, and drafts commit messages. | 46 lines |
 | **[`nix-devshell`](skills/nix-devshell/SKILL.md)** | `/nix-devshell` | Authors, extends, validates, and troubleshoots project Nix development shells from repository evidence. | 76 lines |
-| **[`verify-slice`](skills/verify-slice/SKILL.md)** | `/verify-slice` | Runs risk-proportional verification and PR review across behavioral, state, security, ergonomic, and regression perspectives using falsifiable assertions. | 37 lines |
-| **[`code-review`](skills/code-review/SKILL.md)** | `/code-review` | Inspects diffs across four isolated axes: Spec & Scope (including strategic project alignment), Standards & Smells, Seam & Test Integrity, and Defensive Invariants, plus drafting PR comment blocks. | 45 lines |
-| **[`tdd`](skills/tdd/SKILL.md)** | `/tdd` | Guides red-green test-driven development through public interface seams, boundary-only mocking, and non-tautological assertions. | 40 lines |
+| **[`tdd`](skills/tdd/SKILL.md)** | `/tdd` | Guides red-green test-driven development (Mode A) and test-suite hardening (Mode B) through public interface seams, boundary-only mocking, and non-tautological assertions. | 42 lines |
 
 ---
 
@@ -100,14 +107,19 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 
 1. **Investigation to History**: `diagnose` (verify root cause) -> `git-manager` (checkpoint commit) -> `document` (optional Debug Record / ADR in `docs/`).
 2. **Deliberate Practice to Knowledge**: `practice` (solve transfer challenge, log in `.internal/practice/`) -> `document` (optional durable knowledge article in `docs/knowledge/`).
-3. **Documentation Reconciliation**: `reconcile-docs` (audit repo history, code reality, Gitea state, roadmap) -> propose updates to `README` / `ARCHITECTURE` / `docs/adr/` / `ROADMAP` / `docs/designs/*.md` -> user approves.
+3. **Documentation Reconciliation**: `reconcile-docs` (audit repo history, code reality, optional read-only GitHub state, roadmap) -> propose updates to `README` / `ARCHITECTURE` / `docs/adr/` / `ROADMAP` / `docs/designs/*.md` -> user approves.
 4. **Skill Design Loop**: `build-skill` (approve spec) -> dogfood run -> minimal mechanism refinement.
-5. **Branch Lifecycle & Integration**: `git-manager` (branch-before-edits or isolated worktree) -> implementation & incremental checkpoint commits -> `code-review` / `verify-slice` -> `git-manager` (rebase or integration).
-6. **Issue Planning to PR Delivery**: `gitea-plan` (tiered sizing, 5-column Kanban reconciliation, & falsifiable acceptance criteria) -> `implement-slice` (orchestrates `git-manager` workspace isolation, worker `tdd` checkpoints, pre-committed `verify-slice` QA rubrics, Kanban card transitions, and final-HEAD `code-review`) -> `gitea-pr` (PR synthesis, review comment publishing, feedback triage, merge & `Review -> Completed`).
+5. **Branch Lifecycle & Integration**: `git-manager` (branch-before-edits or isolated worktree) -> implementation & incremental checkpoint commits -> `code-review` / `verify` -> `git-manager` (rebase or integration).
+6. **GitHub Delivery Loop**: `projects` (tiered sizing, 5-column Projects v2 board, milestones, & falsifiable acceptance criteria) -> `implement` (preflight, Step 1 delta-test decomposition, branch-scoped checkpointing, adaptive `test-writer`/`code-writer` workers, & Draft PR) -> `code-review` (4-axis static audit, monotonic `CR-XX` PR reviews via `build_review.py`, & `RV-*` runtime checks) -> `verify` (black-box runtime QA, remote CI inspection, `gh pr ready` + `Work in Progress -> Review`, human-gated merge, & `Review -> Completed`).
 
 ---
 
 ## Installation & Portability
+
+### CLI Prerequisites
+- **`git`**: required for all repository, branch, and worktree workflows.
+- **`gh` (GitHub CLI)**: primary forge CLI for the 4-skill GitHub delivery loop (`projects`, `implement`, `code-review`, `verify`) and optional read-only GitHub ingestion in `reconcile-docs` (authenticated with `repo` and `project` scopes).
+- **`gt` (Gitea CLI)**: optional standalone CLI required only if using `gt-usage` for ad-hoc Gitea operations outside the GitHub delivery loop.
 
 The repository includes an idempotent install script (`install.sh`) supporting both symlink and copy modes:
 
@@ -124,14 +136,14 @@ The repository includes an idempotent install script (`install.sh`) supporting b
 
 When run:
 - Portable skills and active extensions are linked/copied to the target directory.
-- Deprecated or superseded skills are safely relocated to a dated backup directory (`skills.backup-<date>`).
+- Retired legacy Gitea skills (`gitea-plan`, `implement-slice`, `verify-slice`, `gitea-pr`) and other obsolete skills are safely relocated to a dated backup directory (`skills.backup-<date>`).
 - The global profile `profile/AGENTS.md` is installed as the user's base agent instruction.
 
 ---
 
 ## Behavioral Regression Testing
 
-To ensure portable skills and Gitea integrations maintain behavioral invariants across updates, run the deterministic regression test harness:
+To ensure portable skills and GitHub delivery integrations maintain behavioral invariants across updates, run the deterministic regression test harness:
 
 ```bash
 # Run full behavioral contract and invariant test suite
@@ -139,15 +151,12 @@ To ensure portable skills and Gitea integrations maintain behavioral invariants 
 ```
 
 Validates:
-- Prerequisite verification and actionable `gt` CLI setup guidance.
-- Anti-hallucination querying rules (preventing hardcoded milestone/issue sequence numbers).
-- Adaptive proportionality scaling (lightweight docs vs full test ceremony).
-- Canonical 5-tuple workflow node schema and dynamic Mermaid projections.
-- Security invariant verification seams.
-- State-preserving failure/rework routing.
-- Execution deviation logging.
-- Strict dry-run zero-mutation invariants.
-- Skill line caps (≤80 lines), em-dash absence, and path portability.
+- Dynamic GitHub Projects v2 and milestone ID resolution rules (forbidding hardcoded Node IDs or guessed milestone numbers).
+- Single-owner 5-column board state machine (`Backlog -> Ready -> Work in Progress -> Review -> Completed`) across `projects`, `implement`, and `verify`.
+- `implement` preflight classifications, `--dry-run` zero-mutation contract, branch-scoped checkpointing, and OS-level non-interactive worker timeouts.
+- `code-review` `build_review.py` monotonic `CR-XX` publishing, `cr-review-meta` stamping, diff-hunk validation, and exit codes.
+- `verify` 3-phase QA/CI/promotion/merge closeout and `reconcile-docs` read-only GitHub ingestion.
+- Skill line caps (≤80 lines), em-dash absence, valid relative markdown links, and path portability.
 
 ---
 

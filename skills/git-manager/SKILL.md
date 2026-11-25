@@ -5,7 +5,8 @@ description: >-
   history integration (rebase, squash, cherry-pick, merge), conflict stops, and
   evidence-first reflog recovery. Use when creating branches or worktrees, committing
   completed task checkpoints, integrating branches, or recovering lost commits. Not for
-  pull request lifecycle: use gitea-pr. Not for diff code inspection: use code-review.
+  pull request lifecycle: use implement (Draft PRs) or verify (promotion and merge). Not for
+  diff code inspection: use code-review.
 ---
 
 # Git Manager
@@ -15,7 +16,7 @@ description: >-
 - Recording clean, atomic Conventional Commits as coherent tasks finish, or slicing a dirty tree.
 - Integrating branches (rebase, squash, merge, cherry-pick) or stopping cleanly on conflicts.
 - Recovering lost commits, dangling refs, or broken working-tree state via reflog.
-- Not for pull request creation or review threads: use `gitea-pr`.
+- Not for Draft PR creation (`implement`) or PR promotion and merge closeout (`verify`).
 - Not for multi-axis static diff evaluation: use `code-review`.
 
 ## Steps
@@ -61,5 +62,6 @@ description: >-
 
 ## Hands off to
 - `code-review`: when a branch or commit range is ready for multi-axis static diff review.
-- `gitea-pr`: when verified commits are pushed and ready for pull request creation or update.
+- `implement`: when a slice branch is ready for Draft PR creation or rework sync.
+- `verify`: when a reviewed PR is ready for runtime QA, promotion, and merge closeout.
 - `document`: when a commit or recovery surfaces a decision or insight worth recording separately.

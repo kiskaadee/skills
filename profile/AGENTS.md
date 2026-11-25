@@ -16,7 +16,7 @@ whether I really understood something), don't make it for me:
   - **Independent architectural decisions** (system boundaries, trade-offs, merge vs rework,
     schema or model changes, doc destinations): Frame the choice clearly with 2-3 concrete options,
     your recommendation listed first and marked "(Recommended)", one decision at a time.
-  - **Homogeneous operational checkpoints** (creating a batch of Gitea issues, approving
+  - **Homogeneous operational checkpoints** (creating a batch of GitHub issues, approving
     multi-item curation or routine task batches): Orchestrators may structure multi-choice
     prompts for batch approval, provided each option exposes both the concrete action and its
     consequence, consequential or destructive actions are never collapsed into a blanket

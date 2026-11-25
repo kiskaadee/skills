@@ -9,10 +9,10 @@ Treat each source according to its temporal role and authority:
 | Source | Temporal role | Epistemic authority |
 | :--- | :--- | :--- |
 | Chronological records (`git log`, `docs/discussions/`, `docs/debug/`) | Past | Historical evidence. Explains how the system arrived here. |
-| Merged PRs & published `code-review` comments (`gt pr`) | Past -> Present | Primary record of slice-level contract evolutions, accepted trade-offs, and deferred nits. |
+| Merged PRs & published `code-review` comments (`gh pr list --state merged`, `gh api` PR reviews/comments) | Past -> Present | Optional read-only record (when `gh repo view --json url` succeeds) of slice-level contract evolutions, resolved findings, and deferred issues. |
 | Repository implementation (code, tests, configuration, `AGENTS.md`) | Present | Canonical technical truth. Determines what the system is right now. |
 | Existing repository documentation (`ARCHITECTURE.md`, `docs/designs/*.md`) | Present | Canonical unless contradicted by current implementation. |
-| Gitea Milestones & Project Board (`Completed` vs. `Backlog`/`Ready`) | Present -> Future | Read-only delivery state: `Completed` cards are present truth; `Backlog`/`Ready` cards are future intent. |
+| GitHub Milestones & Projects v2 Board (`gh api` milestones, `Completed` vs. `Backlog`/`Ready`) | Present -> Future | Optional read-only delivery state (when `gh repo view --json url` succeeds): `Completed` cards are present truth; `Backlog`/`Ready` cards are future intent. |
 | Active plans (roadmaps, proposals, pending designs) | Future | Planned intent. Describes where the system may go next. |
 | ADRs | Past -> Present | Historical decision record that remains valid until superseded. |
 | ROADMAP | Future | Intended technical trajectory. |
