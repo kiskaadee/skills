@@ -292,7 +292,7 @@ def format_triage_summary(closures: list[dict[str, Any]]) -> str:
     """Render Exit B / Exit C triage closure summary."""
     lines = ["### Triage Summary", ""]
     for item in closures:
-        cid = str(item.get("id", "CR-??")).strip()
+        cid = str(item.get("id") or "CR-??").strip()
         exit_code = str(item.get("exit", "")).strip()
         resolution = str(item.get("resolution", "")).strip()
         exit_label = f"Exit {exit_code}" if exit_code and not exit_code.lower().startswith("exit") else exit_code
@@ -349,6 +349,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entrypoint for building a GitHub PR review payload."""
     parser = build_parser()
     args = parser.parse_args(argv)
 

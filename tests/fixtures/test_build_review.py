@@ -320,7 +320,22 @@ class TestBuildReview(unittest.TestCase):
         self.assertEqual(res.stdout.strip(), "")
         self.assertIn("duplicate", res.stderr.lower())
 
-    def test_three_rework_cycle_cap_blocks_fourth_needs_rework_but_allows_ready(self):
+    def test_rework_cycle_cap_allows_third_needs_rework(self):
+        prior_reviews = [
+            {"body": "<!-- cr-review-meta: max_id=01 head_sha=sha1 verdict=needs_rework -->"},
+            {"body": "<!-- cr-review-meta: max_id=02 head_sha=sha2 verdict=needs_rework -->"},
+        ]
+        res = self._run(
+            {"findings": []},
+            reviews=prior_reviews,
+            head_sha="sha3",
+            verdict="needs_rework",
+        )
+        self.assertEqual(res.returncode, 0, res.stderr)
+        out = json.loads(res.stdout)
+        self.assertIn("<!-- cr-review-meta: max_id=02 head_sha=sha3 verdict=needs_rework -->", out["body"])
+
+    def test_rework_cycle_cap_blocks_fourth_needs_rework(self):
         prior_reviews = [
             {"body": "<!-- cr-review-meta: max_id=01 head_sha=sha1 verdict=needs_rework -->"},
             {"body": "<!-- cr-review-meta: max_id=02 head_sha=sha2 verdict=needs_rework -->"},
@@ -336,6 +351,12 @@ class TestBuildReview(unittest.TestCase):
         self.assertEqual(res_blocked.stdout.strip(), "")
         self.assertIn("3-rework-cycle cap", res_blocked.stderr.lower())
 
+    def test_rework_cycle_cap_allows_ready_after_three_reworks(self):
+        prior_reviews = [
+            {"body": "<!-- cr-review-meta: max_id=01 head_sha=sha1 verdict=needs_rework -->"},
+            {"body": "<!-- cr-review-meta: max_id=02 head_sha=sha2 verdict=needs_rework -->"},
+            {"body": "<!-- cr-review-meta: max_id=03 head_sha=sha3 verdict=needs_rework -->"},
+        ]
         res_ready = self._run(
             {"findings": []},
             reviews=prior_reviews,
@@ -346,41 +367,81 @@ class TestBuildReview(unittest.TestCase):
         out = json.loads(res_ready.stdout)
         self.assertIn("<!-- cr-review-meta: max_id=03 head_sha=sha4 verdict=ready -->", out["body"])
 
-    def test_invalid_inputs_exit_1(self):
-        # Invalid JSON
-        res_bad_json = self._run("{not valid json")
-        self.assertEqual(res_bad_json.returncode, 1)
-
-        # Invalid verdict
-        res_bad_verdict = self._run({"findings": []}, verdict="approved")
-        self.assertEqual(res_bad_verdict.returncode, 1)
-
-        # Missing required findings key
-        res_no_findings = self._run({"rv_checks": []})
-        self.assertEqual(res_no_findings.returncode, 1)
-
-        # Finding missing required field (title)
-        res_missing_field = self._run(
-            {"findings": [{"severity": "High", "body": "Missing title"}]}
-        )
-        self.assertEqual(res_missing_field.returncode, 1)
-
-        # Invalid side value
-        res_bad_side = self._run(
+    def test_triage_closure_null_id_defaults_to_placeholder(self):
+        res = self._run(
             {
-                "findings": [
-                    {
-                        "path": "src/app.py",
-                        "line": 11,
-                        "side": "CENTER",
-                        "severity": "Low",
-                        "title": "Bad side",
-                        "body": "Invalid side enum.",
-                    }
-                ]
-            }
+                "findings": [],
+                "triage_closures": [
+                    {"id": None, "exit": "C", "resolution": "Dismissed: false positive"}
+                ],
+            },
+            head_sha="nullid1",
+            verdict="ready",
         )
-        self.assertEqual(res_bad_side.returncode, 1)
+        self.assertEqual(res.returncode, 0, res.stderr)
+        out = json.loads(res.stdout)
+        self.assertIn("**CR-??**", out["body"])
+        self.assertNotIn("**None**", out["body"])
+
+    def test_invalid_inputs_exit_1(self):
+        cases = [
+            ("invalid_json", "{not valid json", "needs_rework"),
+            ("invalid_verdict", {"findings": []}, "approved"),
+            ("missing_findings_key", {"rv_checks": []}, "needs_rework"),
+            ("missing_title", {"findings": [{"severity": "High", "body": "Missing title"}]}, "needs_rework"),
+            (
+                "invalid_side",
+                {
+                    "findings": [
+                        {
+                            "path": "src/app.py",
+                            "line": 11,
+                            "side": "CENTER",
+                            "severity": "Low",
+                            "title": "Bad side",
+                            "body": "Invalid side enum.",
+                        }
+                    ]
+                },
+                "needs_rework",
+            ),
+            (
+                "non_positive_line_zero",
+                {
+                    "findings": [
+                        {
+                            "path": "src/app.py",
+                            "line": 0,
+                            "side": "RIGHT",
+                            "severity": "Low",
+                            "title": "Zero line",
+                            "body": "Line 0 is invalid.",
+                        }
+                    ]
+                },
+                "needs_rework",
+            ),
+            (
+                "boolean_line",
+                {
+                    "findings": [
+                        {
+                            "path": "src/app.py",
+                            "line": True,
+                            "side": "RIGHT",
+                            "severity": "Low",
+                            "title": "Bool line",
+                            "body": "Boolean line is invalid.",
+                        }
+                    ]
+                },
+                "needs_rework",
+            ),
+        ]
+        for label, payload, verdict in cases:
+            with self.subTest(case=label):
+                res = self._run(payload, verdict=verdict)
+                self.assertEqual(res.returncode, 1, res.stderr)
 
     def test_new_file_multi_hunk_and_empty_diff_handling(self):
         new_and_multi_hunk_diff = """diff --git a/src/brand_new.py b/src/brand_new.py
