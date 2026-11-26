@@ -41,5 +41,6 @@ description: >-
 - Target Gitea entity is created, queried, or updated with confirmed server JSON output.
 
 ## Hands off to
+- `gitea-to-github`: when migrating a Gitea repository or org to GitHub primary with a Gitea pull mirror.
 - `git-manager`: for local branch, commit, or remote configuration work.
 - `projects`: when planning active delivery workflows on GitHub instead of ad-hoc Gitea usage.

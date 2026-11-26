@@ -34,6 +34,7 @@ EXPECTED_SKILLS = [
     "diagnose",
     "document",
     "git-manager",
+    "gitea-to-github",
     "gt-usage",
     "implement",
     "inspect-flake-update",
@@ -256,9 +257,9 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
         self.assertIn("Suppress any standalone `Suggested Next Step:` footer", impl_roles)
 
     def test_chained_skills_include_suggested_next_step_routing(self):
-        """Proves all 6 chained skills include Suggested Next Step routing and valid relative markdown links."""
+        """Proves all 7 chained skills include Suggested Next Step routing and valid relative markdown links."""
         link_re = re.compile(r"\]\(([^)#]+\.md)(?:#[^)]+)?\)")
-        for skill_name in ("projects", "implement", "tdd", "code-review", "verify", "reconcile-docs"):
+        for skill_name in ("projects", "implement", "tdd", "code-review", "verify", "reconcile-docs", "gitea-to-github"):
             skill_path = REPO_ROOT / "skills" / skill_name / "SKILL.md"
             text = skill_path.read_text()
             self.assertIn("Suggested Next Step:", text, f"{skill_name} missing Suggested Next Step routing")
@@ -451,7 +452,7 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
             self.assertEqual(res_post.returncode, 0, res_post.stdout + res_post.stderr)
 
     def test_skill_inventory_and_skeletons(self):
-        """Proves all 15 active skills meet line count (<= 80), em-dash, and path portability rules, and legacy skills are retired."""
+        """Proves all 16 active skills meet line count (<= 80), em-dash, and path portability rules, and legacy skills are retired."""
         install_sh = (REPO_ROOT / "install.sh").read_text()
 
         # Verify ACTIVE_PORTABLE_SKILLS matches EXPECTED_SKILLS exactly
@@ -492,6 +493,69 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
             self.assertTrue(lines[0] == "---", f"Skill {skill_name} missing frontmatter start")
             self.assertIn("name:", content)
             self.assertIn("description:", content)
+
+    def test_gitea_to_github_portability_hygiene(self):
+        """Proves gitea-to-github files contain zero em-dashes, /home/ paths, or private domains."""
+        skill_dir = REPO_ROOT / "skills" / "gitea-to-github"
+        for path in [skill_dir / "SKILL.md", *sorted((skill_dir / "references").glob("*.md"))]:
+            text = path.read_text()
+            self.assertNotIn("—", text, f"{path.name} contains em-dash")
+            self.assertNotIn("/home/", text, f"{path.name} contains /home/ path")
+            self.assertNotIn("roadtotech", text, f"{path.name} contains private domain")
+
+    def test_gitea_to_github_safety_flags(self):
+        """Proves gitea-to-github enforces dry-run flags, LFS fail-fast, and non-git mktemp provisioning."""
+        skill_dir = REPO_ROOT / "skills" / "gitea-to-github"
+        skill_md = (skill_dir / "SKILL.md").read_text()
+        remote_md = (skill_dir / "references" / "remote-and-mirror.md").read_text()
+
+        self.assertIn("--dry-run", skill_md)
+        self.assertIn("--execute", skill_md)
+        self.assertIn("git lfs ls-files", remote_md)
+        self.assertIn("mktemp -d", remote_md)
+        self.assertIn("--empty --no-mirror --no-clone", remote_md)
+
+    def test_gitea_to_github_archive_precedes_mirror_sync(self):
+        """Proves gitea-to-github renames the archive before attaching the mirror and verifying sync."""
+        remote_md = (REPO_ROOT / "skills" / "gitea-to-github" / "references" / "remote-and-mirror.md").read_text()
+        archive_idx = remote_md.index("-archive-YYYYMMDDHHMMSS")
+        mirror_idx = remote_md.index("--gitea-mirror")
+        sync_idx = remote_md.index("mirror-sync")
+        self.assertLess(archive_idx, mirror_idx, "Archive rename must precede --gitea-mirror attachment")
+        self.assertLess(mirror_idx, sync_idx, "Mirror attachment must precede mirror-sync verification")
+
+    def test_gitea_to_github_ci_workflow_migration(self):
+        """Proves ci-and-contracts.md covers .gitea -> .github workflow translation and public self-hosted guard."""
+        ci_md = (REPO_ROOT / "skills" / "gitea-to-github" / "references" / "ci-and-contracts.md").read_text()
+        self.assertIn(".gitea/workflows/", ci_md)
+        self.assertIn(".github/workflows/", ci_md)
+        self.assertIn("self-hosted", ci_md)
+        self.assertIn("ubuntu-latest", ci_md)
+        self.assertIn("`public`", ci_md)
+
+    def test_gitea_to_github_entity_idempotency_marker(self):
+        """Proves entity-migration.md embeds the immutable gitea-origin deduplication marker."""
+        entity_md = (REPO_ROOT / "skills" / "gitea-to-github" / "references" / "entity-migration.md").read_text()
+        self.assertIn("<!-- gitea-origin: <gitea-host>/<owner>/<repo>#<number> -->", entity_md)
+
+    def test_gitea_to_github_sibling_skill_handoffs(self):
+        """Proves projects and gt-usage reference gitea-to-github for legacy Gitea migration."""
+        projects_skill = (REPO_ROOT / "skills" / "projects" / "SKILL.md").read_text()
+        projects_contract = (REPO_ROOT / "skills" / "projects" / "references" / "planning-contract.md").read_text()
+        gt_usage_skill = (REPO_ROOT / "skills" / "gt-usage" / "SKILL.md").read_text()
+
+        self.assertIn("/gitea-to-github", projects_skill)
+        self.assertIn("/gitea-to-github", projects_contract)
+        self.assertIn("gitea-to-github", gt_usage_skill)
+
+    def test_profile_agents_gitea_origin_session_check(self):
+        """Proves profile/AGENTS.md documents Gitea pull mirroring and local session-start check with sovereign opt-out."""
+        profile_agents = (REPO_ROOT / "profile" / "AGENTS.md").read_text()
+        self.assertIn("Gitea pull mirroring", profile_agents)
+        self.assertIn("/gitea-to-github", profile_agents)
+        self.assertIn("forge: gitea", profile_agents)
+        self.assertIn("git config --bool gitea.sovereign", profile_agents)
+        self.assertIn("project_number:", profile_agents)
 
 
 if __name__ == "__main__":

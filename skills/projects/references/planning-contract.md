@@ -80,8 +80,8 @@ gh repo view --json url
   the repository's `AGENTS.md` contains a legacy Gitea planning contract (such
   as Gitea `project_id`, `{Backlog..Completed -> column_id}` maps, or
   `gitea-plan` sync rules), fail fast and advise the user to either migrate the
-  repository to GitHub or use standalone `gt-usage` outside the core delivery
-  loop.
+  repository to GitHub via `/gitea-to-github` or use standalone `gt-usage`
+  outside the core delivery loop.
 
 ---
 

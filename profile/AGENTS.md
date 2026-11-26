@@ -71,11 +71,15 @@ whether I really understood something), don't make it for me:
   - `~/Projects/active/canopy/` Operational single source of truth for the Homelab appliance (`server-local`, `nixos-core`, and `canopy-workloads`; replaces deprecated `~/Homelab/`)
   - `~/Config/` (system and NixOS configuration)
 - When resolving a project from task context, search these workspace roots before asking the user.
-- To create new projects or repositories, always use `new-repo` (source: `~/Projects/active/new-repo`). It supports organization targeting (`-o`), GitHub push mirroring, licenses, and templates.
+- To create new projects or repositories, always use `new-repo` (source: `~/Projects/active/new-repo`). It supports organization targeting (`-o`), Gitea pull mirroring (`--gitea-mirror`), `--empty`, licenses, and templates.
 
 ## Homelab and connectivity
 
 - Sovereign Gitea origin lives at `gitea.roadtotech.me` (hosted on `server-local` at `192.168.1.36`).
+- **Session-start Gitea-origin check (zero-network, local only):** Inspect `git remote get-url origin` (or `git remote -v`). If `origin` points to `gitea.roadtotech.me`:
+  - Skip if repo `AGENTS.md` declares `forge: gitea` or `git config --bool gitea.sovereign` is `true`.
+  - If repo `AGENTS.md` already contains `project_number:`, warn that local `origin` still points to Gitea and advise flipping `origin` to GitHub via `git-manager`.
+  - Otherwise, inform the user that the repository uses Gitea as `origin` and suggest running `/gitea-to-github`.
 - For `gt` (Gitea CLI) repository discovery against sovereign SSH remote on port 2223:
   - Run `gt config set ssh_host gitea.roadtotech.me:2223 --host https://gitea.roadtotech.me` so `gt` maps SSH remotes like `ssh://git@gitea.roadtotech.me:2223/...` to `https://gitea.roadtotech.me`.
 - If `gitea.roadtotech.me` or `roadtotech.me` times out with `dial tcp ...:443: i/o timeout`:

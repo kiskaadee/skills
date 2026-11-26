@@ -23,7 +23,7 @@ description: >-
    `AGENTS.md`, read [references/planning-contract.md](references/planning-contract.md).
    Run `gh repo view --json url` to confirm a GitHub repository. If it fails or
    `AGENTS.md` holds a legacy Gitea planning contract, halt and advise migrating
-   to GitHub or using standalone `gt-usage`.
+   to GitHub via `/gitea-to-github` or using standalone `gt-usage`.
 2. **Reconcile specs and GitHub state.** Compare `ARCHITECTURE.md`, `ROADMAP.md`,
    `docs/designs/*.md`, GitHub Issues, Milestones, and Projects v2 cards for
    contradictions (zombie in-progress, premature completed, review orphan,
