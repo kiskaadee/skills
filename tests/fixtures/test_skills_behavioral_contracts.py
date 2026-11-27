@@ -557,6 +557,24 @@ class TestSkillsBehavioralContracts(unittest.TestCase):
         self.assertIn("git config --bool gitea.sovereign", profile_agents)
         self.assertIn("project_number:", profile_agents)
 
+    def test_practice_project_labs_protocol(self):
+        """Proves practice links project-labs.md covering Ugly Heartbeat, scratch labs, Predict-Before-Run, and Code-Tracing."""
+        practice_dir = REPO_ROOT / "skills" / "practice"
+        practice_md = (practice_dir / "SKILL.md").read_text()
+        labs_md = (practice_dir / "references" / "project-labs.md").read_text()
+        record_md = (practice_dir / "references" / "practice-record.md").read_text()
+
+        self.assertNotIn("—", labs_md)
+        self.assertNotIn("/home/", labs_md)
+        self.assertIn("references/project-labs.md", practice_md)
+        self.assertIn("Predict-Before-Run", practice_md)
+        self.assertIn("Ugly Heartbeat", labs_md)
+        self.assertIn("scratch/", labs_md)
+        self.assertIn("Read the Raw Spec", labs_md)
+        self.assertIn("Predict-Before-Run", labs_md)
+        self.assertIn("Code-Tracing", labs_md)
+        self.assertIn("Reasoning trap:", record_md)
+
 
 if __name__ == "__main__":
     unittest.main()

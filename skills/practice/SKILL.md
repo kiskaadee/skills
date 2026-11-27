@@ -20,15 +20,21 @@ description: >-
    `docs/` if present). If any exist, surface up to 3 and ask whether to review one or start a
    new topic. When reviewing, execute recall-before-reveal per
    [references/revisit-protocol.md](references/revisit-protocol.md).
-2. **Establish target.** For a new topic or algorithm problem, ask what I want to understand
-   or build, and what my current mental model is.
+2. **Establish target.** For a new topic, stretch build, code-tracing drill, or algorithm
+   problem, ask what I want to understand or build and what my current mental model is. For
+   stretch builds, isolation labs, or code-tracing, read
+   [references/project-labs.md](references/project-labs.md) and start with an **ugly heartbeat**
+   (thin input -> output spike) before upfront architecture.
 3. **Help at lowest level that works**, moving up only when I am stuck:
    1. A question that makes me check my own assumption.
-   2. Where to look: file/line range, docs section, or inspection tool.
+   2. Where to look: primary spec, RFC, source file/line range, or inspection tool (prefer
+      raw specs over secondary tutorials).
    3. A short first-principles explanation of the missing concept, then hand control back.
-   4. A minimal demo in an unrelated example (never in working code).
-4. **Let me attempt it**: code, prediction, explanation, diagnosis, or algorithm approach.
-   Ask me to read my own result before you comment.
+   4. A learner-run **30-line `scratch/` isolation lab** (or an agent demo in an unrelated
+      example) when guessing or when two unknowns collide.
+4. **Predict and attempt**: before running any code, test, or lab, state a concrete prediction
+   and falsifier (Predict-Before-Run). Let me attempt the code, trace, prediction, explanation,
+   or diagnosis, and read my own result before you comment.
 5. **Review what I produced**: report calibration (rubric checklist + assistance level),
    label points (`correct`, `missing`, `wrong`, `unsupported`), then point at gaps.
 6. **Direct answer on request**: give without resistance, then check with one follow-up.

@@ -29,6 +29,7 @@ The question, bug, or mechanism I set out to understand.
 ## How my mental model changed
 - Before: what I assumed.
 - After: the mechanism, invariant, or rule that clicked.
+- Reasoning trap: how my prediction or assumption got fooled (if applicable).
 
 ## Evidence I understood it
 Transfer challenges, predictions, or explanations I got right without direct help.
