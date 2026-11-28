@@ -73,14 +73,15 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 
 | Skill | Trigger / Command | Purpose | Length |
 | :--- | :--- | :--- | :--- |
-| **[`practice`](skills/practice/SKILL.md)** | `/practice [topic]`, `/practice review` | Socratic tutoring and delayed retrieval. Learner writes all code; uses graduated assistance, rubric calibration, and recall-before-reveal in gitignored `.internal/practice/`. | 51 lines |
+| **[`practice`](skills/practice/SKILL.md)** | `/practice [topic]`, `/practice review` | Socratic tutoring, delayed retrieval, and hands-on Build-and-Break (`project-labs.md`: Ugly Heartbeat, primary specs, 30-line `scratch/` labs), Predict-Before-Run, and Code-Tracing drills with rubric calibration in gitignored `.internal/practice/`. | 57 lines |
 | **[`diagnose`](skills/diagnose/SKILL.md)** | `/diagnose [symptom]` | Evidence-first troubleshooting. Progresses from raw logs to proven root cause and minimal, reversible fixes. | 49 lines |
 | **[`git-manager`](skills/git-manager/SKILL.md)** | `/git-manager` | Repository hygiene, branch and worktree lifecycle, incremental Conventional Commits (autonomous on working branches in delivery mode; user-authored in learning mode), integration, conflict stops, and evidence-first reflog recovery. | 67 lines |
 | **[`projects`](skills/projects/SKILL.md)** | `/projects` | Outer-loop GitHub planning: translates goals and specs into GitHub Milestones, Issues, and the canonical 5-column Projects v2 board with tiered sizing and zero-context reproducibility audits. | 75 lines |
 | **[`implement`](skills/implement/SKILL.md)** | `/implement` | Orchestrates a ready GitHub vertical-slice issue via preflight checks, Step 1 delta-test decomposition, branch-scoped checkpointing, adaptive `test-writer`/`code-writer` workers, 1:1 commits, and Draft PR publishing. | 78 lines |
 | **[`code-review`](skills/code-review/SKILL.md)** | `/code-review` | Inspects diffs and open GitHub PRs across four isolated axes (Spec & Scope, Standards & Smells, Seam & Test Integrity, Defensive Invariants), publishing monotonic `CR-XX` reviews and `RV-*` runtime checks via `build_review.py`. | 78 lines |
 | **[`verify`](skills/verify/SKILL.md)** | `/verify` | Runs black-box runtime QA and remote CI inspection against `verdict=ready` PRs, posts the verification ledger, promotes Draft PRs (`gh pr ready`, `Work in Progress -> Review`), and executes human-gated merge closeout (`Review -> Completed`). | 75 lines |
-| **[`gt-usage`](skills/gt-usage/SKILL.md)** | `/gt-usage` | Standalone ad-hoc Gitea CLI (`gt`) utility outside the GitHub core delivery loop for querying or mutating Gitea entities and configuring sovereign Gitea remotes. | 45 lines |
+| **[`gitea-to-github`](skills/gitea-to-github/SKILL.md)** | `/gitea-to-github` | On-demand cutover skill migrating standalone Gitea repos or `--org` batches to GitHub primary with a Gitea pull mirror, translating `.gitea/workflows/` to `.github/workflows/`, rewriting `AGENTS.md`, and migrating open issues idempotently. | 42 lines |
+| **[`gt-usage`](skills/gt-usage/SKILL.md)** | `/gt-usage` | Standalone ad-hoc Gitea CLI (`gt`) utility outside the GitHub core delivery loop for querying or mutating Gitea entities and configuring sovereign Gitea remotes. | 46 lines |
 | **[`document`](skills/document/SKILL.md)** | `/document` | Second-order knowledge classifier (Discussion, ADR, Plan, Debug Record, Knowledge) scoped to the active repository's `docs/` (or `.internal/`). User confirms type and provides core insight. | 55 lines |
 | **[`reconcile-docs`](skills/reconcile-docs/SKILL.md)** | `/reconcile-docs [path]` | Reconciles historical evidence, present code reality, optional read-only GitHub delivery state, and future plans into canonical repo docs (`README`, `ARCHITECTURE`, `docs/adr/`, `ROADMAP`, `docs/designs/*.md`). | 45 lines |
 | **[`build-skill`](skills/build-skill/SKILL.md)** | `/build-skill [topic]` | Interactive design, sizing, authoring, and empirical dogfooding of agent skills. Enforces design review gate before file creation. | 50 lines |
@@ -111,6 +112,7 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 4. **Skill Design Loop**: `build-skill` (approve spec) -> dogfood run -> minimal mechanism refinement.
 5. **Branch Lifecycle & Integration**: `git-manager` (branch-before-edits or isolated worktree) -> implementation & incremental checkpoint commits -> `code-review` / `verify` -> `git-manager` (rebase or integration).
 6. **GitHub Delivery Loop**: `projects` (tiered sizing, 5-column Projects v2 board, milestones, & falsifiable acceptance criteria) -> `implement` (preflight, Step 1 delta-test decomposition, branch-scoped checkpointing, adaptive `test-writer`/`code-writer` workers, & Draft PR) -> `code-review` (4-axis static audit, monotonic `CR-XX` PR reviews via `build_review.py`, & `RV-*` runtime checks) -> `verify` (black-box runtime QA, remote CI inspection, `gh pr ready` + `Work in Progress -> Review`, human-gated merge, & `Review -> Completed`).
+7. **Gitea-to-GitHub Cutover**: `gitea-to-github` (dry-run inventory, backup snapshot, PR gate, `new-repo --empty --no-mirror --no-clone` push, `.gitea/workflows/` -> `.github/workflows/` & `AGENTS.md` translation, idempotent issue migration, archive rename, and `new-repo --gitea-mirror` pull-mirror swap) -> `projects` / `implement`.
 
 ---
 
@@ -118,8 +120,9 @@ Every skill features an explicit **"Your call"** checkpoint where the agent paus
 
 ### CLI Prerequisites
 - **`git`**: required for all repository, branch, and worktree workflows.
-- **`gh` (GitHub CLI)**: primary forge CLI for the 4-skill GitHub delivery loop (`projects`, `implement`, `code-review`, `verify`) and optional read-only GitHub ingestion in `reconcile-docs` (authenticated with `repo` and `project` scopes).
-- **`gt` (Gitea CLI)**: optional standalone CLI required only if using `gt-usage` for ad-hoc Gitea operations outside the GitHub delivery loop.
+- **`gh` (GitHub CLI)**: primary forge CLI for the 4-skill GitHub delivery loop (`projects`, `implement`, `code-review`, `verify`), `gitea-to-github`, and optional read-only GitHub ingestion in `reconcile-docs` (authenticated with `repo` and `project` scopes).
+- **`gt` (Gitea CLI)**: optional CLI required for `gt-usage` (ad-hoc Gitea operations) and `gitea-to-github` (Gitea-to-GitHub cutover).
+- **`new-repo`**: optional repo-provisioning CLI used by `gitea-to-github` (`--empty --no-mirror --no-clone` and `--gitea-mirror`).
 
 The repository includes an idempotent install script (`install.sh`) supporting both symlink and copy modes:
 
@@ -156,6 +159,8 @@ Validates:
 - `implement` preflight classifications, `--dry-run` zero-mutation contract, branch-scoped checkpointing, and OS-level non-interactive worker timeouts.
 - `code-review` `build_review.py` monotonic `CR-XX` publishing, `cr-review-meta` stamping, diff-hunk validation, and exit codes.
 - `verify` 3-phase QA/CI/promotion/merge closeout and `reconcile-docs` read-only GitHub ingestion.
+- `gitea-to-github` safety flags, archive-before-mirror ordering, CI security guards, `<!-- gitea-origin: ... -->` idempotency, sibling handoffs, and `profile/AGENTS.md` zero-network session-start opt-out.
+- `practice` Build-and-Break (`project-labs.md`), Predict-Before-Run, Code-Tracing, and `Reasoning trap` contracts.
 - Skill line caps (≤80 lines), em-dash absence, valid relative markdown links, and path portability.
 
 ---

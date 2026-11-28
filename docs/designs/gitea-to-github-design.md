@@ -1,7 +1,7 @@
 # `gitea-to-github` Migration Skill Design
 
 *   **Author:** kiskaadee
-*   **Status:** Draft
+*   **Status:** Implemented
 *   **Date:** 2026-11-26
 
 --------------------------------------------------------------------------------
